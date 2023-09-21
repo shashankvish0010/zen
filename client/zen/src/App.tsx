@@ -1,8 +1,12 @@
 import React from 'react'
+import {Routes, Route} from 'react-router-dom'
+import About from './pages/About'
 
-const App = () => {
+const App: React.FC = () => {
   return (
-    <div>App</div>
+    <Routes>
+      <Route path='/about' element={<About/>} />
+    </Routes>
   )
 }
 
