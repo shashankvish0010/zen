@@ -10,4 +10,4 @@ const pool = new Pool({
    connectionString : process.env.NODE === "production" ? proddb : localdb
 })
 
-module.exports = pool
+export default pool
