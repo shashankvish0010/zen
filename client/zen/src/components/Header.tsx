@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react';
 
 const Header: React.FC = () => {
   return (
-    <div className='h-[8vh] w-[100vw] flex flex-row justify-around items-center shadow'>
+    <div className='h-[10vh] w-[100vw] flex flex-row justify-around items-center shadow'>
       <Link to='/'><div className='text-2xl flex gap-1'>
       <Icon icon="simple-icons:zenn" color='#9333ea'/>
         <h1 className='logo'>ZEN</h1>
@@ -15,7 +15,7 @@ const Header: React.FC = () => {
           <Link to='/'>Home</Link>
           <Link to='/'>About</Link>
           <Link to='/'>Contact</Link>
-          <Link to='/'><button className='bg-purple-500 p-1 text-white'>Login/Signup</button></Link>
+          <Link to='/'><button className='bg-purple-500 p-1 text-white rounded-sm'>Login/Signup</button></Link>
         </ul>
       </div>
     </div>
