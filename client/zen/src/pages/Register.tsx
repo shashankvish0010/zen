@@ -46,7 +46,9 @@ const Register: React.FC = () => {
                 console.log(data);
                 if(data.success === true){
                     setMessage(data.message);
-                    navigate('/otp/verification')
+                    navigate('/otp/verification/'+data.id)
+                }else{
+                    setMessage(data.message);
                 }
             }
         } catch (error) {
@@ -54,8 +56,11 @@ const Register: React.FC = () => {
         }
     }
     return (
-        <div className='h-[100vh] w-[100vw] flex justify-center items-center'>
-            <span>{message}</span>
+        <div className='h-[100vh] w-[100vw] flex flex-col gap-5 justify-center items-center'>
+            { message ? 
+            <span className='shadow p-1 font-medium bg-purple-600 text-white'>{message}</span>
+            : null
+            }
             <div className='w-max h-max flex flex-col justify-evenly gap-5 p-5 shadow'>
                 <h1 className='text-2xl font-semibold'>Register</h1>
                 <span className='w-[100%] h-[0.2rem] bg-purple-500 rounded'></span>

@@ -6,7 +6,11 @@ export default defineConfig({
   plugins: [react()],
   server : {
     proxy : {
-      '/user/register' : { target: 'http://localhost:8080'}
+      '/user/register' : { target: 'http://localhost:8080'},
+      '/otp/verification' : { target: 'http://localhost:8080'},
+      '/resend/otp' : { target: 'http://localhost:8080'},
+      '/user/login' : { target: 'http://localhost:8080'}
+
     }
   }
 })
