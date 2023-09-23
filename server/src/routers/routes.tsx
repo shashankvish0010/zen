@@ -4,6 +4,7 @@ import pool from "../../dbconnect"
 import bcrypt from "bcrypt"
 import nodemailer from "nodemailer"
 import { v4 as uuidv4 } from "uuid";
+import jwt from "jsonwebtoken"
 const router = express.Router()
 
 router.use(bodyParser.json())
@@ -122,6 +123,29 @@ router.get('/resend/otp/:id', async (req, res) => {
         transporter.sendMail(email_message).then(async () => {
             res.json({ success: true, message: "OTP Resend Successfully." })
         }).catch((err) => console.log(err))
+    }
+})
+
+router.post('/user/login/:id', async (req,res) => {
+    const {id} = req.params
+    const {email,password} = req.body
+    if(!email || !password){
+        res.json({ success: false, message: "Fill both fields" })
+    }else{
+        const user = await pool.query('SELECT * FROM Users WHERE id=$1', [id])
+        if(user.rows.length > 0){
+            if(email === user.rows[0].email){
+                const isMatch = await bcrypt.compare(password, user.rows[0].user_password)
+                if(isMatch){
+                    const token = jwt.sign(id, `${process.env.USERS_SECRET_KEY}`)
+                    res.json({ success: true, token, verifed: user.rows[0].account_verified, message: "Fill both fields" })
+                }else{
+                    res.json({ success: false,verifed: user.rows[0].account_verified, message: "Incorrect Password" })
+                }
+            }else{
+                res.json({ success: false,verifed: user.rows[0].account_verified, message: "Email does not exists" })
+            }
+        }
     }
 })
 module.exports = router

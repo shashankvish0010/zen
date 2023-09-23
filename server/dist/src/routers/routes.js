@@ -18,6 +18,7 @@ const dbconnect_1 = __importDefault(require("../../dbconnect"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const uuid_1 = require("uuid");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const router = express_1.default.Router();
 router.use(body_parser_1.default.json());
 router.get('/', (req, res) => res.send('hello from BE'));
@@ -130,6 +131,31 @@ router.get('/resend/otp/:id', (req, res) => __awaiter(void 0, void 0, void 0, fu
         transporter.sendMail(email_message).then(() => __awaiter(void 0, void 0, void 0, function* () {
             res.json({ success: true, message: "OTP Resend Successfully." });
         })).catch((err) => console.log(err));
+    }
+}));
+router.post('/user/login/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const { email, password } = req.body;
+    if (!email || !password) {
+        res.json({ success: false, message: "Fill both fields" });
+    }
+    else {
+        const user = yield dbconnect_1.default.query('SELECT * FROM Users WHERE id=$1', [id]);
+        if (user.rows.length > 0) {
+            if (email === user.rows[0].email) {
+                const isMatch = yield bcrypt_1.default.compare(password, user.rows[0].user_password);
+                if (isMatch) {
+                    const token = jsonwebtoken_1.default.sign(id, `${process.env.USERS_SECRET_KEY}`);
+                    res.json({ success: true, token, verifed: user.rows[0].account_verified, message: "Fill both fields" });
+                }
+                else {
+                    res.json({ success: false, verifed: user.rows[0].account_verified, message: "Incorrect Password" });
+                }
+            }
+            else {
+                res.json({ success: false, verifed: user.rows[0].account_verified, message: "Email does not exists" });
+            }
+        }
     }
 }));
 module.exports = router;
