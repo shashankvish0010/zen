@@ -6,11 +6,18 @@ interface Contextvalue{
  user: userType
  message: string | undefined 
  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+ login: accountStatus | undefined
 }
 
 interface userType {
-    email: string | undefined;
-    password: string | undefined;
+    email: string | undefined
+    password: string | undefined
+}
+
+interface accountStatus {
+    id : string | undefined
+    status : boolean
+    verified : boolean
 }
 
 export const UserContext = createContext<Contextvalue | null>(null)
@@ -18,6 +25,8 @@ export const UserContext = createContext<Contextvalue | null>(null)
 export const UserauthProvider = (props: any) => {
 
     const [message, setMessage] = useState<string | undefined >();
+
+    const [login, setLogin] = useState<accountStatus>();
 
     const [user, setUser] = useState<userType>({
         email: "",
@@ -37,7 +46,7 @@ export const UserauthProvider = (props: any) => {
             case "LOGIN" : {
                 const { email, password } = user
                 try {
-                    const response = await fetch('/user/login/'+action.id, {
+                    const response = await fetch('/user/login', {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -48,14 +57,21 @@ export const UserauthProvider = (props: any) => {
                     })
                     if (response) {
                         const data = await response.json();
-                        if(data.success === true && data.verified === true){
+                        if(data.success === true){
                             setMessage(data.message)
-                            document.cookie = `user_access=${data.token}; path=/`
-                            return state(data)
+                            document.cookie = `user_access=${data.token}; path=/`      
+                            setLogin(login=>({
+                                ...login,
+                                id: data.id,
+                                status : data.success,
+                                verified: data.verified
+                            }))                      
+                            return {...state, data}
                         }
                         else{
                             setMessage(data.message)
-                            return state(data)
+                            setLogin(data.success)                      
+                            return {...state, data}
                         }
                     }
                 } catch (error) {
@@ -66,15 +82,17 @@ export const UserauthProvider = (props: any) => {
             case "LOGOUT" : {
                 const cookie = document.cookie
                 document.cookie = cookie + ";max-age=0"
-                return state(false)
+                return {...state, success : false}
             }
+
+            default : return state
         }
     }
 
-    const [state, dispatch] = useReducer(reducer, null)
+    const [state, dispatch] = useReducer<any>(reducer, '')
 
     const info: Contextvalue = {
-        state, dispatch, handleChange, message,  user
+        state, dispatch, handleChange, message, user, login
     }
   return (
    <UserContext.Provider value={info}>

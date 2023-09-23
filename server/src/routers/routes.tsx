@@ -126,24 +126,27 @@ router.get('/resend/otp/:id', async (req, res) => {
     }
 })
 
-router.post('/user/login/:id', async (req,res) => {
-    const {id} = req.params
+router.post('/user/login', async (req,res) => {
     const {email,password} = req.body
     if(!email || !password){
         res.json({ success: false, message: "Fill both fields" })
     }else{
-        const user = await pool.query('SELECT * FROM Users WHERE id=$1', [id])
+        const user = await pool.query('SELECT * FROM Users WHERE email=$1', [email])
         if(user.rows.length > 0){
             if(email === user.rows[0].email){
                 const isMatch = await bcrypt.compare(password, user.rows[0].user_password)
                 if(isMatch){
-                    const token = jwt.sign(id, `${process.env.USERS_SECRET_KEY}`)
-                    res.json({ success: true, token, verifed: user.rows[0].account_verified, message: "Fill both fields" })
+                    if(user.rows[0].account_verified === false){
+                        res.json({ success: true, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Login Successfully" })
+                    }else{
+                    const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`)
+                    res.json({ success: true, id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
+                    }
                 }else{
-                    res.json({ success: false,verifed: user.rows[0].account_verified, message: "Incorrect Password" })
+                    res.json({ success: false,id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" })
                 }
             }else{
-                res.json({ success: false,verifed: user.rows[0].account_verified, message: "Email does not exists" })
+                res.json({ success: false,id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Email does not exists" })
             }
         }
     }

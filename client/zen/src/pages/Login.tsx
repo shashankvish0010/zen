@@ -1,20 +1,20 @@
 import React, { useContext, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom';
-import { UserContext } from '../context/userauth'
-// interface userType {
-//     email: string | undefined;
-//     password: string | undefined;
-// }
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/Userauth'
+
 const Login: React.FC = () => {
     const userauth = useContext(UserContext)
-    const params = useParams()
     const navigate = useNavigate()
 
-    useEffect(()=> { 
-        if(userauth?.state.success === true && userauth?.state.verified === true){
+    useEffect(()=> {         
+        if(userauth?.login?.status === true && userauth?.login?.verified === true){
             navigate('/')
+        }else{
+            if(userauth?.login?.verified === false){
+                navigate('/otp/verification/'+userauth.login.id)
+            }
         }
-     },[])
+     },[userauth])
     
     return (
         <div className='h-[100vh] w-[100vw] flex flex-col gap-5 justify-center items-center'>
@@ -35,7 +35,7 @@ const Login: React.FC = () => {
                         <input className='px-2 h-[2.25rem] w-[65vw] md:w-[45vw] border rounded' type="password" name='password' value={userauth?.user?.password} onChange={userauth?.handleChange} />
                     </span>
                 </form>
-                <button onClick={()=>{userauth?.dispatch({type: "LOGIN", id: params.id})}} className='bg-purple-500 p-2 font-medium text-white rounded'>Log In</button>
+                <button onClick={()=>{userauth?.dispatch({type: "LOGIN"})}} className='bg-purple-500 p-2 font-medium text-white rounded'>Log In</button>
             </div>
         </div>
     )
