@@ -17,7 +17,7 @@ interface userType {
 interface accountStatus {
     id : string | undefined
     status : boolean
-    verified : boolean
+    verified : boolean | undefined
 }
 
 export const UserContext = createContext<Contextvalue | null>(null)
@@ -57,7 +57,7 @@ export const UserauthProvider = (props: any) => {
                     })
                     if (response) {
                         const data = await response.json();
-                        if(data.success === true){
+                        if(data.success == true){
                             setMessage(data.message)
                             document.cookie = `user_access=${data.token}; path=/`      
                             setLogin(login=>({
@@ -69,8 +69,13 @@ export const UserauthProvider = (props: any) => {
                             return {...state, data}
                         }
                         else{
-                            setMessage(data.message)
-                            setLogin(data.success)                      
+                            setLogin(login=>({
+                                ...login,
+                                id: data.id,
+                                status : data.success,
+                                verified: data.verified
+                            }))   
+                            setMessage(data.message)                     
                             return {...state, data}
                         }
                     }
@@ -82,6 +87,14 @@ export const UserauthProvider = (props: any) => {
             case "LOGOUT" : {
                 const cookie = document.cookie
                 document.cookie = cookie + ";max-age=0"
+                console.log("en");
+                
+                setLogin(login=>({
+                    ...login,
+                    id: undefined,
+                    status : false,
+                    verified: undefined
+                }))  
                 return {...state, success : false}
             }
 

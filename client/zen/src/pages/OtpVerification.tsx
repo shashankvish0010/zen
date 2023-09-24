@@ -10,6 +10,8 @@ const OtpVerification: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        console.log("enter");
+        
         try {
             const response = await fetch('/otp/verification/'+params.id, {
                 method: "POST",
@@ -21,11 +23,14 @@ const OtpVerification: React.FC = () => {
                 })
             })
             if (response) {
-                const data = await response.json();
-                if(data.success === true){
+                const data = await response.json()
+                console.log(data);
+                
+                if(data.success == true){
                     navigate('/login')
-                }
+                }else{
                 setMessage(data.message)
+                }
             }
         } catch (error) {
             console.log(error);
@@ -59,7 +64,7 @@ const OtpVerification: React.FC = () => {
             }
             <div className='w-max h-max flex flex-col justify-evenly gap-5 p-5 shadow'>
                 <h1 className='text-2xl font-semibold'>OTP Verification</h1>
-                <span className='w-[100%] h-[0.2rem] bg-purple-500 rounded'></span>
+                <span className='w-[100%] h-[0.2rem] bg-purple-600 rounded'></span>
                 <form method='POST' className='flex flex-col justify-arounf items-center gap-3'>
                     <span className='flex flex-col gap-1'>
                         <p className='text-sm text-gray-600'>Enter OTP</p>
@@ -70,7 +75,7 @@ const OtpVerification: React.FC = () => {
                 <p className='font-normal'>Didn't recieved Otp </p>
                 <span className='text-blue-600' onClick={handleResend}>Resend</span>
                 </span>
-                <button onClick={handleSubmit} className='bg-purple-500 p-2 font-medium text-white rounded'>Submit</button>
+                <button onClick={handleSubmit} className='bg-purple-600 p-2 font-medium text-white rounded'>Submit</button>
             </div>
         </div>
     )
