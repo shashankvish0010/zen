@@ -153,7 +153,7 @@ router.post('/user/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
                     }
                     else {
                         const token = jsonwebtoken_1.default.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
-                        res.json({ success: true, id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
+                        res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
                     }
                 }
                 else {
@@ -164,6 +164,21 @@ router.post('/user/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
                 res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Email does not exists" });
             }
         }
+    }
+}));
+router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    try {
+        const allUsers = yield dbconnect_1.default.query('SELECT * FROM Users WHERE id <> $1', [id]);
+        if (allUsers) {
+            res.json({ success: true, data: allUsers.rows.map(i => i) });
+        }
+        else {
+            res.json({ success: false, message: 'No User Found' });
+        }
+    }
+    catch (error) {
+        console.log(error);
     }
 }));
 module.exports = router;

@@ -1,4 +1,4 @@
-import {createContext, useReducer, useState} from 'react'
+import {createContext, useReducer, useState, useEffect} from 'react'
 
 interface Contextvalue{
  state : any 
@@ -6,7 +6,8 @@ interface Contextvalue{
  user: userType
  message: string | undefined 
  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
- login: accountStatus | undefined
+ login: boolean
+ curruser : any
 }
 
 interface userType {
@@ -14,19 +15,17 @@ interface userType {
     password: string | undefined
 }
 
-interface accountStatus {
-    id : string | undefined
-    status : boolean
-    verified : boolean | undefined
-}
-
 export const UserContext = createContext<Contextvalue | null>(null)
 
 export const UserauthProvider = (props: any) => {
 
+    const storedUser = localStorage.getItem("current_user");
+    const initialUser = storedUser ? JSON.parse(storedUser) : null
+    const [curruser, setCurrUser] = useState(initialUser || null)
+
     const [message, setMessage] = useState<string | undefined >();
 
-    const [login, setLogin] = useState<accountStatus>();
+    const [login, setLogin] = useState<boolean>(false);
 
     const [user, setUser] = useState<userType>({
         email: "",
@@ -60,21 +59,12 @@ export const UserauthProvider = (props: any) => {
                         if(data.success == true){
                             setMessage(data.message)
                             document.cookie = `user_access=${data.token}; path=/`      
-                            setLogin(login=>({
-                                ...login,
-                                id: data.id,
-                                status : data.success,
-                                verified: data.verified
-                            }))                      
+                            setCurrUser(data.userdata)                            
+                            setLogin(data.success)                      
                             return {...state, data}
                         }
                         else{
-                            setLogin(login=>({
-                                ...login,
-                                id: data.id,
-                                status : data.success,
-                                verified: data.verified
-                            }))   
+                            setLogin(data.success)                       
                             setMessage(data.message)                     
                             return {...state, data}
                         }
@@ -88,13 +78,8 @@ export const UserauthProvider = (props: any) => {
                 const cookie = document.cookie
                 document.cookie = cookie + ";max-age=0"
                 console.log("en");
-                
-                setLogin(login=>({
-                    ...login,
-                    id: undefined,
-                    status : false,
-                    verified: undefined
-                }))  
+                setCurrUser('')
+                setLogin(false)                 
                 return {...state, success : false}
             }
 
@@ -102,10 +87,15 @@ export const UserauthProvider = (props: any) => {
         }
     }
 
+    useEffect(() => {
+        localStorage.setItem("current_user", JSON.stringify(curruser));
+        // document.cookie != null && user != null ? setLoginStatus({ success: true, message: 'User login' }) : setLoginStatus({ success: false, message: 'Please Login' })
+      },[curruser])
+    
     const [state, dispatch] = useReducer<any>(reducer, '')
 
     const info: Contextvalue = {
-        state, dispatch, handleChange, message, user, login
+        state, dispatch, handleChange, message, user, login, curruser
     }
   return (
    <UserContext.Provider value={info}>

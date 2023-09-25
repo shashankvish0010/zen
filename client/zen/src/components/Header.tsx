@@ -18,7 +18,7 @@ const Header: React.FC = () => {
           <Link to='/'>Home</Link>
           <Link to='/'>About</Link>
           <Link to='/'>Contact</Link>
-          {usercontext?.login?.status == false ?
+          {usercontext?.login == false ?
             <Link to='/signup'><button className='bg-purple-600 p-1.5 text-white rounded-sm'>Login/Signup</button></Link>
             :
             <button onClick={() => { usercontext?.dispatch({ type: "LOGOUT" }) }} className='bg-purple-600 p-1.5 text-white rounded-sm'>Logout</button>

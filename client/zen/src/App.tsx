@@ -6,6 +6,8 @@ import Register from './pages/Register'
 import Login from './pages/Login'
 import OtpVerification from './pages/OtpVerification'
 import Home from './pages/Home'
+import VideoCall from './pages/VideoCall'
+import List from './pages/List'
 
 const App: React.FC = () => {
   return (
@@ -17,6 +19,8 @@ const App: React.FC = () => {
       <Route path='/signup' element={<Register/>} />
       <Route path='/login' element={<Login/>} />
       <Route path='/otp/verification/:id' element={<OtpVerification/>} />
+      <Route path='/videocall' element={<VideoCall/>} />
+      <Route path='/zenlist/:id' element={<List/>} />
     </Routes>
     </>
   )

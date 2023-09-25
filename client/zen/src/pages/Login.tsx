@@ -7,11 +7,11 @@ const Login: React.FC = () => {
     const navigate = useNavigate()
 
     useEffect(()=> {         
-        if(userauth?.login?.status === true && userauth?.login?.verified === true){
+        if(userauth?.login === true && userauth?.curruser.account_verified === true){
             navigate('/')
         }else{
-            if(userauth?.login?.verified === false){
-                navigate('/otp/verification/'+userauth.login.id)
+            if(userauth?.curruser?.account_verified === false){
+                navigate('/otp/verification/'+userauth.curruser.id)
             }
         }
      },[userauth])
