@@ -5,6 +5,7 @@ import bcrypt from "bcrypt"
 import nodemailer from "nodemailer"
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken"
+import { log } from "console"
 const router = express.Router()
 
 router.use(bodyParser.json())
@@ -157,11 +158,11 @@ router.post('/user/login', async (req,res) => {
 })
 
 router.get('/get/zenlist/:id', async (req,res)=>{
-    const {id} = req.params;    
+    const {id} = req.params;        
     try {
-        const allUsers = await pool.query('SELECT * FROM Users WHERE id <> $1', [id]);
+        const allUsers = await pool.query('SELECT * FROM Users WHERE id <> $1', [id]);        
         if(allUsers){
-            res.json({success: true, data: allUsers.rows.map(i=> i)})
+            res.json({success: true, data: allUsers.rows.map(i => i)})
         }else{
             res.json({success: false, message: 'No User Found'})
         }        

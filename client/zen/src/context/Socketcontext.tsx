@@ -10,7 +10,7 @@ interface Contextvalue {
     cam: Boolean,
     calling: () => void
     getZenList: (id: string | undefined) => void
-    zenList: [] | undefined
+    zenList: any | undefined
 }
 
 const Socketcontext = createContext<Contextvalue | null>(null)
@@ -19,7 +19,7 @@ const SocketProvider = (props: any) => {
 
     socket.on('hello', (data) => console.log(data))
     const [cam, setCam] = useState<boolean>(false)
-    const [zenList, setZenList] = useState<[]>()
+    const [zenList, setZenList] = useState<any>()
     const [localstream, setLocalStream] = useState<MediaStream>();
 
     useEffect(() => {
@@ -40,9 +40,8 @@ const SocketProvider = (props: any) => {
             })
             if (response) {
                 const data = await response.json();
+                console.log(data);
                 setZenList(data)
-                console.log(zenList);
-                
             }
         } catch (error) {
             console.log(error);

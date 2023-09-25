@@ -10,23 +10,23 @@ interface userType{
 
 const List: React.FC = () => {
     const {id} = useParams()
+    console.log(id);
+    
     const socketcontext = useContext(Socketcontext)
     useEffect(() => {
-        console.log("en");
-        
         socketcontext?.getZenList(id)        
-    }, [id])
+    }, [])
     
   return (
     <div className='h-[100vh], w-[100vw] flex justify-center items-center gap-5'>
-{  socketcontext?.zenList.map((list: userType)=>
+{  socketcontext?.zenList ? socketcontext.zenList.data.map((list: userType)=>
             <div className='h-max w-max flex flex-col justify-center items-center'>
             <Icon icon="material-symbols:person" />
-            <span className='text-base font-semibold'>{list.name}</span>
-            <span className='text-md font-semibold'>{list.zenno}</span>
+            <span className='text-base font-semibold'>{list.firstname}</span>
+            <span className='text-md font-semibold'>{list.zen_no}</span>
             <span className='flex justify-center items-center gap-3 shadow-md cursor-pointer h-max w-max p-2 bg-orange-600 font-semibold text-xl text-white rounded-md'> <Icon icon="ri:live-fill" /><p>Call</p></span>
-            </div>
-            )
+            </div> 
+            ) : null
 }
     </div>
   )
