@@ -157,9 +157,14 @@ router.post('/user/login', async (req,res) => {
     }
 })
 
-router.get('/get/zenlist/:id', async (req,res)=>{
-    const {id} = req.params;        
+router.get('/get/zenlist/:id/:socketid', async (req,res)=>{
+    const {id, socketid} = req.params;   
     try {
+        if(socketid){
+            const user = await pool.query('UPDATE Users SET socketid = $2 WHERE id=$1', [id, socketid])
+        }else{
+            res.json({success: false, message : "Cant get the User ID"})
+        }
         const allUsers = await pool.query('SELECT * FROM Users WHERE id <> $1', [id]);        
         if(allUsers){
             res.json({success: true, data: allUsers.rows.map(i => i)})
@@ -170,4 +175,24 @@ router.get('/get/zenlist/:id', async (req,res)=>{
         console.log(error);
     }
 })
+
+router.post('/add/tozenlist/:id', async (req,res) => {
+    const {id} = req.params;
+    const {zenNo} = req.body;
+    try {
+        if(zenNo){
+            const IszenNoValid = await pool.query('SELECT zen_no from Users WHERE zen_no=$1', [zenNo]);
+            if(IszenNoValid.rows.length > 0){
+                const users = await pool.query('UPDATE Users SET zen_list=$2 WHERE id=$1', [id, `{"${zenNo}"}`])
+                if(users){
+                    res.json({success: true, message: 'Added Successfully'})
+                }
+            }
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
 module.exports = router

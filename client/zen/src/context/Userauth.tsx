@@ -92,7 +92,7 @@ export const UserauthProvider = (props: any) => {
       },[curruser])
     
       useEffect(()=>{
-        document.cookie != null ? setLogin(true) : setLogin(false)
+        document.cookie ? setLogin(true) : setLogin(false)
       }, [])
     const [state, dispatch] = useReducer<any>(reducer, '')
 

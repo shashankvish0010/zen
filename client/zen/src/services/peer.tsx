@@ -16,6 +16,8 @@ class Peerconnection {
     }
 
     async generateOffer () {
+        console.log("enteroffer");
+        
         if(this.peer){
         const offer = await this.peer.createOffer()
         await this.peer.setLocalDescription(new RTCSessionDescription(offer))
@@ -23,12 +25,22 @@ class Peerconnection {
         }
     }
 
-    async genarateAnswer () {
+    async genarateAnswer (offer: RTCSessionDescriptionInit) {
+        console.log("enteranswer");
+
         if(this.peer){
-            await this.peer.setRemoteDescription()
+            await this.peer.setRemoteDescription(offer)
             const answer = await this.peer.createAnswer()
-            await this.peer.setLocalDescription( new RTCSessionDescription(answer) )
+            await this.peer.setLocalDescription(new RTCSessionDescription(answer))
             return answer
+        }
+    }
+
+    async setlocalDescription (answer: RTCSessionDescriptionInit) {
+        console.log("enterremote");
+
+        if(this.peer){
+           await this.peer.setRemoteDescription(answer)
         }
     }
     

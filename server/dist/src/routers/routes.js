@@ -166,15 +166,39 @@ router.post('/user/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
         }
     }
 }));
-router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
+router.get('/get/zenlist/:id/:socketid', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, socketid } = req.params;
     try {
+        if (socketid) {
+            const user = yield dbconnect_1.default.query('UPDATE Users SET socketid = $2 WHERE id=$1', [id, socketid]);
+        }
+        else {
+            res.json({ success: false, message: "Cant get the User ID" });
+        }
         const allUsers = yield dbconnect_1.default.query('SELECT * FROM Users WHERE id <> $1', [id]);
         if (allUsers) {
             res.json({ success: true, data: allUsers.rows.map(i => i) });
         }
         else {
             res.json({ success: false, message: 'No User Found' });
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+}));
+router.post('/add/tozenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const { zenNo } = req.body;
+    try {
+        if (zenNo) {
+            const IszenNoValid = yield dbconnect_1.default.query('SELECT zen_no from Users WHERE zen_no=$1', [zenNo]);
+            if (IszenNoValid.rows.length > 0) {
+                const users = yield dbconnect_1.default.query('UPDATE Users SET zen_list=$2 WHERE id=$1', [id, `{"${zenNo}"}`]);
+                if (users) {
+                    res.json({ success: true, message: 'Added Successfully' });
+                }
+            }
         }
     }
     catch (error) {

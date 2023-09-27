@@ -10,7 +10,8 @@ export default defineConfig({
       '/otp/verification' : { target: 'http://localhost:8080'},
       '/resend/otp' : { target: 'http://localhost:8080'},
       '/user/login' : { target: 'http://localhost:8080'},
-      '/get/zenlist/' : { target: 'http://localhost:8080'}
-    }
+      '/get/zenlist/' : { target: 'http://localhost:8080'},
+      '/add/tozenlist/' : { target: 'http://localhost:8080'},
+        }
   }
 })

@@ -1,19 +1,30 @@
-import React, {useContext} from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Socketcontext } from '../context/Socketcontext'
 import ReactPlayer from 'react-player'
 
 const VideoCall: React.FC = () => {
-    const socketcontext = useContext(Socketcontext)
+  const socketcontext = useContext(Socketcontext)
+  useEffect(()=> {socketcontext?.callConnected; console.log(socketcontext?.callConnected);
+  }, [])
   return (
-    <div className='flex justify-center items-center gap-5 p-3'>
-        <div className='h-max w-max p-2'>
-            {
-                socketcontext?.cam == true ? 
-                <ReactPlayer playing url={socketcontext.localstream} height={'60vh'} width={'80vw'}/>
-              : null
-            }
-        </div>
-        <button onClick={socketcontext?.calling}>get</button>
+    <div className='flex flex-col justify-center items-center gap-5 p-3'>
+      <div className='h-max w-max p-2'>
+        {
+            <ReactPlayer playing url={socketcontext?.myStream} height={'30vh'} width={'40vw'} />
+        }
+      </div>
+      <button onClick={() => socketcontext?.calling}>Stream On</button>
+      <div className='h-max w-max p-2'>
+        
+           
+      {socketcontext?.remotestream && (
+  <video autoPlay ref={(ref) => ref && (ref.srcObject = remotestream)} />
+)}
+            
+        
+              <button onClick={() => socketcontext?.calling}>Stream On</button>
+
+      </div>
     </div>
   )
 }

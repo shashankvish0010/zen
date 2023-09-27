@@ -7,6 +7,8 @@ CREATE TABLE Users(
     email VARCHAR,
     user_password VARCHAR,
     zen_no VARCHAR,
-    account_verified BOOLEAN
+    account_verified BOOLEAN,
+    socketid VARCHAR,
+    zen_list CHAR[]
 )
 
