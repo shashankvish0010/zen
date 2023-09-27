@@ -9,8 +9,8 @@ import { log } from "console"
 const server = http.createServer(app)
 const io = new Server(server, ({
     cors: {
-        origin : '*',
-        methods: ['GET','POST','PUT']
+        origin: '*',
+        methods: ['GET', 'POST', 'PUT']
     }
 }))
 dotenv.config()
@@ -24,12 +24,12 @@ io.on('connection', (socket) => {
 
     socket.emit('hello', socket.id)
     console.log(socket.id);
-    
-    socket.on('call', async (zenno, from, offer)=>{
+
+    socket.on('call', async (zenno, from, offer) => {
         // console.log(offer, zenno, from);
         try {
-            const reciverSocketId = await pool.query('SELECT socketid from Users WHERE zen_no=$1', [zenno]) 
-            receiver =  reciverSocketId.rows[0].socketid
+            const reciverSocketId = await pool.query('SELECT socketid from Users WHERE zen_no=$1', [zenno])
+            receiver = reciverSocketId.rows[0].socketid
             sender = from
             sendersOffer = offer
             console.log("re", receiver);
@@ -39,20 +39,28 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on('recieved', ()=>{
+    socket.on('recieved', () => {
         console.log("enter", sender)
-        io.to(receiver).emit('incomingcall', {sendersOffer, sender})
+        io.to(receiver).emit('incomingcall', { sendersOffer, sender })
     })
 
 
-    socket.on('callrecieved', (answer, {from}) => {
+    socket.on('callrecieved', (answer, { from }) => {
         console.log("enter2", from)
-        io.to(from).emit('callaccepted', {answer, picked: true})
+        io.to(from).emit('callaccepted', { answer, picked: true })
     })
 
-    socket.on('callrecievedfinal', (remotestream, {from})=>{
-        io.to(from).emit(remotestream)
+    socket.on('callrecievedfinal', () => {
+        io.emit('remotestreamon')
+    })
+
+    socket.on('negotiation', (offer) => {
+        io.to(receiver).emit('negotiationaccept', offer)
+    })
+
+    socket.on('negotiationdone', (answer) => {
+        io.to(sender).emit('acceptnegotiationanswer', answer)
     })
 })
 
-server.listen(process.env.PORT, ()=> console.log("server running"))
+server.listen(process.env.PORT, () => console.log("server running"))
