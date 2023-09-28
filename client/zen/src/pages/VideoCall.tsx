@@ -22,7 +22,7 @@ const VideoCall: React.FC = () => {
       </div>
 
 
-      <button onClick={() => socketcontext?.calling}>Stream On</button>
+      <button onClick={() => socketcontext?.sendStream()}>Send Stream</button>
 
     </div>
   )

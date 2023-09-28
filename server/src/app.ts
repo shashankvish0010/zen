@@ -50,9 +50,9 @@ io.on('connection', (socket) => {
         io.to(from).emit('callaccepted', { answer, picked: true })
     })
 
-    socket.on('callrecievedfinal', () => {
-        io.emit('remotestreamon')
-    })
+    // socket.on('negotiationtstart', () => {
+    //     io.to(sender).emit('negotiationoffer')
+    // })
 
     socket.on('negotiation', (offer) => {
         io.to(receiver).emit('negotiationaccept', offer)

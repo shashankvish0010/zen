@@ -17,6 +17,7 @@ interface Contextvalue {
     callConnected: boolean
     reciever: boolean
     pickCall: () => void
+    sendStream: () => void
     picked: boolean
     setPicked: any
 
@@ -27,7 +28,6 @@ const SocketProvider = (props: any) => {
 
     // const myStream: React.MutableRefObject<any | null> | MediaStream = useRef(null)
     // const remoteStream: React.MutableRefObject<any | null> = useRef(null)
-
 
     const [cam, setCam] = useState<boolean>(false)
     const [zenList, setZenList] = useState<any>()
@@ -40,17 +40,8 @@ const SocketProvider = (props: any) => {
     const [remoteStream, setRemoteStream] = useState<any>();
 
     function getSocketId(data: string) {
-        console.log(data);
         setSocketId(data)
     }
-
-    // useEffect(() => {
-    //     const art = async () => {
-    //         const userMediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-    //         setLocalStream(userMediaStream);
-    //     }
-    //     art()
-    // }, [])
 
     const getZenList = async (id: string | undefined) => {
         console.log("enter");
@@ -77,11 +68,11 @@ const SocketProvider = (props: any) => {
     const calling = async (zenNo: number | undefined) => {
         console.log("calling", socketid);
         const offer = await peer.generateOffer()
-        setCam(!cam);
+        setCam(!cam);   
         socket.emit('call', zenNo, socketid, offer)
     }
 
-    function callercalling() {
+    function callercalling() {        
         setReciever(true)
     }
 
@@ -95,7 +86,6 @@ const SocketProvider = (props: any) => {
         const { sendersOffer } = data
         const answer = await peer.generateAnswer(sendersOffer)
         socket.emit('callrecieved', answer, { from: data.sender })
-
     }
 
     async function callaccepted(data: any) {
@@ -103,57 +93,52 @@ const SocketProvider = (props: any) => {
         console.log("ac", answer);
         setPicked(data.picked)
         await peer.setRemoteDescription(answer)
-        socket.emit('callrecievedfinal')
+        socket.emit('videocalldone')
         setCallConnected(true)
     }
 
-    async function remotestreamon() {
+    const sendStream = async () => {
         console.log("START");
         const userMediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
         setLocalStream(userMediaStream);
-        for(const track of userMediaStream.getTracks()){
-            peer.peer.addTrack(track, userMediaStream)
-        }
     }
 
     const handleNegotiation = async () =>{
+        console.log("negohandle");
         const offer = await peer.generateOffer();
-        socket.emit('negotiation:new', offer)
+        socket.emit('negotiation', offer)
     }
 
     async function negotiationaccept (offer: RTCSessionDescription){
+        console.log("negoanswer");
         const answer = await peer.generateAnswer(offer)
         socket.emit('negotiationdone', answer)
     }
 
     async function acceptnegotiationanswer(answer: RTCSessionDescription){
+        console.log("negoremote");
         await peer.setRemoteDescription(answer)
     }
     
     useEffect(()=>{
         peer.peer.addEventListener('negotiationneeded', handleNegotiation);
-        
         return () => {
             peer.peer.removeEventListener('negotiationneeded', handleNegotiation)
         }
     }, [])
 
-    useEffect(() => {
-        console.log("enterSTRT");
-        
-        peer.peer.addEventListener('track', async (ev: any) => {
-            const remoteStreams = ev.streams
-            console.log("set");
-            setRemoteStream(remoteStreams[0])
-        })
-    }, [])
+   useEffect(()=>{
+    peer.peer.addEventListener('track', async (e: any) => {
+        const remoteStreams = e.streams
+        setRemoteStream(remoteStreams[0])
+    })
+   },[])
 
     useEffect(() => {
         socket.on('hello', getSocketId)
         socket.on("callercalling", callercalling)
         socket.on('incomingcall', incomingcall)
         socket.on('callaccepted', callaccepted)
-        socket.on('remotestreamon', remotestreamon)
         socket.on('negotiationaccept', negotiationaccept)
         socket.on('acceptnegotiationanswer', acceptnegotiationanswer)
 
@@ -162,13 +147,13 @@ const SocketProvider = (props: any) => {
             socket.off("callercalling", callercalling)
             socket.off('incomingcall', incomingcall)
             socket.off('callaccepted', callaccepted)
-            socket.off('remotestreamon', remotestreamon)
             socket.off('negotiationaccept', negotiationaccept)
+            socket.off('acceptnegotiationanswer', acceptnegotiationanswer)
         }
     }
         , [])
 
-    const info: Contextvalue = { LocalStream, remoteStream, setPicked, picked, pickCall, reciever, setCam, cam, calling, getZenList, zenList, callConnected }
+    const info: Contextvalue = { LocalStream, sendStream, remoteStream, setPicked, picked, pickCall, reciever, setCam, cam, calling, getZenList, zenList, callConnected }
     return (
         <Socketcontext.Provider value={info}>
             {props.children}

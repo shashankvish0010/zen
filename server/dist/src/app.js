@@ -58,14 +58,17 @@ io.on('connection', (socket) => {
         console.log("enter2", from);
         io.to(from).emit('callaccepted', { answer, picked: true });
     });
-    socket.on('callrecievedfinal', () => {
-        io.emit('remotestreamon');
-    });
+    // socket.on('negotiationtstart', () => {
+    //     io.to(sender).emit('negotiationoffer')
+    // })
     socket.on('negotiation', (offer) => {
         io.to(receiver).emit('negotiationaccept', offer);
     });
     socket.on('negotiationdone', (answer) => {
         io.to(sender).emit('acceptnegotiationanswer', answer);
+    });
+    socket.on('videocalldone', () => {
+        io.emit('remotestreamon');
     });
 });
 server.listen(process.env.PORT, () => console.log("server running"));
