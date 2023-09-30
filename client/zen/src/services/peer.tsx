@@ -20,7 +20,7 @@ class Peerconnection {
         try {
             if(this.peer){
                 const offer = await this.peer.createOffer()        
-                await this.peer.setLocalDescription(new RTCSessionDescription(offer))
+                await this.peer.setLocalDescription(offer)
                 return offer
                 }
         } catch (error) {
@@ -40,7 +40,7 @@ class Peerconnection {
     
                 // Now create the answer and set the local description
                 const answer = await this.peer.createAnswer();
-                await this.peer.setLocalDescription(new RTCSessionDescription(answer));
+                await this.peer.setLocalDescription(answer);
                 console.log("Answer created and local description set.");
                 return answer;
             } catch (error) {
@@ -50,10 +50,10 @@ class Peerconnection {
     }
     
     async setRemoteDescription (answer: RTCSessionDescriptionInit) {
-        console.log("enterremote");
+        console.log("enterremote", answer);
         try {
             if(this.peer){
-                await this.peer.setRemoteDescription(new RTCSessionDescription(answer))
+                 await this.peer.setRemoteDescription(new RTCSessionDescription(answer)).then(()=>console.log("done")).catch((error: any)=>console.log("error", error))
              }
         } catch (error) {
             console.log('setlocalDescription', error);

@@ -43,7 +43,6 @@ io.on('connection', (socket) => {
             receiver = reciverSocketId.rows[0].socketid;
             sender = from;
             sendersOffer = offer;
-            console.log("re", receiver);
             io.to(receiver).emit('callercalling');
         }
         catch (error) {
@@ -51,11 +50,9 @@ io.on('connection', (socket) => {
         }
     }));
     socket.on('recieved', () => {
-        console.log("enter", sender);
         io.to(receiver).emit('incomingcall', { sendersOffer, sender });
     });
     socket.on('callrecieved', (answer, { from }) => {
-        console.log("enter2", from);
         io.to(from).emit('callaccepted', { answer, picked: true });
     });
     // socket.on('negotiationtstart', () => {
@@ -67,8 +64,6 @@ io.on('connection', (socket) => {
     socket.on('negotiationdone', (answer) => {
         io.to(sender).emit('acceptnegotiationanswer', answer);
     });
-    socket.on('videocalldone', () => {
-        io.emit('remotestreamon');
-    });
+    socket.on('done', () => io.emit('videocall'));
 });
 server.listen(process.env.PORT, () => console.log("server running"));
