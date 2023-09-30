@@ -55,10 +55,11 @@ io.on('connection', (socket) => {
     socket.on('callrecieved', (answer, { from }) => {
         io.to(from).emit('callaccepted', { answer, picked: true });
     });
-    // socket.on('negotiationtstart', () => {
-    //     io.to(sender).emit('negotiationoffer')
-    // })
+    socket.on('negotiationtstart', () => {
+        io.to(sender).emit('negotiation');
+    });
     socket.on('negotiation', (offer) => {
+        console.log(offer);
         io.to(receiver).emit('negotiationaccept', offer);
     });
     socket.on('negotiationdone', (answer) => {

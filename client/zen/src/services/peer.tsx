@@ -19,7 +19,9 @@ class Peerconnection {
         console.log("enteroffer");
         try {
             if(this.peer){
-                const offer = await this.peer.createOffer()        
+                const offer = await this.peer.createOffer() 
+                console.log(offer);
+                       
                 await this.peer.setLocalDescription(offer)
                 return offer
                 }
@@ -40,6 +42,8 @@ class Peerconnection {
     
                 // Now create the answer and set the local description
                 const answer = await this.peer.createAnswer();
+                console.log(answer);
+                
                 await this.peer.setLocalDescription(answer);
                 console.log("Answer created and local description set.");
                 return answer;

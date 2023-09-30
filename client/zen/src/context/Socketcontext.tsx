@@ -123,11 +123,17 @@ const SocketProvider = (props: any) => {
 
     const handleNegotiation = async () =>{
         console.log("negohandle");
-        const offer = await peer.generateOffer();
-        socket.emit('negotiation', offer)
-        socket.off('negotiation', offer)
+        socket.emit('negotiationstart')
+        socket.off('negotiationstart')
     }
 
+    async function negotiation () {
+         const offer = await peer.generateOffer();
+         socket.emit('negotiation', offer)
+         return () => {
+            socket.off('negotiation', offer)
+         }
+    }
     async function negotiationaccept (offer: RTCSessionDescription){
         console.log("negoanswer");
         const answer = await peer.generateAnswer(offer)
@@ -163,6 +169,7 @@ const SocketProvider = (props: any) => {
         socket.on("callercalling", callercalling)
         socket.on('incomingcall', incomingcall)
         socket.on('callaccepted', callaccepted)
+        socket.on('negotiation', negotiation)
         socket.on('negotiationaccept', negotiationaccept)
         socket.on('acceptnegotiationanswer', acceptnegotiationanswer)
         socket.on('videocall', videcall)
@@ -172,6 +179,7 @@ const SocketProvider = (props: any) => {
             socket.off("callercalling", callercalling)
             socket.off('incomingcall', incomingcall)
             socket.off('callaccepted', callaccepted)
+            socket.off('negotiation', negotiation)
             socket.off('negotiationaccept', negotiationaccept)
             socket.off('acceptnegotiationanswer', acceptnegotiationanswer)
             socket.off('videocall', videcall)

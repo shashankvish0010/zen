@@ -5,7 +5,6 @@ import dotenv from "dotenv"
 import cors from "cors"
 import pool from "../dbconnect"
 import { Server } from 'socket.io'
-import { log } from "console"
 const server = http.createServer(app)
 const io = new Server(server, ({
     cors: {
@@ -47,11 +46,13 @@ io.on('connection', (socket) => {
         io.to(from).emit('callaccepted', { answer, picked: true })
     })
 
-    // socket.on('negotiationtstart', () => {
-    //     io.to(sender).emit('negotiationoffer')
-    // })
+    socket.on('negotiationtstart', () => {
+        io.to(sender).emit('negotiation')
+    })
 
     socket.on('negotiation', (offer) => {
+        console.log(offer);
+        
         io.to(receiver).emit('negotiationaccept', offer)
     })
 
