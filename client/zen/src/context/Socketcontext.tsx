@@ -38,14 +38,6 @@ const SocketProvider = (props: any) => {
     const [startStream, setStartStream] = useState<boolean>(false);
     const [remoteStream, setRemoteStream] = useState<any>();
 
-    useEffect(()=>{
-        navigator.mediaDevices.getUserMedia({audio: true, video: true}).then((currentStream) => {
-            console.log(currentStream);
-            
-            setLocalStream(currentStream)    
-        })
-    }, [])
-
     function getSocketId(data: string) {
         setSocketId(data)
     }
@@ -74,6 +66,7 @@ const SocketProvider = (props: any) => {
         setStartStream(true)
         const UsersStream = await navigator.mediaDevices.getUserMedia({audio: true, video: true})
         console.log(UsersStream);
+        setLocalStream(UsersStream)
         UsersStream.getTracks().forEach((track: any)=>{
             console.log(track);
             peer.peer.addTrack(track, UsersStream)
@@ -122,28 +115,20 @@ const SocketProvider = (props: any) => {
     }
 
     const handleNegotiation = async () =>{
-        console.log("negohandle");
-        socket.emit('negotiationstart')
-        socket.off('negotiationstart')
+        const offer = await peer.generateOffer();
+        socket.emit('negotiation', offer)
     }
 
-    async function negotiation () {
-         const offer = await peer.generateOffer();
-         socket.emit('negotiation', offer)
-         return () => {
-            socket.off('negotiation', offer)
-         }
-    }
-    async function negotiationaccept (offer: RTCSessionDescription){
+    async function negotiationaccept (data: any){
         console.log("negoanswer");
-        const answer = await peer.generateAnswer(offer)
+        const answer = await peer.generateAnswer(data.sendersoffer)
         socket.emit('negotiationdone', answer)
         socket.off('negotiationdone', answer)
     }
 
-    async function acceptnegotiationanswer(answer: RTCSessionDescription){
-        console.log("negoremote", answer);
-        await peer.setRemoteDescription(answer)
+    async function acceptnegotiationanswer(data : any){
+        console.log("negoremote", data.receiveranswer);
+        await peer.setRemoteDescription(data.receiveranswer)
     }
     
     useEffect(()=>{
@@ -169,7 +154,6 @@ const SocketProvider = (props: any) => {
         socket.on("callercalling", callercalling)
         socket.on('incomingcall', incomingcall)
         socket.on('callaccepted', callaccepted)
-        socket.on('negotiation', negotiation)
         socket.on('negotiationaccept', negotiationaccept)
         socket.on('acceptnegotiationanswer', acceptnegotiationanswer)
         socket.on('videocall', videcall)
@@ -179,7 +163,6 @@ const SocketProvider = (props: any) => {
             socket.off("callercalling", callercalling)
             socket.off('incomingcall', incomingcall)
             socket.off('callaccepted', callaccepted)
-            socket.off('negotiation', negotiation)
             socket.off('negotiationaccept', negotiationaccept)
             socket.off('acceptnegotiationanswer', acceptnegotiationanswer)
             socket.off('videocall', videcall)
