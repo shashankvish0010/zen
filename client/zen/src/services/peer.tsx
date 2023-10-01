@@ -58,7 +58,8 @@ class Peerconnection {
         try {
             if(this.peer){
                  await this.peer.setRemoteDescription(new RTCSessionDescription(answer)).then(()=>console.log("done")).catch((error: any)=>console.log("error", error))
-             }
+                 console.log("Answer recieved and remote description set.");
+                }
         } catch (error) {
             console.log('setlocalDescription', error);
         }

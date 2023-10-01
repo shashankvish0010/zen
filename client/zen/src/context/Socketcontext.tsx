@@ -132,7 +132,7 @@ const SocketProvider = (props: any) => {
     async function acceptnegotiationanswer(data : any){
         console.log("negoremote", data.receiverNegoAnswer);
         await peer.setRemoteDescription(data.receiverNegoAnswer)
-        socket.emit("calldone")
+        // socket.emit("calldone")
     }
     
     useEffect(()=>{
@@ -144,9 +144,9 @@ const SocketProvider = (props: any) => {
 
    useEffect(()=>{    
     peer.peer.addEventListener('track',(ev: any) => {
-        console.log("gottrack");
-        const remoteStream = ev.streams   
-        setRemoteStream(remoteStream[0])
+        console.log("gottrack", ev);
+        const remoteStream = ev.streams[0]   
+        setRemoteStream(remoteStream)
     });
    },[startStream])
 
