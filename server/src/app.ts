@@ -24,7 +24,6 @@ io.on('connection', (socket) => {
     socket.emit('hello', socket.id)
 
     socket.on('call', async (zenno, from, offer) => {
-        // console.log(offer, zenno, from);
         try {
             const reciverSocketId = await pool.query('SELECT socketid from Users WHERE zen_no=$1', [zenno])
             receiver = reciverSocketId.rows[0].socketid
@@ -47,19 +46,19 @@ io.on('connection', (socket) => {
 
     socket.on('negotiation', (offer) => {
         console.log("negore", receiver);
-        io.to(receiver).emit('negotiationaccept', {sendersNegoOffer : offer})
+        io.to(receiver).emit('negotiationaccept', { sendersNegoOffer: offer })
     })
 
     socket.on('negotiationdone', (answer) => {
         console.log("negose", sender);
 
         console.log(answer);
-        io.to(sender).emit('acceptnegotiationanswer', {receiverNegoAnswer : answer})
+        io.to(sender).emit('acceptnegotiationanswer', { receiverNegoAnswer: answer })
     })
 
-    socket.on('done', ()=> io.emit('videocall')) 
+    socket.on('done', () => io.emit('videocall'))
 
-    socket.on('calldone', () => console.log("video call done")) 
+    socket.on('calldone', () => console.log("video call done"))
 })
 
 server.listen(process.env.PORT, () => console.log("server running"))

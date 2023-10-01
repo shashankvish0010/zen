@@ -1,11 +1,11 @@
 class Peerconnection {
-     peer: any
-     constructor () {
-        if(!this.peer){
+    peer: any
+    constructor() {
+        if (!this.peer) {
             this.peer = new RTCPeerConnection({
-                iceServers : [
+                iceServers: [
                     {
-                        urls : [
+                        urls: [
                             "stun:stun.l.google.com:19302",
                             "stun:global.stun.twilio.com:3478"
                         ]
@@ -15,16 +15,16 @@ class Peerconnection {
         }
     }
 
-    async generateOffer () {
+    async generateOffer() {
         console.log("enteroffer");
         try {
-            if(this.peer){
-                const offer = await this.peer.createOffer() 
+            if (this.peer) {
+                const offer = await this.peer.createOffer()
                 console.log(offer);
-                       
+
                 await this.peer.setLocalDescription(offer)
                 return offer
-                }
+            }
         } catch (error) {
             console.log('generateOffer', error);
         }
@@ -33,17 +33,17 @@ class Peerconnection {
     async generateAnswer(offer: RTCSessionDescriptionInit) {
         console.log("Entering generateAnswer");
         console.log("Received offer:", offer);
-    
+
         if (this.peer) {
             try {
                 // Set the remote description first
                 await this.peer.setRemoteDescription(new RTCSessionDescription(offer));
                 console.log("Remote description set with offer.");
-    
+
                 // Now create the answer and set the local description
                 const answer = await this.peer.createAnswer();
                 console.log(answer);
-                
+
                 await this.peer.setLocalDescription(answer);
                 console.log("Answer created and local description set.");
                 return answer;
@@ -52,19 +52,18 @@ class Peerconnection {
             }
         }
     }
-    
-    async setRemoteDescription (answer: RTCSessionDescriptionInit) {
+
+    async setRemoteDescription(answer: RTCSessionDescriptionInit) {
         console.log("enterremote", answer);
         try {
-            if(this.peer){
-                 await this.peer.setRemoteDescription(new RTCSessionDescription(answer)).then(()=>console.log("done")).catch((error: any)=>console.log("error", error))
-                 console.log("Answer recieved and remote description set.");
-                }
+            if (this.peer) {
+                await this.peer.setRemoteDescription(new RTCSessionDescription(answer)).then(() => console.log("Answer recieved and remote description set.")).catch((error: any) => console.log("error", error))
+            }
         } catch (error) {
             console.log('setlocalDescription', error);
         }
     }
-    
+
 }
 
 export default new Peerconnection()

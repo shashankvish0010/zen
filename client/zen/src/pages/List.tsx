@@ -5,7 +5,7 @@ import { Socketcontext } from '../context/Socketcontext';
 import { UserContext } from '../context/Userauth';
 
 interface userType {
-  id : string
+  id: string
   firstname: string | undefined,
   zen_no: number
 }
@@ -42,9 +42,9 @@ const List: React.FC = () => {
   useEffect(() => {
     socketcontext?.getZenList(id)
   }, [])
-  useEffect(()=>{
+  useEffect(() => {
     console.log
-    (socketcontext?.reciever)
+      (socketcontext?.reciever)
   }, [])
 
   return (
@@ -52,10 +52,10 @@ const List: React.FC = () => {
       {socketcontext?.reciever == true ?
         <div className='bg-purple-600 flex flex-col p-3 mt-3 md:w-[30vw] w-[80vw] gap-5 rounded shadow items-center'>
           <div>
-          <Icon icon="ic:baseline-wifi-calling-3" color='white' height='5vh'/>
+            <Icon icon="ic:baseline-wifi-calling-3" color='white' height='5vh' />
           </div>
           <div className='h-max w-[100%] px-2 flex justify-evenly'>
-            <span onClick={()=>{socketcontext?.pickCall(); socketcontext?.setPicked(true); navigate('/videocall')}} className='h-max w-max px-2 rounded shadow bg-green-500 text-white font-semibold'>Answer</span>
+            <span onClick={() => { socketcontext?.pickCall(); socketcontext?.setPicked(true); navigate('/videocall') }} className='h-max w-max px-2 rounded shadow bg-green-500 text-white font-semibold'>Answer</span>
             <span className='h-max w-max px-2 rounded shadow bg-red-500 text-white font-semibold'>Decline</span>
           </div>
         </div>
@@ -76,7 +76,7 @@ const List: React.FC = () => {
             <Icon icon="material-symbols:person" height='4vh' />
             <span className='text-base font-semibold'>{list.firstname}</span>
             <span className='text-md font-semibold'>{list.zen_no}</span>
-            <span onClick={() => { socketcontext?.calling(list.zen_no); navigate('/calling/'+list.zen_no)}} className='flex justify-center items-center gap-3 shadow-md cursor-pointer h-max w-max p-1 bg-blue-600 font-semibold text-xl text-white rounded-md'> <Icon icon="ri:live-fill" /><p>Call</p></span>
+            <span onClick={() => { socketcontext?.calling(list.zen_no); navigate('/calling/' + list.zen_no) }} className='flex justify-center items-center gap-3 shadow-md cursor-pointer h-max w-max p-1 bg-blue-600 font-semibold text-xl text-white rounded-md'> <Icon icon="ri:live-fill" /><p>Call</p></span>
           </div>
         ) : null
         }
