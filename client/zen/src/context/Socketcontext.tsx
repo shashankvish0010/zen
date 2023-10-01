@@ -70,7 +70,6 @@ const SocketProvider = (props: any) => {
         setLocalStream(UsersStream)
         setStartStream(true)
         UsersStream.getTracks().forEach((track: any) => {
-            console.log(track);
             peer.peer.addTrack(track, UsersStream)
         })
     }

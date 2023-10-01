@@ -19,8 +19,7 @@ const VideoCall: React.FC = () => {
         {
           socketcontext?.LocalStream && (
             <ReactPlayer
-              playing
-              muted
+            playing
               url={socketcontext.LocalStream}
               height={'30vh'}
               width={'40vw'}
@@ -33,15 +32,16 @@ const VideoCall: React.FC = () => {
         {
           socketcontext?.remoteStream && (
             <ReactPlayer
-              playing
-              muted
+            playing
               url={socketcontext.remoteStream}
-              height={'100px'}
-              width={'200px'}
+              height={'30vh'}
+              width={'40vw'}
             />
           )
         }
       </div>
+      <button onClick={() => socketcontext?.calling}>Stream On</button>
+
     </div>
   );
 };
