@@ -22,7 +22,6 @@ let sendersOffer: any;
 io.on('connection', (socket) => {
 
     socket.emit('hello', socket.id)
-    console.log(socket.id);
 
     socket.on('call', async (zenno, from, offer) => {
         // console.log(offer, zenno, from);
@@ -47,15 +46,20 @@ io.on('connection', (socket) => {
     })
 
     socket.on('negotiation', (offer) => {
-        console.log(offer);
-        io.to(receiver).emit('negotiationaccept', {sendersoffer : offer})
+        console.log("negore", receiver);
+        io.to(receiver).emit('negotiationaccept', {sendersNegoOffer : offer})
     })
 
     socket.on('negotiationdone', (answer) => {
-        io.to(sender).emit('acceptnegotiationanswer', {receiveranswer : answer})
+        console.log("negose", sender);
+
+        console.log(answer);
+        io.to(sender).emit('acceptnegotiationanswer', {receiverNegoAnswer : answer})
     })
 
-    socket.on('done', ()=> io.emit('videocall'))
+    socket.on('done', ()=> io.emit('videocall')) 
+
+    socket.on('calldone', () => console.log("video call done")) 
 })
 
 server.listen(process.env.PORT, () => console.log("server running"))

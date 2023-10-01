@@ -35,7 +35,6 @@ let sender;
 let sendersOffer;
 io.on('connection', (socket) => {
     socket.emit('hello', socket.id);
-    console.log(socket.id);
     socket.on('call', (zenno, from, offer) => __awaiter(void 0, void 0, void 0, function* () {
         // console.log(offer, zenno, from);
         try {
@@ -56,12 +55,15 @@ io.on('connection', (socket) => {
         io.to(from).emit('callaccepted', { answer, picked: true });
     });
     socket.on('negotiation', (offer) => {
-        console.log(offer);
-        io.to(receiver).emit('negotiationaccept', { sendersoffer: offer });
+        console.log("negore", receiver);
+        io.to(receiver).emit('negotiationaccept', { sendersNegoOffer: offer });
     });
     socket.on('negotiationdone', (answer) => {
-        io.to(sender).emit('acceptnegotiationanswer', { receiveranswer: answer });
+        console.log("negose", sender);
+        console.log(answer);
+        io.to(sender).emit('acceptnegotiationanswer', { receiverNegoAnswer: answer });
     });
     socket.on('done', () => io.emit('videocall'));
+    socket.on('calldone', () => console.log("video call done"));
 });
 server.listen(process.env.PORT, () => console.log("server running"));

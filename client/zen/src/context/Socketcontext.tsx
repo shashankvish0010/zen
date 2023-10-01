@@ -31,6 +31,7 @@ const SocketProvider = (props: any) => {
     const [cam, setCam] = useState<boolean>(false)
     const [zenList, setZenList] = useState<any>()
     const [socketid, setSocketId] = useState<string>()
+    const [caller, setCaller] = useState<boolean>(false)
     const [reciever, setReciever] = useState<boolean>(false)
     const [callConnected, setCallConnected] = useState<boolean>(false)
     const [picked, setPicked] = useState<boolean>(false)
@@ -67,6 +68,8 @@ const SocketProvider = (props: any) => {
         const UsersStream = await navigator.mediaDevices.getUserMedia({audio: true, video: true})
         console.log(UsersStream);
         setLocalStream(UsersStream)
+        setStartStream(true)
+
         UsersStream.getTracks().forEach((track: any)=>{
             console.log(track);
             peer.peer.addTrack(track, UsersStream)
@@ -81,6 +84,7 @@ const SocketProvider = (props: any) => {
         console.log("calling", socketid);
         const offer = await peer.generateOffer()
         setCam(!cam);   
+        setCaller(true)
         socket.emit('call', zenNo, socketid, offer)
         socket.off('call')
     }
@@ -92,8 +96,6 @@ const SocketProvider = (props: any) => {
     const pickCall = async () => {
         setReciever(false)
         socket.emit('recieved')
-        socket.off('recieved')
-
     }
 
     async function incomingcall(data: any) {
@@ -114,21 +116,24 @@ const SocketProvider = (props: any) => {
         setCallConnected(true)
     }
 
-    const handleNegotiation = async () =>{
-        const offer = await peer.generateOffer();
-        socket.emit('negotiation', offer)
+    async function handleNegotiation () {
+        if(caller == true){
+            const offer = await peer.generateOffer();
+            socket.emit('negotiation', offer)
+        }
     }
 
     async function negotiationaccept (data: any){
         console.log("negoanswer");
-        const answer = await peer.generateAnswer(data.sendersoffer)
+        const answer = await peer.generateAnswer(data.sendersNegoOffer)
         socket.emit('negotiationdone', answer)
         socket.off('negotiationdone', answer)
     }
 
     async function acceptnegotiationanswer(data : any){
-        console.log("negoremote", data.receiveranswer);
-        await peer.setRemoteDescription(data.receiveranswer)
+        console.log("negoremote", data.receiverNegoAnswer);
+        await peer.setRemoteDescription(data.receiverNegoAnswer)
+        socket.emit("calldone")
     }
     
     useEffect(()=>{
@@ -136,7 +141,7 @@ const SocketProvider = (props: any) => {
         return () => {
             peer.peer.removeEventListener('negotiationneeded', handleNegotiation)
         }
-    }, [])
+    }, [handleNegotiation])
 
    useEffect(()=>{    
     peer.peer.addEventListener('track', async (ev: any) => {
@@ -168,7 +173,7 @@ const SocketProvider = (props: any) => {
             socket.off('videocall', videcall)
         }
     }
-        , [])
+, [])
 
     const info: Contextvalue = { LocalStream, startStream, remoteStream, setPicked, picked, pickCall, reciever, setCam, cam, calling, getZenList, zenList, callConnected }
     return (
