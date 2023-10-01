@@ -69,7 +69,6 @@ const SocketProvider = (props: any) => {
         console.log(UsersStream);
         setLocalStream(UsersStream)
         setStartStream(true)
-
         UsersStream.getTracks().forEach((track: any)=>{
             console.log(track);
             peer.peer.addTrack(track, UsersStream)
@@ -120,7 +119,7 @@ const SocketProvider = (props: any) => {
         if(caller == true){
             const offer = await peer.generateOffer();
             socket.emit('negotiation', offer)
-        }
+        }else console.log("not a caller")
     }
 
     async function negotiationaccept (data: any){
@@ -144,10 +143,10 @@ const SocketProvider = (props: any) => {
     }, [handleNegotiation])
 
    useEffect(()=>{    
-    peer.peer.addEventListener('track', async (ev: any) => {
+    peer.peer.addEventListener('track',(ev: any) => {
         console.log("gottrack");
-        const remote = ev.streams   
-        setRemoteStream(remote[0])
+        const remoteStream = ev.streams   
+        setRemoteStream(remoteStream[0])
     });
    },[startStream])
 
