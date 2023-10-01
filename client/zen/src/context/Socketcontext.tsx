@@ -132,7 +132,8 @@ const SocketProvider = (props: any) => {
     async function acceptnegotiationanswer(data : any){
         console.log("negoremote", data.receiverNegoAnswer);
         await peer.setRemoteDescription(data.receiverNegoAnswer)
-        // socket.emit("calldone")
+        socket.emit("calldone")
+        socket.off("calldone")
     }
     
     useEffect(()=>{
