@@ -6,7 +6,6 @@ import peer from '../services/peer'
 const socket = io('http://localhost:8080')
 
 interface Contextvalue {
-    // myStream: React.MutableRefObject<any | null> | MediaStream
     remoteStream: any
     LocalStream: any
     setCam: any
@@ -27,7 +26,6 @@ const Socketcontext = createContext<Contextvalue | null>(null)
 const SocketProvider = (props: any) => {
 
     // const remoteStream: React.MutableRefObject<any | null> = useRef(null)
-
     const [cam, setCam] = useState<boolean>(false)
     const [zenList, setZenList] = useState<any>()
     const [socketid, setSocketId] = useState<string>()
@@ -65,7 +63,7 @@ const SocketProvider = (props: any) => {
 
     const streaming = async () => {
         setStartStream(true)
-        const UsersStream = await navigator.mediaDevices.getUserMedia({ audio: false, video: true })
+        const UsersStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
         console.log(UsersStream);
         setLocalStream(UsersStream)
         setStartStream(true)
@@ -143,9 +141,8 @@ const SocketProvider = (props: any) => {
     }, [handleNegotiation])
 
     useEffect(() => {
-        peer.peer.addEventListener('track', (ev: any) => {
-            console.log("gottrack");
-            const remoteStream = ev.streams[0]
+        peer.peer.addEventListener('track', async (event: any) => {
+            const [remoteStream] = event.streams;
             setRemoteStream(remoteStream)
         });
     }, [startStream])
