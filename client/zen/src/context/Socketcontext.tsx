@@ -69,6 +69,7 @@ const SocketProvider = (props: any) => {
     }
 
     function videcall() {
+        setStartStream(true)
         streaming()
     }
 
@@ -98,7 +99,7 @@ const SocketProvider = (props: any) => {
         const { answer } = data
         setPicked(data.picked)
         await peer.setRemoteDescription(answer)
-        socket.emit('done')
+        streaming()
         setCallConnected(true)
     }
 
@@ -115,8 +116,9 @@ const SocketProvider = (props: any) => {
     }
 
     async function acceptnegotiationanswer(data: any) {
-        await peer.setRemoteDescription(data.receiverNegoAnswer)
-        streaming()
+        await peer.setRemoteDescription(data.receiverNegoAnswer).then(()=>{
+            socket.emit('done')
+        })
     }
 
     useEffect(() => {
@@ -127,10 +129,12 @@ const SocketProvider = (props: any) => {
     }, [handleNegotiation])
 
     useEffect(() => {
-        peer.peer.addEventListener('track', async (event: any) => {
-            const [remoteStream] = event.streams;
-            setRemoteStream(remoteStream)
-        });
+        if(startStream == true){
+            peer.peer.addEventListener('track', async (event: any) => {
+                const [remoteStream] = event.streams;
+                setRemoteStream(remoteStream)
+            });
+        }
     }, [startStream])
 
 

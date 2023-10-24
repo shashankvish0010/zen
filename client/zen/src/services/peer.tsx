@@ -15,7 +15,7 @@ class Peerconnection {
                       credential: "NBrSkTE3xWZTzRlx",
                     },
                     {
-                      urls: "turn:a.relay.metered.ca:80?transport=tcp",
+                      urls: "turn:a.relay.metered.ca:80?transport=udp",
                       username: "9feb6522d3b0d94f7d4bdc53",
                       credential: "NBrSkTE3xWZTzRlx",
                     },
@@ -24,6 +24,11 @@ class Peerconnection {
                       username: "9feb6522d3b0d94f7d4bdc53",
                       credential: "NBrSkTE3xWZTzRlx",
                     },
+                    {
+                        urls: "turn:a.relay.metered.ca:443?transport=udp",
+                        username: "9feb6522d3b0d94f7d4bdc53",
+                        credential: "NBrSkTE3xWZTzRlx",
+                      },
                     {
                       urls: "turn:a.relay.metered.ca:443?transport=tcp",
                       username: "9feb6522d3b0d94f7d4bdc53",
