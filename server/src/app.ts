@@ -1,10 +1,12 @@
 import express from "express"
 const app = express()
 import http from 'http'
+import fs from 'fs'
 import dotenv from "dotenv"
 import cors from "cors"
 import pool from "../dbconnect"
 import { Server } from 'socket.io'
+import mediasoup from 'mediasoup'
 const server = http.createServer(app)
 const io = new Server(server, ({
     cors: {
@@ -16,9 +18,32 @@ dotenv.config()
 app.use(require('./routers/routes'))
 app.use(cors())
 app.use(express.json())
+let mediasoupWorker: any;
+let mediasoupRouter: any;
+let streamerTransport : any;
+let viewerTransport : any;
 let receiver: string | string[];
 let sender: string | string[];
 let sendersOffer: any;
+
+// const mediacodecs: any = [
+//     {
+//         kind: 'audio',
+//         mimeType: 'audio/opus',
+//         clockRate: 48000,
+//         channels: 2
+//     },
+//     {
+//         kind: 'video',
+//         mimeType: 'video/VP8',
+//         clockRate: 90000,
+//         parameters: {
+//             'x-google-start-bitrate': 1000,
+//         }
+//     },
+// ]
+
+
 io.on('connection', (socket) => {
 
     socket.emit('hello', socket.id)
@@ -44,21 +69,88 @@ io.on('connection', (socket) => {
         io.to(from).emit('callaccepted', { answer, picked: true })
     })
 
+    socket.on('candidate', (candidates) => {
+        io.to(receiver).emit('candidate', candidates)
+    })
+
     socket.on('negotiation', (offer) => {
-        console.log("negore", receiver);
+        // console.log("negore", receiver);
         io.to(receiver).emit('negotiationaccept', { sendersNegoOffer: offer })
     })
 
     socket.on('negotiationdone', (answer) => {
-        console.log("negose", sender);
+        // console.log("negose", sender);
 
-        console.log(answer);
+        // console.log(answer);
         io.to(sender).emit('acceptnegotiationanswer', { receiverNegoAnswer: answer })
     })
 
-    socket.on('done', () => io.emit('videocall'))
+    socket.on('done', () => {io.emit('videocall'); console.log("sdp exchanged")})
 
-    socket.on('calldone', () => console.log("video call done"))
+    socket.on('calldone', () =>{ console.log("video call done")})
+
+    socket.on('livestream', async () => {
+        mediasoupWorker = await mediasoup.createWorker({
+            rtcMaxPort: 2020,
+            rtcMinPort: 2000
+        })
+
+        // mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
+        const RTPCapabilities = mediasoupRouter.rtpCapabilities
+        socket.emit('GetRTPCapabilities', { RTPCapabilities })
+        console.log("worker created");
+    })
+
+    const createWebRTCTransport = async () => {
+        try {
+            const WebRTCOptions = {
+                listenIps : [
+                    {
+                        ip : '127.0.0.1'
+                    }
+                ],
+                enableUdp : true,
+                enableTcp : true,
+                preferUdp : true
+            }
+            let transport = await mediasoupRouter.createWebRTCTransport(WebRTCOptions)
+
+            transport.on('dtlsstatechnage', (dtlsState : any) => {
+                if(dtlsState === 'closed'){
+                    transport.close()
+                }
+            })
+
+            transport.on('close', () => {
+                console.log('transport closed');
+            })
+
+            socket.emit('transportParams', {
+                params : 
+                {id : transport.id,
+                iceParameters : transport.iceParameters,
+                iceCandidates : transport.iceCandidates,
+                dtlsParameters : transport.dtlsParameters}
+            })
+
+            return transport
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    socket.on('WebRTCTransport', ({streamer}) => {
+        if(streamer){
+            streamerTransport = createWebRTCTransport()
+        }else{
+            viewerTransport = createWebRTCTransport()
+        }
+    })
+
+    socket.on('transportConnect', async ({dtlsParameters})=>{
+        streamerTransport.connect({dtlsParameters})
+    })
 })
 
 server.listen(process.env.PORT, () => console.log("server running"))

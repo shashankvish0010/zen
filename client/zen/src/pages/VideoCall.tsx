@@ -61,8 +61,6 @@ if (socketcontext?.remoteStream ) {
   // Attach the remote stream to the video element
 console.log("remote",socketcontext.remoteStream);
 console.log("local",socketcontext.LocalStream);
-
-
   // Error event listener
 }
 
@@ -74,6 +72,7 @@ console.log("local",socketcontext.LocalStream);
         {socketcontext?.LocalStream && (
           <ReactPlayer
             playing
+            muted
             url={socketcontext.LocalStream} // Provide the actual URL here
             height={'30vh'}
             width={'40vw'}
@@ -85,13 +84,13 @@ console.log("local",socketcontext.LocalStream);
         { 
           <ReactPlayer
           playing
+          muted
           url={socketcontext?.remoteStream} // Provide the actual URL here
           height={'30vh'}
           width={'40vw'}
         />
          }
       </div>
-      {/* <button onClick={() => socketcontext?.calling()}>Stream On</button> */}
     </div>
   );
 };

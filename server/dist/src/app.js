@@ -19,6 +19,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 const dbconnect_1 = __importDefault(require("../dbconnect"));
 const socket_io_1 = require("socket.io");
+const mediasoup_1 = __importDefault(require("mediasoup"));
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, ({
     cors: {
@@ -30,9 +31,29 @@ dotenv_1.default.config();
 app.use(require('./routers/routes'));
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
+let mediasoupWorker;
+let mediasoupRouter;
+let streamerTransport;
+let viewerTransport;
 let receiver;
 let sender;
 let sendersOffer;
+// const mediacodecs: any = [
+//     {
+//         kind: 'audio',
+//         mimeType: 'audio/opus',
+//         clockRate: 48000,
+//         channels: 2
+//     },
+//     {
+//         kind: 'video',
+//         mimeType: 'video/VP8',
+//         clockRate: 90000,
+//         parameters: {
+//             'x-google-start-bitrate': 1000,
+//         }
+//     },
+// ]
 io.on('connection', (socket) => {
     socket.emit('hello', socket.id);
     socket.on('call', (zenno, from, offer) => __awaiter(void 0, void 0, void 0, function* () {
@@ -53,16 +74,73 @@ io.on('connection', (socket) => {
     socket.on('callrecieved', (answer, { from }) => {
         io.to(from).emit('callaccepted', { answer, picked: true });
     });
+    socket.on('candidate', (candidates) => {
+        io.to(receiver).emit('candidate', candidates);
+    });
     socket.on('negotiation', (offer) => {
-        console.log("negore", receiver);
+        // console.log("negore", receiver);
         io.to(receiver).emit('negotiationaccept', { sendersNegoOffer: offer });
     });
     socket.on('negotiationdone', (answer) => {
-        console.log("negose", sender);
-        console.log(answer);
+        // console.log("negose", sender);
+        // console.log(answer);
         io.to(sender).emit('acceptnegotiationanswer', { receiverNegoAnswer: answer });
     });
-    socket.on('done', () => io.emit('videocall'));
-    socket.on('calldone', () => console.log("video call done"));
+    socket.on('done', () => { io.emit('videocall'); console.log("sdp exchanged"); });
+    socket.on('calldone', () => { console.log("video call done"); });
+    socket.on('livestream', () => __awaiter(void 0, void 0, void 0, function* () {
+        mediasoupWorker = yield mediasoup_1.default.createWorker({
+            rtcMaxPort: 2020,
+            rtcMinPort: 2000
+        });
+        // mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
+        const RTPCapabilities = mediasoupRouter.rtpCapabilities;
+        socket.emit('GetRTPCapabilities', { RTPCapabilities });
+        console.log("worker created");
+    }));
+    const createWebRTCTransport = () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const WebRTCOptions = {
+                listenIps: [
+                    {
+                        ip: '127.0.0.1'
+                    }
+                ],
+                enableUdp: true,
+                enableTcp: true,
+                preferUdp: true
+            };
+            let transport = yield mediasoupRouter.createWebRTCTransport(WebRTCOptions);
+            transport.on('dtlsstatechnage', (dtlsState) => {
+                if (dtlsState === 'closed') {
+                    transport.close();
+                }
+            });
+            transport.on('close', () => {
+                console.log('transport closed');
+            });
+            socket.emit('transportParams', {
+                params: { id: transport.id,
+                    iceParameters: transport.iceParameters,
+                    iceCandidates: transport.iceCandidates,
+                    dtlsParameters: transport.dtlsParameters }
+            });
+            return transport;
+        }
+        catch (error) {
+            console.log(error);
+        }
+    });
+    socket.on('WebRTCTransport', ({ streamer }) => {
+        if (streamer) {
+            streamerTransport = createWebRTCTransport();
+        }
+        else {
+            viewerTransport = createWebRTCTransport();
+        }
+    });
+    socket.on('transportConnect', ({ dtlsParameters }) => __awaiter(void 0, void 0, void 0, function* () {
+        streamerTransport.connect({ dtlsParameters });
+    }));
 });
 server.listen(process.env.PORT, () => console.log("server running"));

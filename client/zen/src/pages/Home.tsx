@@ -2,11 +2,9 @@ import React, {useContext} from 'react'
 import { Icon } from '@iconify/react';
 import Footer from '../components/Footer';
 import { UserContext } from '../context/Userauth';
-import { Socketcontext } from '../context/Socketcontext';
 import { useNavigate } from 'react-router-dom';
 const Home: React.FC = () => {
   const user = useContext(UserContext)  
-  const socket = useContext(Socketcontext)
   const navigate = useNavigate()
   return (
     <div className='h-[100vh] w-[100vw] flex flex-col items-center gap-5'>

@@ -42,7 +42,6 @@ const SocketProvider = (props: any) => {
     }
 
     const getZenList = async (id: string | undefined) => {
-        console.log("enter");
 
         try {
             const response = await fetch('/get/zenlist/' + id + '/' + socketid, {
@@ -53,7 +52,6 @@ const SocketProvider = (props: any) => {
             })
             if (response) {
                 const data = await response.json();
-                console.log(data);
                 setZenList(data)
             }
         } catch (error) {
@@ -61,14 +59,12 @@ const SocketProvider = (props: any) => {
         }
     }
 
-    const streaming = async () => {
-        setStartStream(true)
-        const UsersStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-        console.log(UsersStream);
-        setLocalStream(UsersStream)
-        setStartStream(true)
-        UsersStream.getTracks().forEach((track: any) => {
-            peer.peer.addTrack(track, UsersStream)
+    const streaming = () => {
+        navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((UsersStream)=>{
+            setLocalStream(UsersStream)
+            UsersStream.getTracks().forEach((track: any) => {
+                peer.peer.addTrack(track, UsersStream)
+            })
         })
     }
 
@@ -77,12 +73,10 @@ const SocketProvider = (props: any) => {
     }
 
     const calling = async (zenNo: number | undefined) => {
-        console.log("calling", socketid);
         const offer = await peer.generateOffer()
         setCam(!cam);
         setCaller(true)
         socket.emit('call', zenNo, socketid, offer)
-        socket.off('call')
     }
 
     function callercalling() {
@@ -95,20 +89,16 @@ const SocketProvider = (props: any) => {
     }
 
     async function incomingcall(data: any) {
-        console.log(data)
         const { sendersOffer } = data
         const answer = await peer.generateAnswer(sendersOffer)
         socket.emit('callrecieved', answer, { from: data.sender })
-        socket.off('callrecieved')
     }
 
     async function callaccepted(data: any) {
         const { answer } = data
-        console.log("ac", answer);
         setPicked(data.picked)
         await peer.setRemoteDescription(answer)
         socket.emit('done')
-        socket.off('done')
         setCallConnected(true)
     }
 
@@ -120,17 +110,13 @@ const SocketProvider = (props: any) => {
     }
 
     async function negotiationaccept(data: any) {
-        console.log("negoanswer");
         const answer = await peer.generateAnswer(data.sendersNegoOffer)
         socket.emit('negotiationdone', answer)
-        socket.off('negotiationdone', answer)
     }
 
     async function acceptnegotiationanswer(data: any) {
-        console.log("negoremote", data.receiverNegoAnswer);
         await peer.setRemoteDescription(data.receiverNegoAnswer)
-        socket.emit("calldone")
-        socket.off("calldone")
+        streaming()
     }
 
     useEffect(() => {
@@ -146,8 +132,6 @@ const SocketProvider = (props: any) => {
             setRemoteStream(remoteStream)
         });
     }, [startStream])
-
-    console.log(remoteStream);
 
 
     useEffect(() => {
@@ -169,7 +153,7 @@ const SocketProvider = (props: any) => {
             socket.off('videocall', videcall)
         }
     }
-        , [socket])
+        , [socket, getSocketId, callercalling, incomingcall, callaccepted, negotiationaccept, acceptnegotiationanswer, videcall])
 
     const info: Contextvalue = { LocalStream, startStream, remoteStream, setPicked, picked, pickCall, reciever, setCam, cam, calling, getZenList, zenList, callConnected }
     return (
