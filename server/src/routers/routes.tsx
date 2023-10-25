@@ -150,7 +150,7 @@ router.post('/user/login', async (req,res) => {
                     const authToken = process.env.TWILIO_AUTH_TOKEN;
                     const client = require('twilio')(accountSid, authToken);
         
-                    client.tokens.create().then((token: any) => {console.log(token)});    
+                    client.tokens.create().then((token: any) => {console.log(token.username)});    
                 }
                 }else{
                     res.json({ success: false,id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" })
