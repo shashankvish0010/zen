@@ -16,7 +16,9 @@ const io = new Server(server, ({
 }))
 dotenv.config()
 app.use(require('./routers/routes'))
-app.use(cors())
+app.use(cors({
+    origin: "https://zen-backend-6acy.onrender.com"
+}))
 app.use(express.json())
 let mediasoupWorker: any;
 let mediasoupRouter: any;
