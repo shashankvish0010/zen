@@ -23,8 +23,8 @@ app.use(require('./routers/routes'))
 app.use(express.json())
 let mediasoupWorker: any;
 let mediasoupRouter: any;
-let streamerTransport : any;
-let viewerTransport : any;
+let streamerTransport: any;
+let viewerTransport: any;
 let receiver: string | string[];
 let sender: string | string[];
 let sendersOffer: any;
@@ -53,6 +53,12 @@ io.on('connection', (socket) => {
 
     socket.on('call', async (zenno, from, offer) => {
         try {
+            const accountSid = process.env.TWILIO_ACCOUNT_SID;
+            const authToken = process.env.TWILIO_AUTH_TOKEN;
+            const client = require('twilio')(accountSid, authToken);
+
+            client.tokens.create().then((token: any) => {console.log(token)});
+
             const reciverSocketId = await pool.query('SELECT socketid from Users WHERE zen_no=$1', [zenno])
             receiver = reciverSocketId.rows[0].socketid
             sender = from
@@ -88,9 +94,9 @@ io.on('connection', (socket) => {
         io.to(sender).emit('acceptnegotiationanswer', { receiverNegoAnswer: answer })
     })
 
-    socket.on('done', () => {io.emit('videocall'); console.log("sdp exchanged")})
+    socket.on('done', () => { io.emit('videocall'); console.log("sdp exchanged") })
 
-    socket.on('calldone', () =>{ console.log("video call done")})
+    socket.on('calldone', () => { console.log("video call done") })
 
     // socket.on('livestream', async () => {
     //     mediasoupWorker = await mediasoup.createWorker({
@@ -107,19 +113,19 @@ io.on('connection', (socket) => {
     const createWebRTCTransport = async () => {
         try {
             const WebRTCOptions = {
-                listenIps : [
+                listenIps: [
                     {
-                        ip : '127.0.0.1'
+                        ip: '127.0.0.1'
                     }
                 ],
-                enableUdp : true,
-                enableTcp : true,
-                preferUdp : true
+                enableUdp: true,
+                enableTcp: true,
+                preferUdp: true
             }
             let transport = await mediasoupRouter.createWebRTCTransport(WebRTCOptions)
 
-            transport.on('dtlsstatechnage', (dtlsState : any) => {
-                if(dtlsState === 'closed'){
+            transport.on('dtlsstatechnage', (dtlsState: any) => {
+                if (dtlsState === 'closed') {
                     transport.close()
                 }
             })
@@ -129,11 +135,13 @@ io.on('connection', (socket) => {
             })
 
             socket.emit('transportParams', {
-                params : 
-                {id : transport.id,
-                iceParameters : transport.iceParameters,
-                iceCandidates : transport.iceCandidates,
-                dtlsParameters : transport.dtlsParameters}
+                params:
+                {
+                    id: transport.id,
+                    iceParameters: transport.iceParameters,
+                    iceCandidates: transport.iceCandidates,
+                    dtlsParameters: transport.dtlsParameters
+                }
             })
 
             return transport
@@ -143,16 +151,16 @@ io.on('connection', (socket) => {
         }
     }
 
-    socket.on('WebRTCTransport', ({streamer}) => {
-        if(streamer){
+    socket.on('WebRTCTransport', ({ streamer }) => {
+        if (streamer) {
             streamerTransport = createWebRTCTransport()
-        }else{
+        } else {
             viewerTransport = createWebRTCTransport()
         }
     })
 
-    socket.on('transportConnect', async ({dtlsParameters})=>{
-        streamerTransport.connect({dtlsParameters})
+    socket.on('transportConnect', async ({ dtlsParameters }) => {
+        streamerTransport.connect({ dtlsParameters })
     })
 })
 

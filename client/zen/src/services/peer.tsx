@@ -2,6 +2,7 @@ class Peerconnection {
     peer: any
     addEventListener: any;
     constructor() {
+        
         if (!this.peer) {
 
             this.peer = new RTCPeerConnection({

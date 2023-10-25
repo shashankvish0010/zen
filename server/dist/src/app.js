@@ -61,6 +61,10 @@ io.on('connection', (socket) => {
     socket.emit('hello', socket.id);
     socket.on('call', (zenno, from, offer) => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            const accountSid = process.env.TWILIO_ACCOUNT_SID;
+            const authToken = process.env.TWILIO_AUTH_TOKEN;
+            const client = require('twilio')(accountSid, authToken);
+            client.tokens.create().then((token) => { console.log(token); });
             const reciverSocketId = yield dbconnect_1.default.query('SELECT socketid from Users WHERE zen_no=$1', [zenno]);
             receiver = reciverSocketId.rows[0].socketid;
             sender = from;
@@ -123,10 +127,12 @@ io.on('connection', (socket) => {
                 console.log('transport closed');
             });
             socket.emit('transportParams', {
-                params: { id: transport.id,
+                params: {
+                    id: transport.id,
                     iceParameters: transport.iceParameters,
                     iceCandidates: transport.iceCandidates,
-                    dtlsParameters: transport.dtlsParameters }
+                    dtlsParameters: transport.dtlsParameters
+                }
             });
             return transport;
         }
