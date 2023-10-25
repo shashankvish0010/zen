@@ -10,7 +10,7 @@ import { Server } from 'socket.io'
 const server = http.createServer(app)
 const io = new Server(server, ({
     cors: {
-        origin: '*',
+        origin: 'https://zen-gamma.vercel.app',
         methods: ['GET', 'POST', 'PUT']
     }
 }))

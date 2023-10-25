@@ -23,7 +23,7 @@ const socket_io_1 = require("socket.io");
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, ({
     cors: {
-        origin: '*',
+        origin: 'https://zen-gamma.vercel.app',
         methods: ['GET', 'POST', 'PUT']
     }
 }));
