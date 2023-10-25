@@ -9,6 +9,8 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 app.use(require('./routers/routes'));
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: "https://zen-gamma.vercel.app"
+}));
 app.use(express_1.default.json());
 app.listen(process.env.PORT, () => console.log("server running"));
