@@ -3,7 +3,7 @@ import { io } from 'socket.io-client'
 import peer from '../services/peer'
 // import { SourceProps } from 'react-player/base'
 
-const socket = io('http://localhost:8080')
+const socket = io('https://zen-backend-6acy.onrender.com')
 
 interface Contextvalue {
     remoteStream: any
