@@ -81,7 +81,7 @@ console.log("local",socketcontext.LocalStream);
       </div>
       {/* <button onClick={() => socketcontext?.calling()}>Stream On</button> */}
       <div className='h-max w-max p-2'>
-        { 
+        { socketcontext?.remoteStream &&
           <ReactPlayer
           playing
           muted
