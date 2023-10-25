@@ -5,7 +5,7 @@ class Peerconnection {
         if (!this.peer) {
 
             this.peer = new RTCPeerConnection({
-                iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }],
+                iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'turn:global.stun.twilio.com:3478?transport=udp' }],
                 // iceServers: [
                 //     {
                 //       urls: "stun:stun.relay.metered.ca:80",
