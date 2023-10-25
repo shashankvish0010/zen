@@ -28,10 +28,11 @@ const io = new socket_io_1.Server(server, ({
     }
 }));
 dotenv_1.default.config();
-app.use(require('./routers/routes'));
 app.use((0, cors_1.default)({
     origin: "https://zen-gamma.vercel.app"
 }));
+app.options('*', (0, cors_1.default)());
+app.use(require('./routers/routes'));
 app.use(express_1.default.json());
 let mediasoupWorker;
 let mediasoupRouter;

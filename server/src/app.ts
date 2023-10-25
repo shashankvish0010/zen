@@ -15,10 +15,11 @@ const io = new Server(server, ({
     }
 }))
 dotenv.config()
-app.use(require('./routers/routes'))
 app.use(cors({
     origin: "https://zen-gamma.vercel.app"
 }))
+app.options('*', cors())
+app.use(require('./routers/routes'))
 app.use(express.json())
 let mediasoupWorker: any;
 let mediasoupRouter: any;
