@@ -19,7 +19,7 @@ const List: React.FC = () => {
   const [message, setMessage] = useState<string | null>(null)
   const saveList = async (id: string | undefined) => {
     try {
-      const response = await fetch('/add/tozenlist/' + id, {
+      const response = await fetch('https://zen-backend-6acy.onrender.com'+'/add/tozenlist/' + id, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

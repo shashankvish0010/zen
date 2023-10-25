@@ -13,7 +13,7 @@ const OtpVerification: React.FC = () => {
         console.log("enter");
         
         try {
-            const response = await fetch('/otp/verification/'+params.id, {
+            const response = await fetch('https://zen-backend-6acy.onrender.com'+'/otp/verification/'+params.id, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -38,7 +38,7 @@ const OtpVerification: React.FC = () => {
     }
 
     const handleResend = async () => {
-        const response = await fetch('/resend/otp/'+params.id, {
+        const response = await fetch('https://zen-backend-6acy.onrender.com'+'/resend/otp/'+params.id, {
             method: "GET",
             headers: {
                 "Content-Type" : "application/json"

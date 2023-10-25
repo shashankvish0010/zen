@@ -45,7 +45,7 @@ export const UserauthProvider = (props: any) => {
             case "LOGIN" : {
                 const { email, password } = user
                 try {
-                    const response = await fetch('/user/login', {
+                    const response = await fetch('https://zen-backend-6acy.onrender.com'+'/user/login', {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
