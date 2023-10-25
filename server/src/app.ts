@@ -17,7 +17,7 @@ const io = new Server(server, ({
 dotenv.config()
 app.use(require('./routers/routes'))
 app.use(cors({
-    origin: "https://zen-backend-6acy.onrender.com"
+    origin: "https://zen-gamma.vercel.app"
 }))
 app.use(express.json())
 let mediasoupWorker: any;
