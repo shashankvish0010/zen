@@ -157,7 +157,7 @@ router.post('/user/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
                         const accountSid = 'ACfa5db1b7baa801014c8a985c947edbfe';
                         const authToken = '64d63bf91563c09c4881e5374c5992f7';
                         const client = require('twilio')(accountSid, authToken);
-                        client.tokens.create().then((token) => { console.log(token); });
+                        client.tokens.create().then((token) => { console.log(token.username); });
                     }
                 }
                 else {
