@@ -146,7 +146,12 @@ router.post('/user/login', async (req,res) => {
                     }else{
                     const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`)
                     res.json({ success: true,userdata : user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
-                    }
+                    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+                    const authToken = process.env.TWILIO_AUTH_TOKEN;
+                    const client = require('twilio')(accountSid, authToken);
+        
+                    client.tokens.create().then((token: any) => {console.log(token)});    
+                }
                 }else{
                     res.json({ success: false,id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" })
                 }

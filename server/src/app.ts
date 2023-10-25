@@ -53,12 +53,6 @@ io.on('connection', (socket) => {
 
     socket.on('call', async (zenno, from, offer) => {
         try {
-            const accountSid = process.env.TWILIO_ACCOUNT_SID;
-            const authToken = process.env.TWILIO_AUTH_TOKEN;
-            const client = require('twilio')(accountSid, authToken);
-
-            client.tokens.create().then((token: any) => {console.log(token)});
-
             const reciverSocketId = await pool.query('SELECT socketid from Users WHERE zen_no=$1', [zenno])
             receiver = reciverSocketId.rows[0].socketid
             sender = from
