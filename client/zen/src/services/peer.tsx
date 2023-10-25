@@ -5,56 +5,56 @@ class Peerconnection {
         if (!this.peer) {
 
             this.peer = new RTCPeerConnection({
+                // "iceServers": [
+                //     {
+                //       "urls": "stun:global.stun.twilio.com:3478"
+                //     },
+                //     {
+                //       ""username"": "dc2d2894d5a9023620c467b0e71cfa6a35457e6679785ed6ae9856fe5bdfa269",
+                //       "credential": "tE2DajzSJwnsSbc123",
+                //       "urls": "turn:global.turn.twilio.com:3478?transport=udp"
+                //     },
+                //     {
+                //       "username": "dc2d2894d5a9023620c467b0e71cfa6a35457e6679785ed6ae9856fe5bdfa269",
+                //       "credential": "tE2DajzSJwnsSbc123",
+                //       "urls": "turn:global.turn.twilio.com:3478?transport=tcp"
+                //     },
+                //     {
+                //       "username": "dc2d2894d5a9023620c467b0e71cfa6a35457e6679785ed6ae9856fe5bdfa269",
+                //       "credential": "tE2DajzSJwnsSbc123",
+                //       "urls": "turn:global.turn.twilio.com:443?transport=tcp"
+                //     }
+                //   ],
                 "iceServers": [
                     {
-                      "urls": "stun:global.stun.twilio.com:3478"
+                      "urls": "stun:stun.relay.metered.ca:80",
                     },
                     {
-                      "username": "dc2d2894d5a9023620c467b0e71cfa6a35457e6679785ed6ae9856fe5bdfa269",
-                      "credential": "tE2DajzSJwnsSbc123",
-                      "urls": "turn:global.turn.twilio.com:3478?transport=udp"
+                      "urls": "turn:a.relay.metered.ca:80",
+                      username: "9feb6522d3b0d94f7d4bdc53",
+                      "credential": "NBrSkTE3xWZTzRlx",
                     },
                     {
-                      "username": "dc2d2894d5a9023620c467b0e71cfa6a35457e6679785ed6ae9856fe5bdfa269",
-                      "credential": "tE2DajzSJwnsSbc123",
-                      "urls": "turn:global.turn.twilio.com:3478?transport=tcp"
+                      "urls": "turn:a.relay.metered.ca:80?transport=udp",
+                      "username": "9feb6522d3b0d94f7d4bdc53",
+                      "credential": "NBrSkTE3xWZTzRlx",
                     },
                     {
-                      "username": "dc2d2894d5a9023620c467b0e71cfa6a35457e6679785ed6ae9856fe5bdfa269",
-                      "credential": "tE2DajzSJwnsSbc123",
-                      "urls": "turn:global.turn.twilio.com:443?transport=tcp"
-                    }
-                  ],
-                // iceServers: [
-                //     {
-                //       urls: "stun:stun.relay.metered.ca:80",
-                //     },
-                //     {
-                //       urls: "turn:a.relay.metered.ca:80",
-                //       username: "9feb6522d3b0d94f7d4bdc53",
-                //       credential: "NBrSkTE3xWZTzRlx",
-                //     },
-                //     {
-                //       urls: "turn:a.relay.metered.ca:80?transport=udp",
-                //       username: "9feb6522d3b0d94f7d4bdc53",
-                //       credential: "NBrSkTE3xWZTzRlx",
-                //     },
-                //     {
-                //       urls: "turn:a.relay.metered.ca:443",
-                //       username: "9feb6522d3b0d94f7d4bdc53",
-                //       credential: "NBrSkTE3xWZTzRlx",
-                //     },
-                //     {
-                //         urls: "turn:a.relay.metered.ca:443?transport=udp",
-                //         username: "9feb6522d3b0d94f7d4bdc53",
-                //         credential: "NBrSkTE3xWZTzRlx",
-                //       },
-                //     {
-                //       urls: "turn:a.relay.metered.ca:443?transport=tcp",
-                //       username: "9feb6522d3b0d94f7d4bdc53",
-                //       credential: "NBrSkTE3xWZTzRlx",
-                //     },
-                // ],
+                      "urls": "turn:a.relay.metered.ca:443",
+                      "username": "9feb6522d3b0d94f7d4bdc53",
+                      "credential": "NBrSkTE3xWZTzRlx",
+                    },
+                    {
+                        "urls": "turn:a.relay.metered.ca:443?transport=udp",
+                        "username": "9feb6522d3b0d94f7d4bdc53",
+                        "credential": "NBrSkTE3xWZTzRlx",
+                      },
+                    {
+                      "urls": "turn:a.relay.metered.ca:443?transport=tcp",
+                      "username": "9feb6522d3b0d94f7d4bdc53",
+                      "credential": "NBrSkTE3xWZTzRlx",
+                    },
+                ],
 
             }
             )
