@@ -19,7 +19,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 const dbconnect_1 = __importDefault(require("../dbconnect"));
 const socket_io_1 = require("socket.io");
-const mediasoup_1 = __importDefault(require("mediasoup"));
+// import mediasoup from 'mediasoup'
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, ({
     cors: {
@@ -29,7 +29,9 @@ const io = new socket_io_1.Server(server, ({
 }));
 dotenv_1.default.config();
 app.use(require('./routers/routes'));
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: "https://zen-gamma.vercel.app"
+}));
 app.use(express_1.default.json());
 let mediasoupWorker;
 let mediasoupRouter;
@@ -88,16 +90,16 @@ io.on('connection', (socket) => {
     });
     socket.on('done', () => { io.emit('videocall'); console.log("sdp exchanged"); });
     socket.on('calldone', () => { console.log("video call done"); });
-    socket.on('livestream', () => __awaiter(void 0, void 0, void 0, function* () {
-        mediasoupWorker = yield mediasoup_1.default.createWorker({
-            rtcMaxPort: 2020,
-            rtcMinPort: 2000
-        });
-        // mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
-        const RTPCapabilities = mediasoupRouter.rtpCapabilities;
-        socket.emit('GetRTPCapabilities', { RTPCapabilities });
-        console.log("worker created");
-    }));
+    // socket.on('livestream', async () => {
+    //     mediasoupWorker = await mediasoup.createWorker({
+    //         rtcMaxPort: 2020,
+    //         rtcMinPort: 2000
+    //     })
+    //     // mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
+    //     const RTPCapabilities = mediasoupRouter.rtpCapabilities
+    //     socket.emit('GetRTPCapabilities', { RTPCapabilities })
+    //     console.log("worker created");
+    // })
     const createWebRTCTransport = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const WebRTCOptions = {
