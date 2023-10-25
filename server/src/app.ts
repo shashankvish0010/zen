@@ -6,7 +6,7 @@ import dotenv from "dotenv"
 import cors from "cors"
 import pool from "../dbconnect"
 import { Server } from 'socket.io'
-import mediasoup from 'mediasoup'
+// import mediasoup from 'mediasoup'
 const server = http.createServer(app)
 const io = new Server(server, ({
     cors: {
@@ -89,17 +89,17 @@ io.on('connection', (socket) => {
 
     socket.on('calldone', () =>{ console.log("video call done")})
 
-    socket.on('livestream', async () => {
-        mediasoupWorker = await mediasoup.createWorker({
-            rtcMaxPort: 2020,
-            rtcMinPort: 2000
-        })
+    // socket.on('livestream', async () => {
+    //     mediasoupWorker = await mediasoup.createWorker({
+    //         rtcMaxPort: 2020,
+    //         rtcMinPort: 2000
+    //     })
 
-        // mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
-        const RTPCapabilities = mediasoupRouter.rtpCapabilities
-        socket.emit('GetRTPCapabilities', { RTPCapabilities })
-        console.log("worker created");
-    })
+    //     // mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
+    //     const RTPCapabilities = mediasoupRouter.rtpCapabilities
+    //     socket.emit('GetRTPCapabilities', { RTPCapabilities })
+    //     console.log("worker created");
+    // })
 
     const createWebRTCTransport = async () => {
         try {
