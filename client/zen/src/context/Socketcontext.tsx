@@ -35,6 +35,7 @@ const SocketProvider = (props: any) => {
     // const [callConnected, setCallConnected] = useState<boolean>(false)
     const [picked, setPicked] = useState<boolean>(false)
     const [LocalStream, setLocalStream] = useState<any>();
+    const [stream, setStream] = useState<any>();
     // const [startStream, setStartStream] = useState<boolean>(false);
     const [remoteStream, setRemoteStream] = useState<any>();
 
@@ -63,6 +64,7 @@ const SocketProvider = (props: any) => {
     useEffect(()=>{
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((UsersStream)=>{
             setLocalStream(UsersStream)
+            setStream(UsersStream)
         })
     },[])
 
@@ -86,6 +88,7 @@ const SocketProvider = (props: any) => {
         const peer = new Peer({
             initiator : true,
             trickle : false,
+            stream
         });
         setCallPeer(peer)
         peer.on('signal', (signalData: any) => {
@@ -122,13 +125,14 @@ const SocketProvider = (props: any) => {
         setCall({
             isReceivedCall: true,
             signal : data.sendersSignalData,
-            from : data.sender
+            from : data.sender,
         })
-        
+
         if(call && call.signal){
         const peer = new Peer({
             initiator : false,
             trickle: false,
+            stream
         })
 
         peer.on('signal', (data: any) => {
