@@ -27,7 +27,7 @@ let streamerTransport: any;
 let viewerTransport: any;
 let receiver: string | string[];
 let sender: string | string[];
-let sendersOffer: any;
+let sendersSignalData: any;
 
 // const mediacodecs: any = [
 //     {
@@ -51,12 +51,12 @@ io.on('connection', (socket) => {
 
     socket.emit('hello', socket.id)
 
-    socket.on('call', async (zenno, from, offer) => {
+    socket.on('call', async (zenno, from, signalData) => {
         try {
             const reciverSocketId = await pool.query('SELECT socketid from Users WHERE zen_no=$1', [zenno])
             receiver = reciverSocketId.rows[0].socketid
             sender = from
-            sendersOffer = offer
+            sendersSignalData = signalData
             io.to(receiver).emit('callercalling')
         } catch (error) {
             console.log(error);
@@ -64,16 +64,12 @@ io.on('connection', (socket) => {
     })
 
     socket.on('recieved', () => {
-        io.to(receiver).emit('incomingcall', { sendersOffer, sender })
+        io.to(receiver).emit('incomingcall', { sendersSignalData, sender })
     })
 
 
-    socket.on('callrecieved', (answer, { from }) => {
-        io.to(from).emit('callaccepted', { answer, picked: true })
-    })
-
-    socket.on('candidate', (candidates) => {
-        io.to(receiver).emit('candidate', candidates)
+    socket.on('callrecieved', (signalData, { from }) => {
+        io.to(from).emit('callaccepted', { signalData, picked: true })
     })
 
     socket.on('negotiation', (offer) => {
