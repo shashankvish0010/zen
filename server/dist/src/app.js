@@ -82,7 +82,7 @@ io.on('connection', (socket) => {
     });
     socket.on('callrecieved', ({ signal, from }) => {
         console.log('fourth', signal, from);
-        io.to(from).emit('callaccepted', { signal, picked: true });
+        io.to(receiver).emit('callaccepted', { signal, picked: true });
     });
     socket.on('negotiation', (offer) => {
         // console.log("negore", receiver);
