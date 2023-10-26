@@ -116,6 +116,7 @@ const SocketProvider = (props: any) => {
     }
 
     async function incomingcall(data: any) {
+        console.log("enter incoming signal");
 
         setCall({
             signal : data.senderSignalData,
@@ -128,8 +129,6 @@ const SocketProvider = (props: any) => {
         })
 
         peer.on('signal', (signalData: any) => {
-            console.log("enter incoming signal");
-            
             socket.emit('callrecieved', signalData, { from: data.sender })
         })
 
