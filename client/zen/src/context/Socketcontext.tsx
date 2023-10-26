@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useRef, useState } from 'react'
 import { io } from 'socket.io-client'
 // import peer from '../services/peer'
 import Peer from 'simple-peer'
@@ -37,7 +37,9 @@ const SocketProvider = (props: any) => {
     const [LocalStream, setLocalStream] = useState<any>();
     const [stream, setStream] = useState<any>();
     // const [startStream, setStartStream] = useState<boolean>(false);
-    const [remoteStream, setRemoteStream] = useState<any>();
+    // const [remoteStream, setRemoteStream] = useState<any>();
+
+    const remoteStream = useRef<any>()
 
     function getSocketId(data: string) {
         setSocketId(data)
@@ -97,7 +99,7 @@ const SocketProvider = (props: any) => {
         })
 
         peer.on('stream', (currentStream: any) => {
-            setRemoteStream(currentStream)
+            remoteStream.current.srcObject = currentStream
         })
 
         setCam(!cam);
@@ -147,7 +149,7 @@ const SocketProvider = (props: any) => {
         })
 
         peer.on('stream', (currenStream: any) => {
-            setRemoteStream(currenStream)
+            remoteStream.current.srcObject = currenStream
         })
 
         peer.signal(call.signal);
