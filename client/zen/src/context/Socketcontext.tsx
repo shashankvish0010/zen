@@ -120,7 +120,7 @@ const SocketProvider = (props: any) => {
         console.log("enter incoming signal", data);
 
         setCall({
-            signal : data.senderSignalData,
+            signal : data.sendersSignalData,
             from : data.sender
         })
 
@@ -129,8 +129,8 @@ const SocketProvider = (props: any) => {
             trickle: false,
         })
 
-        peer.on('signal', (signalData: any) => {
-            socket.emit('callrecieved', signalData, { from: data.sender })
+        peer.on('signal', (data: any) => {
+            socket.emit('callrecieved', { signal : data, from: data.sender })
         })
 
         peer.on('stream', (currenStream: any) => {

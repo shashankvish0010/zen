@@ -66,14 +66,14 @@ io.on('connection', (socket) => {
     })
 
     socket.on('recieved', () => {
-        console.log('second');
+        console.log('second', receiver);
         io.to(receiver).emit('incomingcall', { sendersSignalData, sender })
     })
 
 
-    socket.on('callrecieved', (signalData, { from }) => {
-        console.log('third');
-        io.to(from).emit('callaccepted', { signalData, picked: true })
+    socket.on('callrecieved', ({ signal, from }) => {
+        console.log('third', signal);
+        io.to(from).emit('callaccepted', { signal, picked: true })
     })
 
     socket.on('negotiation', (offer) => {
