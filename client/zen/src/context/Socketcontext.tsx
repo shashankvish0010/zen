@@ -143,7 +143,7 @@ const SocketProvider = (props: any) => {
         })
 
         peer.on('signal', (data: any) => {
-            socket.emit('callrecieved', { signal : data, from: data.sender })
+            socket.emit('callrecieved', { signal : data })
         })
 
         peer.on('stream', (currenStream: any) => {

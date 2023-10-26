@@ -80,9 +80,9 @@ io.on('connection', (socket) => {
         console.log('third', receiver);
         io.to(receiver).emit('incomingcall');
     });
-    socket.on('callrecieved', ({ signal, from }) => {
-        console.log('fourth', signal, from);
-        io.to(from).emit('callaccepted', { signal, picked: true });
+    socket.on('callrecieved', ({ signal }) => {
+        console.log('fourth', signal);
+        io.to(sender).emit('callaccepted', { signal, picked: true });
     });
     socket.on('negotiation', (offer) => {
         // console.log("negore", receiver);
