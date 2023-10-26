@@ -67,12 +67,16 @@ io.on('connection', (socket) => {
 
     socket.on('recieved', () => {
         console.log('second', receiver);
-        io.to(receiver).emit('incomingcall', { sendersSignalData, sender })
+        io.to(receiver).emit('recieverCall', { sendersSignalData, sender })
     })
 
+    socket.on('incomingcallfromsender', () => {
+        console.log('third', receiver);
+        io.to(receiver).emit('incomingcall')
+    })
 
     socket.on('callrecieved', ({ signal, from }) => {
-        console.log('third', signal);
+        console.log('fourth', signal);
         io.to(from).emit('callaccepted', { signal, picked: true })
     })
 

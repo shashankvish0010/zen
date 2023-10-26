@@ -123,17 +123,18 @@ const SocketProvider = (props: any) => {
         socket.emit('recieved')
     }
 
-    async function incomingcall(data: any) {
-        console.log("enter incoming signal", data);
-
+    async function recieverCall(data: any) {
+        console.log("recieverCall set the call", data);
         setCall({
             isReceivedCall: true,
             signal : data.sendersSignalData,
             from : data.sender,
         })
+        socket.emit('incomingcallfromsender')
+    }
 
-        if(call && call.signal != null || undefined){
-            console.log("enter incoming with call signal");
+    async function incomingcall() {
+        console.log("enter incoming signal");
 
         const peer = new Peer({
             initiator : false,
@@ -150,7 +151,6 @@ const SocketProvider = (props: any) => {
         })
 
         peer.signal(call.signal);
-    }
 }
 
     // async function callaccepted(data: any) {
@@ -200,6 +200,7 @@ const SocketProvider = (props: any) => {
         socket.on('hello', getSocketId)
         socket.on("callercalling", callercalling)
         socket.on('incomingcall', incomingcall)
+        socket.on('recieverCall', recieverCall)
         socket.on('callaccepted', callaccepted)
         // socket.on('negotiationaccept', negotiationaccept)
         // socket.on('acceptnegotiationanswer', acceptnegotiationanswer)
@@ -209,6 +210,7 @@ const SocketProvider = (props: any) => {
             socket.off('hello', getSocketId)
             socket.off("callercalling", callercalling)
             socket.off('incomingcall', incomingcall)
+            socket.off('recieverCall', recieverCall)
             socket.off('callaccepted', callaccepted)
             // socket.off('negotiationaccept', negotiationaccept)
             // socket.off('acceptnegotiationanswer', acceptnegotiationanswer)
