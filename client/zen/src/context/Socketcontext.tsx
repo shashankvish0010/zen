@@ -101,6 +101,7 @@ const SocketProvider = (props: any) => {
     }
 
     function callaccepted (data: any) {
+        console.log("enter callacceted");
             setPicked(data.picked)
             callpeer.signal(data.signalData)
     }
@@ -127,6 +128,8 @@ const SocketProvider = (props: any) => {
         })
 
         peer.on('signal', (signalData: any) => {
+            console.log("enter incoming signal");
+            
             socket.emit('callrecieved', signalData, { from: data.sender })
         })
 
