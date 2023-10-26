@@ -154,10 +154,6 @@ router.post('/user/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
                     else {
                         const token = jsonwebtoken_1.default.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
                         res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
-                        const accountSid = 'ACfa5db1b7baa801014c8a985c947edbfe';
-                        const authToken = '64d63bf91563c09c4881e5374c5992f7';
-                        const client = require('twilio')(accountSid, authToken);
-                        client.tokens.create().then((token) => { console.log(token.username); });
                     }
                 }
                 else {

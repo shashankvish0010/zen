@@ -25,6 +25,7 @@ const Socketcontext = createContext<Contextvalue | null>(null)
 const SocketProvider = (props: any) => {
 
     // const remoteStream: React.MutableRefObject<any | null> = useRef(null)
+    const [callpeer, setCallPeer] = useState<any>()
     const [cam, setCam] = useState<boolean>(false)
     const [call, setCall] = useState<any>()
     const [zenList, setZenList] = useState<any>()
@@ -86,7 +87,7 @@ const SocketProvider = (props: any) => {
             initiator : true,
             trickle : false,
         });
-
+        setCallPeer(peer)
         peer.on('signal', (signalData: any) => {
             socket.emit('call', zenNo, socketid, signalData)
         })
@@ -95,12 +96,13 @@ const SocketProvider = (props: any) => {
             setRemoteStream(currentStream)
         })
 
-        socket.on('callaccepted', (data) => {
-            setPicked(data.picked)
-            peer.signal(data.signalData)
-        })
         setCam(!cam);
         // setCaller(true)
+    }
+
+    function callaccepted (data: any) {
+            setPicked(data.picked)
+            callpeer.signal(data.signalData)
     }
 
     function callercalling() {
@@ -182,7 +184,7 @@ const SocketProvider = (props: any) => {
         socket.on('hello', getSocketId)
         socket.on("callercalling", callercalling)
         socket.on('incomingcall', incomingcall)
-        // socket.on('callaccepted', callaccepted)
+        socket.on('callaccepted', callaccepted)
         // socket.on('negotiationaccept', negotiationaccept)
         // socket.on('acceptnegotiationanswer', acceptnegotiationanswer)
         // socket.on('videocall', videcall)
@@ -191,14 +193,14 @@ const SocketProvider = (props: any) => {
             socket.off('hello', getSocketId)
             socket.off("callercalling", callercalling)
             socket.off('incomingcall', incomingcall)
-            // socket.off('callaccepted', callaccepted)
+            socket.off('callaccepted', callaccepted)
             // socket.off('negotiationaccept', negotiationaccept)
             // socket.off('acceptnegotiationanswer', acceptnegotiationanswer)
             // socket.off('videocall', videcall)
         }
     }
         , [socket, getSocketId, callercalling, incomingcall, 
-            // callaccepted, 
+            callaccepted, 
             // negotiationaccept, 
             // acceptnegotiationanswer, 
             // videcall

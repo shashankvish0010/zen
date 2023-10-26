@@ -40,7 +40,7 @@ let streamerTransport;
 let viewerTransport;
 let receiver;
 let sender;
-let sendersOffer;
+let sendersSignalData;
 // const mediacodecs: any = [
 //     {
 //         kind: 'audio',
@@ -59,12 +59,12 @@ let sendersOffer;
 // ]
 io.on('connection', (socket) => {
     socket.emit('hello', socket.id);
-    socket.on('call', (zenno, from, offer) => __awaiter(void 0, void 0, void 0, function* () {
+    socket.on('call', (zenno, from, signalData) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const reciverSocketId = yield dbconnect_1.default.query('SELECT socketid from Users WHERE zen_no=$1', [zenno]);
             receiver = reciverSocketId.rows[0].socketid;
             sender = from;
-            sendersOffer = offer;
+            sendersSignalData = signalData;
             io.to(receiver).emit('callercalling');
         }
         catch (error) {
@@ -72,13 +72,10 @@ io.on('connection', (socket) => {
         }
     }));
     socket.on('recieved', () => {
-        io.to(receiver).emit('incomingcall', { sendersOffer, sender });
+        io.to(receiver).emit('incomingcall', { sendersSignalData, sender });
     });
-    socket.on('callrecieved', (answer, { from }) => {
-        io.to(from).emit('callaccepted', { answer, picked: true });
-    });
-    socket.on('candidate', (candidates) => {
-        io.to(receiver).emit('candidate', candidates);
+    socket.on('callrecieved', (signalData, { from }) => {
+        io.to(from).emit('callaccepted', { signalData, picked: true });
     });
     socket.on('negotiation', (offer) => {
         // console.log("negore", receiver);
