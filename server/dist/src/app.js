@@ -65,6 +65,7 @@ io.on('connection', (socket) => {
             receiver = reciverSocketId.rows[0].socketid;
             sender = from;
             sendersSignalData = signalData;
+            console.log('first', signalData);
             io.to(receiver).emit('callercalling');
         }
         catch (error) {
@@ -72,9 +73,11 @@ io.on('connection', (socket) => {
         }
     }));
     socket.on('recieved', () => {
+        console.log('second');
         io.to(receiver).emit('incomingcall', { sendersSignalData, sender });
     });
     socket.on('callrecieved', (signalData, { from }) => {
+        console.log('third');
         io.to(from).emit('callaccepted', { signalData, picked: true });
     });
     socket.on('negotiation', (offer) => {
