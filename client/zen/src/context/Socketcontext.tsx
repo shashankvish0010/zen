@@ -105,9 +105,9 @@ const SocketProvider = (props: any) => {
     }
 
     function callaccepted (data: any) {
-        console.log("enter callacceted");
+        console.log("enter callacceted", data);
             setPicked(data.picked)
-            callpeer.signal(data.signalData)
+            callpeer.signal(data.signal)
     }
 
     function callercalling() {
