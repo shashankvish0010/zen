@@ -99,6 +99,8 @@ const SocketProvider = (props: any) => {
         })
 
         peer.on('stream', (currentStream: any) => {
+            console.log(currenStream);
+
             remoteStream.current.srcObject = currentStream
         })
 
@@ -149,6 +151,8 @@ const SocketProvider = (props: any) => {
         })
 
         peer.on('stream', (currenStream: any) => {
+            console.log(currenStream);
+            
             remoteStream.current.srcObject = currenStream
         })
 
