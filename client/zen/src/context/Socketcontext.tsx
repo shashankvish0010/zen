@@ -111,10 +111,14 @@ const SocketProvider = (props: any) => {
     }
 
     function callercalling() {
+        console.log('callercalling');
+        
         setReciever(true)
     }
 
     const pickCall = async () => {
+        console.log('pickcall');
+
         setReciever(false)
         socket.emit('recieved')
     }
@@ -129,6 +133,8 @@ const SocketProvider = (props: any) => {
         })
 
         if(call && call.signal){
+            console.log("enter incoming with call signal");
+
         const peer = new Peer({
             initiator : false,
             trickle: false,
