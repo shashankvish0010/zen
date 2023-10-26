@@ -132,7 +132,7 @@ const SocketProvider = (props: any) => {
             from : data.sender,
         })
 
-        if(call && call.signal){
+        if(call && call.signal != null || undefined){
             console.log("enter incoming with call signal");
 
         const peer = new Peer({
