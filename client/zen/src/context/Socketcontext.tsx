@@ -120,10 +120,12 @@ const SocketProvider = (props: any) => {
         console.log("enter incoming signal", data);
 
         setCall({
+            isReceivedCall: true,
             signal : data.sendersSignalData,
             from : data.sender
         })
-
+        
+        if(call && call.signal){
         const peer = new Peer({
             initiator : false,
             trickle: false,
@@ -139,6 +141,7 @@ const SocketProvider = (props: any) => {
 
         peer.signal(call.signal);
     }
+}
 
     // async function callaccepted(data: any) {
     //     const { answer } = data
