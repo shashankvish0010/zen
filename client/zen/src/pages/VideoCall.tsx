@@ -85,7 +85,7 @@ console.log("local",socketcontext.LocalStream);
           <ReactPlayer
           playing
           muted
-          url={socketcontext?.remoteStream} // Provide the actual URL here
+          url={socketcontext.remoteStream} // Provide the actual URL here
           height={'30vh'}
           width={'40vw'}
         />
