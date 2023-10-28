@@ -2,12 +2,16 @@ class Peerconnection {
     peer: any
     addEventListener: any;
     constructor() {
-        
+
         if (!this.peer) {
 
             this.peer = new RTCPeerConnection({
                 iceServers: [
-                    {urls: "stun:stun.services.mozilla.com",}
+                    {
+                        urls: "stun:stun.services.mozilla.com",
+                        username: "louis@mozilla.com",
+                        credential: "webrtcdemo",
+                    }
                 ]
                 // "iceServers": [
                 //     {
