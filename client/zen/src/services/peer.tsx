@@ -7,9 +7,8 @@ class Peerconnection {
 
             this.peer = new RTCPeerConnection({
                 iceServers: [
-                    {
-                        urls: "stun:freestun.net:3479"
-                    },
+ 
+                     { urls: 'stun:freestun.net:5350' }, { urls: 'turns:freestun.tel:5350', username: 'free', credential: 'free' } 
                     // {
                     //     urls: "stun:23.21.150.121"
                     // },
