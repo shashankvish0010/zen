@@ -64,7 +64,6 @@ io.on('connection', (socket) => {
             receiver = reciverSocketId.rows[0].socketid;
             sender = from;
             sendersOffer = offer;
-            console.log('first', sendersOffer);
             io.to(receiver).emit('callercalling');
         }
         catch (error) {
@@ -75,20 +74,15 @@ io.on('connection', (socket) => {
         io.to(receiver).emit('recieverCall', { sendersOffer, sender });
     });
     socket.on('callrecieved', (answer) => {
-        console.log('fourth', answer);
         io.to(sender).emit('callaccepted', { answer, picked: true });
     });
     socket.on('negotiation', (offer) => {
-        // console.log("negore", receiver);
         io.to(receiver).emit('negotiationaccept', { sendersNegoOffer: offer });
     });
     socket.on('negotiationdone', (answer) => {
-        // console.log("negose", sender);
-        // console.log(answer);
         io.to(sender).emit('acceptnegotiationanswer', { receiverNegoAnswer: answer });
     });
-    socket.on('done', () => { io.emit('videocall'); console.log("sdp exchanged"); });
-    socket.on('calldone', () => { console.log("video call done"); });
+    socket.on('done', () => { io.emit('videocall'); });
     // socket.on('livestream', async () => {
     //     mediasoupWorker = await mediasoup.createWorker({
     //         rtcMaxPort: 2020,

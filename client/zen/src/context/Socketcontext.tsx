@@ -7,12 +7,10 @@ interface Contextvalue {
     remoteStream: any
     LocalStream: any
     setCam: any
-    // startStream: boolean
     cam: Boolean,
     calling: (zenNo: number | undefined) => void
     getZenList: (id: string | undefined) => void
     zenList: any | undefined
-    // callConnected: boolean
     reciever: boolean
     pickCall: () => void
     picked: boolean
@@ -23,13 +21,11 @@ interface Contextvalue {
 const Socketcontext = createContext<Contextvalue | null>(null)
 const SocketProvider = (props: any) => {
 
-    // const remoteStream: React.MutableRefObject<any | null> = useRef(null)
     const [cam, setCam] = useState<boolean>(false)
     const [zenList, setZenList] = useState<any>()
     const [socketid, setSocketId] = useState<string>()
     const [caller, setCaller] = useState<boolean>(false)
     const [reciever, setReciever] = useState<boolean>(false)
-    // const [callConnected, setCallConnected] = useState<boolean>(false)
     const [picked, setPicked] = useState<boolean>(false)
     const [LocalStream, setLocalStream] = useState<any>();
     const [startStream, setStartStream] = useState<boolean>(false);
@@ -57,7 +53,6 @@ const SocketProvider = (props: any) => {
         }
     }
 
-
     const streaming = () => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((UsersStream) => {
             setLocalStream(UsersStream)
@@ -72,8 +67,6 @@ const SocketProvider = (props: any) => {
 
     function videcall() {
         setStartStream(true)
-        console.log("enter stream");
-        
         streaming()
     }
 
@@ -86,7 +79,6 @@ const SocketProvider = (props: any) => {
     }
 
     async function callaccepted(data: any) {
-        console.log("enter callacceted", data);
         const { answer, picked } = data
         setPicked(picked)
         await peer.setRemoteDescription(answer)
@@ -94,7 +86,6 @@ const SocketProvider = (props: any) => {
     }
 
     function callercalling() {
-        console.log('callercalling');
         setReciever(true)
     }
 
@@ -104,7 +95,6 @@ const SocketProvider = (props: any) => {
     }
 
     async function recieverCall(data: any) {
-        console.log("recieverCall set the call", data);
         const { sendersOffer } = data
         const answer = await peer.generateAnswer(sendersOffer)
         socket.emit('callrecieved', answer)
