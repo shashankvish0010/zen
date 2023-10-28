@@ -61,14 +61,19 @@ const SocketProvider = (props: any) => {
     const streaming = () => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((UsersStream) => {
             setLocalStream(UsersStream)
-            UsersStream.getTracks().forEach((track: any) => {
+            // UsersStream.getTracks().forEach((track: any) => {
+            //     peer.peer.addTrack(track, UsersStream)
+            // })
+            for (const track of UsersStream.getTracks()) {
                 peer.peer.addTrack(track, UsersStream)
-            })
+            }
         })
     }
 
     function videcall() {
         setStartStream(true)
+        console.log("enter stream");
+        
         streaming()
     }
 
@@ -93,7 +98,7 @@ const SocketProvider = (props: any) => {
         setReciever(true)
     }
 
-    const pickCall = async () => {
+    const pickCall = () => {
         setReciever(false)
         socket.emit('recieved')
     }
