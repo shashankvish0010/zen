@@ -67,27 +67,26 @@ console.log("local",socketcontext.LocalStream);
   }, [socketcontext]);
 
   return (
-    <div className='flex flex-col justify-center items-center gap-5 p-3'>
-      <div className='h-max w-max p-2'>
+    <div className='h-screen w-screen relative flex flex-col justify-center items-center gap-5 p-3'>
+      <div className='h-max w-max p-2 absolute'>
         {socketcontext?.LocalStream && (
           <ReactPlayer
             playing
             muted
             url={socketcontext.LocalStream} // Provide the actual URL here
-            height={'30vh'}
-            width={'40vw'}
+            height={'20vh'}
+            width={'20vw'}
           />
         )}
       </div>
-      {/* <button onClick={() => socketcontext?.calling()}>Stream On</button> */}
       <div className='h-max w-max p-2'>
         { socketcontext?.remoteStream &&
           <ReactPlayer
           playing
           muted
           url={socketcontext.remoteStream} // Provide the actual URL here
-          height={'30vh'}
-          width={'40vw'}
+          height={'80vh'}
+          width={'100vw'}
         />
          }
       </div>
