@@ -6,11 +6,13 @@ class Peerconnection {
         if (!this.peer) {
 
             this.peer = new RTCPeerConnection({
-                iceServers: [{urls: ["stun:stun.l.google.com:19302"]}]
-                // iceServers: [
-                //     {
-                //         urls: "stun:23.21.150.121"
-                //     }
+                iceServers: [
+                    {
+                        urls: "stun:freestun.net:3479"
+                    },
+                    // {
+                    //     urls: "stun:23.21.150.121"
+                    // },
                     // {
                     //     urls: "stun:stun.relay.metered.ca:80",
                     // },
@@ -34,7 +36,7 @@ class Peerconnection {
                     //     username: "9feb6522d3b0d94f7d4bdc53",
                     //     credential: "NBrSkTE3xWZTzRlx",
                     // },
-                // ],
+                ],
             }
             )
         }
