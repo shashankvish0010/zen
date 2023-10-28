@@ -80,7 +80,7 @@ console.log("local",socketcontext.LocalStream);
         )}
       </div>
       <div className='h-max w-max p-2 rounded-md'>
-        { socketcontext?.remoteStream &&
+        { socketcontext?.remoteStream && (
           <ReactPlayer
           playing
           muted
@@ -88,7 +88,7 @@ console.log("local",socketcontext.LocalStream);
           height={'80vh'}
           width={'100vw'}
         />
-         }
+         )}
       </div>
     </div>
   );
