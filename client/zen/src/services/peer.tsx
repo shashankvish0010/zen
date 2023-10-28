@@ -11,7 +11,7 @@ class Peerconnection {
                           urls: "stun:stun.relay.metered.ca:80"
                         },
                         {
-                          urls: "turna.relay.metered.ca:80",
+                          urls: "turn:a.relay.metered.ca:80",
                           username: "9feb6522d3b0d94f7d4bdc53",
                           credential: "NBrSkTE3xWZTzRlx"
                         },
