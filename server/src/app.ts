@@ -8,6 +8,9 @@ import pool from "../dbconnect"
 import { Server } from 'socket.io'
 // import mediasoup from 'mediasoup'
 const server = http.createServer(app)
+app.use(cors({
+    origin: "https://zen-gamma.vercel.app"
+}))
 const io = new Server(server, ({
     cors: {
         origin: 'https://zen-gamma.vercel.app',
@@ -15,10 +18,6 @@ const io = new Server(server, ({
     }
 }))
 dotenv.config()
-app.use(cors({
-    origin: "https://zen-gamma.vercel.app"
-}))
-app.options('*', cors())
 app.use(require('./routers/routes'))
 app.use(express.json())
 let mediasoupWorker: any;
@@ -27,7 +26,7 @@ let streamerTransport: any;
 let viewerTransport: any;
 let receiver: string | string[];
 let sender: string | string[];
-let sendersSignalData: any;
+let sendersOffer: any;
 
 // const mediacodecs: any = [
 //     {
@@ -51,13 +50,13 @@ io.on('connection', (socket) => {
 
     socket.emit('hello', socket.id)
 
-    socket.on('call', async (zenno, from, signalData) => {
+    socket.on('call', async (zenno, from, offer) => {
         try {
             const reciverSocketId = await pool.query('SELECT socketid from Users WHERE zen_no=$1', [zenno])
             receiver = reciverSocketId.rows[0].socketid
             sender = from
-            sendersSignalData = signalData
-            console.log('first',signalData);
+            sendersOffer = offer
+            console.log('first',sendersOffer);
             
             io.to(receiver).emit('callercalling')
         } catch (error) {
@@ -66,18 +65,12 @@ io.on('connection', (socket) => {
     })
 
     socket.on('recieved', () => {
-        console.log('second', receiver);
-        io.to(receiver).emit('recieverCall', { sendersSignalData, sender })
+        io.to(receiver).emit('recieverCall', { sendersOffer, sender })
     })
 
-    socket.on('incomingcallfromsender', () => {
-        console.log('third', receiver);
-        io.to(receiver).emit('incomingcall')
-    })
-
-    socket.on('callrecieved', ({ signal }) => {
-        console.log('fourth', signal);
-        io.to(sender).emit('callaccepted', { signal, picked: true })
+    socket.on('callrecieved', ( answer ) => {
+        console.log('fourth', answer);
+        io.to(sender).emit('callaccepted', { answer, picked: true })
     })
 
     socket.on('negotiation', (offer) => {
