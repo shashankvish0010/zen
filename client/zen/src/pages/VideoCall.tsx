@@ -68,7 +68,7 @@ console.log("local",socketcontext.LocalStream);
 
   return (
     <div className='h-screen w-screen relative flex flex-col justify-center items-center gap-5 p-3'>
-      <div className='h-max w-max p-2 absolute'>
+      <div className='h-max w-max p-2 absolute rounded-md'>
         {socketcontext?.LocalStream && (
           <ReactPlayer
             playing
@@ -79,7 +79,7 @@ console.log("local",socketcontext.LocalStream);
           />
         )}
       </div>
-      <div className='h-max w-max p-2'>
+      <div className='h-max w-max p-2 rounded-md'>
         { socketcontext?.remoteStream &&
           <ReactPlayer
           playing
