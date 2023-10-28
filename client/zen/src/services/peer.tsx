@@ -8,27 +8,26 @@ class Peerconnection {
             this.peer = new RTCPeerConnection({
                 iceServers: [
                         {
-                          "urls": "stun:stun.relay.metered.ca:80"
+                          urls: "stun:stun.relay.metered.ca:80"
+                        },                       {
+                          rls: "turna.relay.metered.ca:80",
+                          username: "9feb6522d3b0d94f7d4bdc53",
+                          credential: "NBrSkTE3xWZTzRlx"
                         },
                         {
-                          "urls": "turn:a.relay.metered.ca:80",
-                          "username": "9feb6522d3b0d94f7d4bdc53",
-                          "credential": "NBrSkTE3xWZTzRlx"
+                          urls: "turn:a.relay.metered.ca:80?transport=tcp",
+                          username: "9feb6522d3b0d94f7d4bdc53",
+                          credential: "NBrSkTE3xWZTzRlx"
                         },
                         {
-                          "urls": "turn:a.relay.metered.ca:80?transport=tcp",
-                          "username": "9feb6522d3b0d94f7d4bdc53",
-                          "credential": "NBrSkTE3xWZTzRlx"
+                          urls: "turn:a.relay.metered.ca:443",
+                          username: "9feb6522d3b0d94f7d4bdc53",
+                          credential: "NBrSkTE3xWZTzRlx"
                         },
                         {
-                          "urls": "turn:a.relay.metered.ca:443",
-                          "username": "9feb6522d3b0d94f7d4bdc53",
-                          "credential": "NBrSkTE3xWZTzRlx"
-                        },
-                        {
-                          "urls": "turn:a.relay.metered.ca:443?transport=tcp",
-                          "username": "9feb6522d3b0d94f7d4bdc53",
-                          "credential": "NBrSkTE3xWZTzRlx"
+                          urls: "turn:a.relay.metered.ca:443?transport=tcp",
+                          username: "9feb6522d3b0d94f7d4bdc53",
+                          credential: "NBrSkTE3xWZTzRlx"
                         }
                       ],                    // {
                     //     urls: "stun:23.21.150.121"
