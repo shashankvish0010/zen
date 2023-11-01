@@ -46,6 +46,10 @@ const VideoCall: React.FC = () => {
           socketcontext?.mycamera == true ? <Icon onclick={socketcontext?.controlCamera} icon="pepicons-pop:camera-circle-off" />
             : <Icon onclick={socketcontext?.controlCamera} icon="pepicons-pop:camera" />
         }
+        {
+          socketcontext?.mymic == true ? <Icon onclick={socketcontext?.controlMic} icon="bi:mic-mute-fill" />
+            : <Icon onclick={socketcontext?.controlMic} icon="eva:mic-fill" />
+        }
       </div>
     </div>
   );

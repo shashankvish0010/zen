@@ -7,9 +7,11 @@ interface Contextvalue {
     remoteStream: any
     LocalStream: any
     mycamera: boolean
+    mymic: boolean
     calling: (zenNo: number | undefined) => void
     getZenList: (id: string | undefined) => void
     controlCamera: () => void
+    controlMic: () => void
     zenList: any | undefined
     reciever: boolean
     pickCall: () => void
@@ -20,7 +22,8 @@ interface Contextvalue {
 
 const Socketcontext = createContext<Contextvalue | null>(null)
 const SocketProvider = (props: any) => {
-    const [mycamera, setMyCamera] = useState<boolean>(false)
+    const [mycamera, setMyCamera] = useState<boolean>(true)
+    const [mymic, setMyMic] = useState<boolean>(true)
     const [zenList, setZenList] = useState<any>()
     const [socketid, setSocketId] = useState<string>()
     const [caller, setCaller] = useState<boolean>(false)
@@ -36,6 +39,10 @@ const SocketProvider = (props: any) => {
 
     const controlCamera = () => {
         setMyCamera(!mycamera)
+    }
+
+    const controlMic = () => {
+        setMyMic(!mymic)
     }
 
     const getZenList = async (id: string | undefined) => {
@@ -77,7 +84,6 @@ const SocketProvider = (props: any) => {
     const calling = async (zenNo: number | undefined) => {
         const offer = await peer.generateOffer()
         socket.emit('call', zenNo, socketid, offer)
-        setMyCamera(true)
         setCaller(true)
     }
 
@@ -164,7 +170,7 @@ const SocketProvider = (props: any) => {
             videcall
         ])
 
-    const info: Contextvalue = { LocalStream, remoteStream, mycamera, controlCamera, setPicked, picked, pickCall, reciever, calling, getZenList, zenList }
+    const info: Contextvalue = { LocalStream, remoteStream, mycamera, controlCamera, mymic, controlMic, setPicked, picked, pickCall, reciever, calling, getZenList, zenList }
     return (
         <Socketcontext.Provider value={info}>
             {props.children}
