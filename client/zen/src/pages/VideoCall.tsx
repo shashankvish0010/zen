@@ -41,7 +41,7 @@ const VideoCall: React.FC = () => {
           />
         )}
       </div>
-      <div className='flex w-screen h-max flex-row justify-around bg-black'>
+      <div className='flex w-screen h-[5vh] p-3 flex-row justify-around bg-black'>
         {
           socketcontext?.mycamera == true ? <Icon color='red' onclick={()=>{socketcontext?.controlCamera}} icon="pepicons-pop:camera-circle-off" height='3vh' />
             : <Icon color='blue' onclick={()=>{socketcontext?.controlCamera}} icon="pepicons-pop:camera" height='3vh' />
