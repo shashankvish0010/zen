@@ -42,7 +42,7 @@ console.log("local",socketcontext.LocalStream);
          )}
       </div>
       <div className='flex flex-row justify-around'>
-      <Icon icon="pepicons-pop:camera-circle-off" />
+      <Icon onclick={socketcontext?.controlCamera} icon="pepicons-pop:camera-circle-off" />
       </div>
     </div>
   );
