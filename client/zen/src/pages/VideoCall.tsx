@@ -41,14 +41,14 @@ const VideoCall: React.FC = () => {
           />
         )}
       </div>
-      <div className='flex flex-row justify-around'>
+      <div className='flex w-screen h-max flex-row justify-around mt-[100%] bg-black'>
         {
-          socketcontext?.mycamera == true ? <Icon onclick={socketcontext?.controlCamera} icon="pepicons-pop:camera-circle-off" />
-            : <Icon onclick={socketcontext?.controlCamera} icon="pepicons-pop:camera" />
+          socketcontext?.mycamera == true ? <Icon onclick={()=>{socketcontext?.controlCamera}} icon="pepicons-pop:camera-circle-off" height='3vh' />
+            : <Icon onclick={()=>{socketcontext?.controlCamera}} icon="pepicons-pop:camera" height='3vh' />
         }
         {
-          socketcontext?.mymic == true ? <Icon onclick={socketcontext?.controlMic} icon="bi:mic-mute-fill" />
-            : <Icon onclick={socketcontext?.controlMic} icon="eva:mic-fill" />
+          socketcontext?.mymic == true ? <Icon onclick={()=>{socketcontext?.controlMic}} icon="bi:mic-mute-fill" height='3vh' />
+            : <Icon onclick={()=>{socketcontext?.controlMic}} icon="eva:mic-fill"  height='3vh' />
         }
       </div>
     </div>
