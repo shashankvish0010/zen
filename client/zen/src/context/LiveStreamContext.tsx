@@ -9,7 +9,7 @@ interface ContextValue {
 export const LiveStreamContext = createContext<ContextValue | null>(null)
 
 export const LiveStreamProvider = (props: any) => {
-
+    socket
     const info: ContextValue = {}
 
     return (
