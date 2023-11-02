@@ -9,11 +9,11 @@ import { Server } from 'socket.io'
 // import mediasoup from 'mediasoup'
 const server = http.createServer(app)
 app.use(cors({
-    origin: "https://zen-gamma.vercel.app/"
+    origin: "https://zen-gamma.vercel.app"
 }))
 const io = new Server(server, ({
     cors: {
-        origin: 'https://zen-gamma.vercel.app/',
+        origin: 'https://zen-gamma.vercel.app',
         methods: ['GET', 'POST', 'PUT']
     }
 }))

@@ -22,11 +22,11 @@ const socket_io_1 = require("socket.io");
 // import mediasoup from 'mediasoup'
 const server = http_1.default.createServer(app);
 app.use((0, cors_1.default)({
-    origin: "https://zen-gamma.vercel.app/"
+    origin: "https://zen-gamma.vercel.app"
 }));
 const io = new socket_io_1.Server(server, ({
     cors: {
-        origin: 'https://zen-gamma.vercel.app/',
+        origin: 'https://zen-gamma.vercel.app',
         methods: ['GET', 'POST', 'PUT']
     }
 }));
