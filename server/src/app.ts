@@ -1,13 +1,17 @@
 import express from "express"
+import fs from 'fs'
 const app = express()
 import http from 'http'
-import fs from 'fs'
 import dotenv from "dotenv"
 import cors from "cors"
 import pool from "../dbconnect"
 import { Server } from 'socket.io'
 import * as mediasoup from "mediasoup";
-const server = http.createServer(app)
+const options: any = {
+    key: fs.readFileSync('./routers/ssl/key.pem', 'utf-8'),
+    cert: fs.readFileSync('./routers/ssl/cert.pem', 'utf-8')
+}
+const server = http.createServer(options, app)
 app.use(cors({
     origin: "https://zen-gamma.vercel.app"
 }))

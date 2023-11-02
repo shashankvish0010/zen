@@ -36,6 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const fs_1 = __importDefault(require("fs"));
 const app = (0, express_1.default)();
 const http_1 = __importDefault(require("http"));
 const dotenv_1 = __importDefault(require("dotenv"));
@@ -43,7 +44,11 @@ const cors_1 = __importDefault(require("cors"));
 const dbconnect_1 = __importDefault(require("../dbconnect"));
 const socket_io_1 = require("socket.io");
 const mediasoup = __importStar(require("mediasoup"));
-const server = http_1.default.createServer(app);
+const options = {
+    key: fs_1.default.readFileSync('./routers/ssl/key.pem', 'utf-8'),
+    cert: fs_1.default.readFileSync('./routers/ssl/cert.pem', 'utf-8')
+};
+const server = http_1.default.createServer(options, app);
 app.use((0, cors_1.default)({
     origin: "https://zen-gamma.vercel.app"
 }));
