@@ -1,6 +1,6 @@
 import { createContext } from "react"
-import { io } from "socket.io-client"
-const socket = io('https://zen-backend-6acy.onrender.com/live')
+// import { io } from "socket.io-client"
+// const socket = io('https://zen-backend-6acy.onrender.com')
 
 interface ContextValue {
 
@@ -9,7 +9,7 @@ interface ContextValue {
 export const LiveStreamContext = createContext<ContextValue | null>(null)
 
 export const LiveStreamProvider = (props: any) => {
-    socket
+    
     const info: ContextValue = {}
 
     return (
