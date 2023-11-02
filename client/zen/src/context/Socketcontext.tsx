@@ -4,7 +4,7 @@ import { socketvalue } from './socketprovider'
 import peer from '../services/peer'
 // const socket = io('https://zen-backend-6acy.onrender.com')
 const socketValue = useContext(socketvalue)
-const socket = socketValue?.socket
+const socket = socketValue?.info
 
 interface Contextvalue {
     remoteStream: any
