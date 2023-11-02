@@ -1,19 +1,25 @@
-// import React, { useContext } from 'react'
-// import ReactPlayer from 'react-player'
-// // import { LiveContext } from '../context/LiveContext'
+import React, { useContext, useEffect } from 'react'
+import ReactPlayer from 'react-player'
+import { Socketcontext } from '../context/Socketcontext'
+const CreatorLiveStream: React.FC = () => {
 
-// const CreatorLiveStream: React.FC = () => {
+    const livestreamcontext = useContext(Socketcontext)
 
-//   // const livecontext = useContext(LiveContext)
+    useEffect(() => {
+        livestreamcontext?.getLocalStream()
+    }, [])
 
-//   return (
-//     <div className='h-screen w-screen flex flex-col items-center gap-5'>
-//       <div>
-//         {/* <ReactPlayer playing url={livecontext?.livestream} height={400} width={500}/> */}
-//       </div>
-//     </div>
-//   )
+    return (
+        <div className='h-screen w-screen flex flex-col items-center gap-5'>
+            <div>
+                {
+                    livestreamcontext?.localLiveStream &&
+                    <ReactPlayer playing url={livestreamcontext?.localLiveStream} height={400} width={500} />
+                }
+            </div>
+        </div>
+    )
 
-// }
+}
 
-// export default CreatorLiveStream
+export default CreatorLiveStream
