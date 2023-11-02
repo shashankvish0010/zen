@@ -7,11 +7,13 @@ import cors from "cors"
 import pool from "../dbconnect"
 import { Server } from 'socket.io'
 import * as mediasoup from "mediasoup";
-const options: any = {
-    key: fs.readFileSync('./routers/ssl/key.pem', 'utf-8'),
-    cert: fs.readFileSync('./routers/ssl/cert.pem', 'utf-8')
-}
-const server = http.createServer(options, app)
+// const keyfile = './routers/key.pem'
+// const certfile = './routers/cert.pem'
+// const options: any = {
+//     key: fs.readFileSync(keyfile, 'utf-8'),
+//     cert: fs.readFileSync(certfile, 'utf-8')
+// }
+const server = http.createServer(app)
 app.use(cors({
     origin: "https://zen-gamma.vercel.app"
 }))
