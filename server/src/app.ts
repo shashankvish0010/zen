@@ -83,15 +83,19 @@ io.on('connection', (socket) => {
     // --------------------------------------- WebSocket connection for Zen Live || Live Streaming --------------------------------- 
 
     socket.on('livestream', async () => {
-        mediasoupWorker = await mediasoup.createWorker({
-            rtcMinPort: 2000,
-            rtcMaxPort: 2020,
-        }).then(async () => {
-            mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
-            const RTPCapabilities = mediasoupRouter.rtpCapabilities
-            socket.emit('GetRTPCapabilities', { RTPCapabilities })
-            console.log("worker created");
-        })
+        try {
+            mediasoupWorker = await mediasoup.createWorker({
+                rtcMinPort: 2000,
+                rtcMaxPort: 2020,
+            }).then(async () => {
+                mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
+                const RTPCapabilities = mediasoupRouter.rtpCapabilities
+                socket.emit('GetRTPCapabilities', { RTPCapabilities })
+                console.log("worker created");
+            })
+        } catch (error) {
+         console.log(error);
+        }
     })
 
     const createWebRTCTransport = async () => {
