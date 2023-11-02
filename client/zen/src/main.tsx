@@ -4,16 +4,16 @@ import App from './App.tsx'
 import './index.css'
 import { UserauthProvider } from './context/Userauth.tsx'
 import { SocketProvider } from './context/Socketcontext.tsx'
-// import { LiveContextProvider } from './context/LiveContext.tsx'
+import { LiveStreamProvider } from './context/LiveStreamContext.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <UserauthProvider>
-        <SocketProvider>
-          {/* <LiveContextProvider> */}
+      <SocketProvider>
+        <LiveStreamProvider>
           <App />
-          {/* </LiveContextProvider> */}
-        </SocketProvider>
+        </LiveStreamProvider>
+      </SocketProvider>
     </UserauthProvider>
   </BrowserRouter>
 )
