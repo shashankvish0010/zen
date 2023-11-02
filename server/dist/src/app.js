@@ -25,10 +25,10 @@ app.use((0, cors_1.default)({
     origin: "https://zen-gamma.vercel.app"
 }));
 const io = new socket_io_1.Server(server, ({
-    cors: {
-        origin: 'https://zen-gamma.vercel.app',
-        methods: ['GET', 'POST', 'PUT']
-    }
+// cors: {
+//     origin: 'https://zen-gamma.vercel.app',
+//     methods: ['GET', 'POST', 'PUT']
+// }
 }));
 dotenv_1.default.config();
 app.use(require('./routers/routes'));

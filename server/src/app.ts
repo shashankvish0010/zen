@@ -12,10 +12,10 @@ app.use(cors({
     origin: "https://zen-gamma.vercel.app"
 }))
 const io = new Server(server, ({
-    cors: {
-        origin: 'https://zen-gamma.vercel.app',
-        methods: ['GET', 'POST', 'PUT']
-    }
+    // cors: {
+    //     origin: 'https://zen-gamma.vercel.app',
+    //     methods: ['GET', 'POST', 'PUT']
+    // }
 }))
 dotenv.config()
 app.use(require('./routers/routes'))
