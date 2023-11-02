@@ -6,7 +6,7 @@ import dotenv from "dotenv"
 import cors from "cors"
 import pool from "../dbconnect"
 import { Server } from 'socket.io'
-import mediasoup from 'mediasoup'
+import * as mediasoup from "mediasoup";
 const server = http.createServer(app)
 app.use(cors({
     origin: "https://zen-gamma.vercel.app"
@@ -90,10 +90,10 @@ io.on('connection', (socket) => {
             }).then(async () => {
                 console.log(mediasoupWorker);
                 
-                // mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
-                // const RTPCapabilities = mediasoupRouter.rtpCapabilities
-                // socket.emit('GetRTPCapabilities', { RTPCapabilities })
-                // console.log("worker created");
+                mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
+                const RTPCapabilities = mediasoupRouter.rtpCapabilities
+                socket.emit('GetRTPCapabilities', { RTPCapabilities })
+                console.log("worker created");
             })
         } catch (error) {
          console.log(error);
