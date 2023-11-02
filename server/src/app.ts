@@ -84,14 +84,14 @@ io.on('connection', (socket) => {
 
     socket.on('livestream', async () => {
         mediasoupWorker = await mediasoup.createWorker({
+            rtcMinPort: 2000,
             rtcMaxPort: 2020,
-            rtcMinPort: 2000
+        }).then(async () => {
+            mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
+            const RTPCapabilities = mediasoupRouter.rtpCapabilities
+            socket.emit('GetRTPCapabilities', { RTPCapabilities })
+            console.log("worker created");
         })
-
-        mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
-        const RTPCapabilities = mediasoupRouter.rtpCapabilities
-        socket.emit('GetRTPCapabilities', { RTPCapabilities })
-        console.log("worker created");
     })
 
     const createWebRTCTransport = async () => {

@@ -87,13 +87,14 @@ io.on('connection', (socket) => {
     // --------------------------------------- WebSocket connection for Zen Live || Live Streaming --------------------------------- 
     socket.on('livestream', () => __awaiter(void 0, void 0, void 0, function* () {
         mediasoupWorker = yield mediasoup_1.default.createWorker({
+            rtcMinPort: 2000,
             rtcMaxPort: 2020,
-            rtcMinPort: 2000
-        });
-        mediasoupRouter = yield mediasoupWorker.createRouter({ mediacodecs });
-        const RTPCapabilities = mediasoupRouter.rtpCapabilities;
-        socket.emit('GetRTPCapabilities', { RTPCapabilities });
-        console.log("worker created");
+        }).then(() => __awaiter(void 0, void 0, void 0, function* () {
+            mediasoupRouter = yield mediasoupWorker.createRouter({ mediacodecs });
+            const RTPCapabilities = mediasoupRouter.rtpCapabilities;
+            socket.emit('GetRTPCapabilities', { RTPCapabilities });
+            console.log("worker created");
+        }));
     }));
     const createWebRTCTransport = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
