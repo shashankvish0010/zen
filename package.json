@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "mediasoup-client": "^3.6.103"
+  }
+}

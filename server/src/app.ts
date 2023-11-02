@@ -6,7 +6,7 @@ import dotenv from "dotenv"
 import cors from "cors"
 import pool from "../dbconnect"
 import { Server } from 'socket.io'
-// import mediasoup from 'mediasoup'
+import mediasoup from 'mediasoup'
 const server = http.createServer(app)
 app.use(cors({
     origin: "https://zen-gamma.vercel.app"
@@ -28,26 +28,26 @@ let receiver: string | string[];
 let sender: string | string[];
 let sendersOffer: any;
 
-// const mediacodecs: any = [
-//     {
-//         kind: 'audio',
-//         mimeType: 'audio/opus',
-//         clockRate: 48000,
-//         channels: 2
-//     },
-//     {
-//         kind: 'video',
-//         mimeType: 'video/VP8',
-//         clockRate: 90000,
-//         parameters: {
-//             'x-google-start-bitrate': 1000,
-//         }
-//     },
-// ]
+const mediacodecs: any = [
+    {
+        kind: 'audio',
+        mimeType: 'audio/opus',
+        clockRate: 48000,
+        channels: 2
+    },
+    {
+        kind: 'video',
+        mimeType: 'video/VP8',
+        clockRate: 90000,
+        parameters: {
+            'x-google-start-bitrate': 1000,
+        }
+    },
+]
 
 
 io.on('connection', (socket) => {
-
+    // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
     socket.emit('hello', socket.id)
 
     socket.on('call', async (zenno, from, offer) => {
@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
             const reciverSocketId = await pool.query('SELECT socketid from Users WHERE zen_no=$1', [zenno])
             receiver = reciverSocketId.rows[0].socketid
             sender = from
-            sendersOffer = offer            
+            sendersOffer = offer
             io.to(receiver).emit('callercalling')
         } catch (error) {
             console.log(error);
@@ -66,7 +66,7 @@ io.on('connection', (socket) => {
         io.to(receiver).emit('recieverCall', { sendersOffer, sender })
     })
 
-    socket.on('callrecieved', ( answer ) => {
+    socket.on('callrecieved', (answer) => {
         io.to(sender).emit('callaccepted', { answer, picked: true })
     })
 
@@ -79,18 +79,20 @@ io.on('connection', (socket) => {
     })
 
     socket.on('done', () => { io.emit('videocall') })
-    
-    // socket.on('livestream', async () => {
-    //     mediasoupWorker = await mediasoup.createWorker({
-    //         rtcMaxPort: 2020,
-    //         rtcMinPort: 2000
-    //     })
 
-    //     // mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
-    //     const RTPCapabilities = mediasoupRouter.rtpCapabilities
-    //     socket.emit('GetRTPCapabilities', { RTPCapabilities })
-    //     console.log("worker created");
-    // })
+    // --------------------------------------- WebSocket connection for Zen Live || Live Streaming --------------------------------- 
+
+    socket.on('livestream', async () => {
+        mediasoupWorker = await mediasoup.createWorker({
+            rtcMaxPort: 2020,
+            rtcMinPort: 2000
+        })
+
+        // mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
+        const RTPCapabilities = mediasoupRouter.rtpCapabilities
+        socket.emit('GetRTPCapabilities', { RTPCapabilities })
+        console.log("worker created");
+    })
 
     const createWebRTCTransport = async () => {
         try {

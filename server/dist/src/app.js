@@ -19,7 +19,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 const dbconnect_1 = __importDefault(require("../dbconnect"));
 const socket_io_1 = require("socket.io");
-// import mediasoup from 'mediasoup'
+const mediasoup_1 = __importDefault(require("mediasoup"));
 const server = http_1.default.createServer(app);
 app.use((0, cors_1.default)({
     origin: "https://zen-gamma.vercel.app"
@@ -40,23 +40,24 @@ let viewerTransport;
 let receiver;
 let sender;
 let sendersOffer;
-// const mediacodecs: any = [
-//     {
-//         kind: 'audio',
-//         mimeType: 'audio/opus',
-//         clockRate: 48000,
-//         channels: 2
-//     },
-//     {
-//         kind: 'video',
-//         mimeType: 'video/VP8',
-//         clockRate: 90000,
-//         parameters: {
-//             'x-google-start-bitrate': 1000,
-//         }
-//     },
-// ]
+const mediacodecs = [
+    {
+        kind: 'audio',
+        mimeType: 'audio/opus',
+        clockRate: 48000,
+        channels: 2
+    },
+    {
+        kind: 'video',
+        mimeType: 'video/VP8',
+        clockRate: 90000,
+        parameters: {
+            'x-google-start-bitrate': 1000,
+        }
+    },
+];
 io.on('connection', (socket) => {
+    // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
     socket.emit('hello', socket.id);
     socket.on('call', (zenno, from, offer) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -83,16 +84,17 @@ io.on('connection', (socket) => {
         io.to(sender).emit('acceptnegotiationanswer', { receiverNegoAnswer: answer });
     });
     socket.on('done', () => { io.emit('videocall'); });
-    // socket.on('livestream', async () => {
-    //     mediasoupWorker = await mediasoup.createWorker({
-    //         rtcMaxPort: 2020,
-    //         rtcMinPort: 2000
-    //     })
-    //     // mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
-    //     const RTPCapabilities = mediasoupRouter.rtpCapabilities
-    //     socket.emit('GetRTPCapabilities', { RTPCapabilities })
-    //     console.log("worker created");
-    // })
+    // --------------------------------------- WebSocket connection for Zen Live || Live Streaming --------------------------------- 
+    socket.on('livestream', () => __awaiter(void 0, void 0, void 0, function* () {
+        mediasoupWorker = yield mediasoup_1.default.createWorker({
+            rtcMaxPort: 2020,
+            rtcMinPort: 2000
+        });
+        // mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
+        const RTPCapabilities = mediasoupRouter.rtpCapabilities;
+        socket.emit('GetRTPCapabilities', { RTPCapabilities });
+        console.log("worker created");
+    }));
     const createWebRTCTransport = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const WebRTCOptions = {

@@ -170,6 +170,26 @@ const SocketProvider = (props: any) => {
             videcall
         ])
 
+    // --------------------------------------------- Live Streaming Code -----------------------------------------------------
+
+    const [localLiveStream, setLocalLiveStream] = useState<any>()
+    const [liveStream, setLiveStream] = useState<any>()
+
+    const addLocalStream = (stream: MediaStream) => {
+        const Localtracks = stream.getTracks()[0]
+        setLiveStream(Localtracks)
+    }
+
+    const getLocalStream = () => {
+        navigator.mediaDevices.getUserMedia({audio: true, video: true}).then((myLocalStream)=>{
+            setLocalLiveStream(myLocalStream)
+            addLocalStream(myLocalStream)
+        })
+    }
+
+
+
+    // -------------------------------------------- Value Provider Object ----------------------------------------------------------
     const info: Contextvalue = { LocalStream, remoteStream, mycamera, controlCamera, mymic, controlMic, setPicked, picked, pickCall, reciever, calling, getZenList, zenList }
     return (
         <Socketcontext.Provider value={info}>
