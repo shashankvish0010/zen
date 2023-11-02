@@ -1,10 +1,7 @@
-import { createContext, useContext, useEffect, useState } from 'react'
-import { Socketproviders } from './Socketvalueprovider'
-// import { io } from 'socket.io-client'
+import { createContext, useEffect, useState } from 'react'
+import { io } from 'socket.io-client'
 import peer from '../services/peer'
-// const socket = io('https://zen-backend-6acy.onrender.com')
-const Socketprovide = useContext(Socketproviders)
-const socket = Socketprovide?.info
+const socket = io('https://zen-backend-6acy.onrender.com')
 
 interface Contextvalue {
     remoteStream: any
