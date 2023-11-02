@@ -183,6 +183,7 @@ const SocketProvider = (props: any) => {
     const addLocalStream = (stream: MediaStream) => {
         const Localtracks = stream.getTracks()[0]
         setLiveStream(Localtracks)
+        socket.emit('livestream')
     }
 
     const getLocalStream = () => {
@@ -191,6 +192,18 @@ const SocketProvider = (props: any) => {
             addLocalStream(myLocalStream)
         })
     }
+
+    const getRtpCapabilities = ({RTPCapabilities}: any) => {
+        console.log(RTPCapabilities);
+    }
+
+    useEffect(()=>{
+        socket.on('GetRTPCapabilities', getRtpCapabilities)
+
+        return () => {
+            socket.off('GetRTPCapabilities', getRtpCapabilities)
+        }
+    },[])
 
 
 
