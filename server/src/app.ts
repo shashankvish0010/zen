@@ -87,7 +87,10 @@ io.on('connection', (socket) => {
 
     socket.on('livestream', async () => {
         try {
-            mediasoupWorker = await mediasoup.createWorker().then(async () => {
+            mediasoupWorker = await mediasoup.createWorker({
+                rtcMinPort: 10000,
+                rtcMaxPort: 59999
+            }).then(async () => {
                 console.log(mediasoupWorker);
                 mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
                 const RTPCapabilities = mediasoupRouter.rtpCapabilities

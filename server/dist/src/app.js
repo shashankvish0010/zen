@@ -112,7 +112,10 @@ io.on('connection', (socket) => {
     // --------------------------------------- WebSocket connection for Zen Live || Live Streaming --------------------------------- 
     socket.on('livestream', () => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            mediasoupWorker = yield mediasoup.createWorker().then(() => __awaiter(void 0, void 0, void 0, function* () {
+            mediasoupWorker = yield mediasoup.createWorker({
+                rtcMinPort: 10000,
+                rtcMaxPort: 59999
+            }).then(() => __awaiter(void 0, void 0, void 0, function* () {
                 console.log(mediasoupWorker);
                 mediasoupRouter = yield mediasoupWorker.createRouter({ mediacodecs });
                 const RTPCapabilities = mediasoupRouter.rtpCapabilities;
