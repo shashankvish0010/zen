@@ -13,7 +13,7 @@ const VideoCall: React.FC = () => {
   return (
     <div className='h-screen w-screen relative flex flex-col justify-center items-center gap-5 p-3'>
       {socketcontext?.mycamera == true ?
-        (<div className='h-max w-max p-2 ml-[80%] absolute border border-white rounded-md'>
+        (<div className='h-max w-max p-2 ml-[80%] mb-[70%] absolute border border-white rounded-md'>
           {socketcontext?.LocalStream &&
           <ReactPlayer
             playing
