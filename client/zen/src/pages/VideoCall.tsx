@@ -41,8 +41,8 @@ const VideoCall: React.FC = () => {
             : <Icon color='blue' onClick={() => { socketcontext?.controlCamera() }} icon="pepicons-pop:camera" height='5vh' />
         }
         {
-          socketcontext?.mymic == true ? <Icon color='red' onClick={() => { socketcontext?.controlMic }} icon="bi:mic-mute-fill" height='5vh' />
-            : <Icon color='green' onClick={() => { socketcontext?.controlMic }} icon="eva:mic-fill" height='5vh' />
+          socketcontext?.mymic == true ? <Icon color='red' onClick={() => { socketcontext?.controlMic() }} icon="bi:mic-mute-fill" height='5vh' />
+            : <Icon color='green' onClick={() => { socketcontext?.controlMic() }} icon="eva:mic-fill" height='5vh' />
         }
       </div>
     </div>
