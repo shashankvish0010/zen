@@ -19,8 +19,9 @@ const VideoCall: React.FC = () => {
 
   return (
     <div className='h-screen w-screen relative flex flex-col justify-center items-center gap-5 p-3'>
-      <div className='h-max w-max p-2 ml-[80%] absolute rounded-md'>
-        {socketcontext?.mycamera == true ? (socketcontext?.LocalStream && (
+      {socketcontext?.mycamera == true ?
+        (<div className='h-max w-max p-2 ml-[80%] absolute border border-white rounded-md'>
+          socketcontext?.LocalStream &&
           <ReactPlayer
             playing
             muted
@@ -28,8 +29,8 @@ const VideoCall: React.FC = () => {
             height={'20vh'}
             width={'20vw'}
           />
-        )) : null}
-      </div>
+        </div>
+        ) : null}
       <div className='h-max w-max p-2 rounded-md'>
         {socketcontext?.remoteStream && (
           <ReactPlayer
@@ -43,12 +44,12 @@ const VideoCall: React.FC = () => {
       </div>
       <div className='mt-[100%] absolute flex w-screen h-[5vh] p-3 flex-row gap-5 bg-transparent'>
         {
-          socketcontext?.mycamera == true ? <Icon color='red' onclick={()=>{socketcontext?.controlCamera}} icon="pepicons-pop:camera-circle-off" height='5vh' />
-            : <Icon color='blue' onclick={()=>{socketcontext?.controlCamera}} icon="pepicons-pop:camera" height='5vh' />
+          socketcontext?.mycamera == true ? <Icon color='red' onclick={() => { socketcontext?.controlCamera }} icon="pepicons-pop:camera-circle-off" height='5vh' />
+            : <Icon color='blue' onclick={() => { socketcontext?.controlCamera }} icon="pepicons-pop:camera" height='5vh' />
         }
         {
-          socketcontext?.mymic == true ? <Icon color='red' onclick={()=>{socketcontext?.controlMic}} icon="bi:mic-mute-fill" height='5vh' />
-            : <Icon color='green' onclick={()=>{socketcontext?.controlMic}} icon="eva:mic-fill"  height='5vh' />
+          socketcontext?.mymic == true ? <Icon color='red' onclick={() => { socketcontext?.controlMic }} icon="bi:mic-mute-fill" height='5vh' />
+            : <Icon color='green' onclick={() => { socketcontext?.controlMic }} icon="eva:mic-fill" height='5vh' />
         }
       </div>
     </div>

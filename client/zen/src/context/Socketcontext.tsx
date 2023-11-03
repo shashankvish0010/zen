@@ -44,13 +44,12 @@ const SocketProvider = (props: any) => {
 
     const controlCamera = () => {        
         setMyCamera(!mycamera)
-        console.log(mycamera);
-
+        console.log("cam",mycamera);
     }
 
     const controlMic = () => {
         setMyMic(!mymic)
-        console.log(mymic);
+        console.log("mic",mymic);
     }
 
     const getZenList = async (id: string | undefined) => {
