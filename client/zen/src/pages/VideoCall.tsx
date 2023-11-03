@@ -13,9 +13,9 @@ const VideoCall: React.FC = () => {
   return (
     <div className='h-screen bg-purple-600 w-screen relative flex flex-col justify-center items-center gap-5 p-3'>
       {socketcontext?.mycamera == true ?
-        (<div className='h-max w-max p-2 ml-[80%] mb-[70%] absolute border border-white rounded-md'>
+        (<div className='h-max w-max p-2 ml-[80%] mb-[70%] absolute'>
           {socketcontext?.LocalStream &&
-          <ReactPlayer
+          <ReactPlayer className='border border-white rounded-md'
             playing
             muted
             url={socketcontext.LocalStream} // Provide the actual URL here
@@ -24,9 +24,9 @@ const VideoCall: React.FC = () => {
           />}
         </div>
         ) : null}
-      <div className='h-max w-max p-2 rounded-md border border-white shadow'>
+      <div className='h-max w-max p-2'>
         {socketcontext?.remoteStream && (
-          <ReactPlayer
+          <ReactPlayer className='border border-white rounded-md shadow-slate-300'
             playing
             muted
             url={socketcontext.remoteStream} // Provide the actual URL here
