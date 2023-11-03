@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Socketcontext } from '../context/Socketcontext';
 import ReactPlayer from 'react-player';
 import { Icon } from '@iconify/react';
@@ -6,29 +6,22 @@ import { Icon } from '@iconify/react';
 const VideoCall: React.FC = () => {
   const socketcontext = useContext(Socketcontext);
 
-  // useEffect(() => {
-  //   // Inside the useEffect
-  //   if (socketcontext?.remoteStream) {
-  //     // Attach the remote stream to the video element
-  //     console.log("remote", socketcontext.remoteStream);
-  //     console.log("local", socketcontext.LocalStream);
-  //     // Error event listener
-  //   }
-
-  // }, [socketcontext]);
+  useEffect(() => {
+    console.log(    socketcontext?.mycamera      );
+  }, [socketcontext]);
 
   return (
     <div className='h-screen w-screen relative flex flex-col justify-center items-center gap-5 p-3'>
       {socketcontext?.mycamera == true ?
         (<div className='h-max w-max p-2 ml-[80%] absolute border border-white rounded-md'>
-          socketcontext?.LocalStream &&
+          {socketcontext?.LocalStream &&
           <ReactPlayer
             playing
             muted
             url={socketcontext.LocalStream} // Provide the actual URL here
             height={'20vh'}
             width={'20vw'}
-          />
+          />}
         </div>
         ) : null}
       <div className='h-max w-max p-2 rounded-md'>
