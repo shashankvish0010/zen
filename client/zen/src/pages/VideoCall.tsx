@@ -30,7 +30,7 @@ const VideoCall: React.FC = () => {
           />
         )) : null}
       </div>
-      <div className='h-max w-max p-2 rounded-md'>
+      <div className='relative h-max w-max p-2 rounded-md'>
         {socketcontext?.remoteStream && (
           <ReactPlayer
             playing
@@ -41,9 +41,9 @@ const VideoCall: React.FC = () => {
           />
         )}
       </div>
-      <div className='flex w-screen h-[5vh] p-3 flex-row justify-around bg-black'>
+      <div className='absolute flex w-screen h-[5vh] p-3 flex-row justify-around bg-transparent'>
         {
-          socketcontext?.mycamera == true ? <Icon color='red' onclick={()=>{socketcontext?.controlCamera}} icon="pepicons-pop:camera-circle-off" height='3vh' />
+          socketcontext?.mycamera == true ? <Icon color='red' onclick={()=>{socketcontext?.controlCamera}} icon="pepicons-pop:camera-circle-off" height='5vh' />
             : <Icon color='blue' onclick={()=>{socketcontext?.controlCamera}} icon="pepicons-pop:camera" height='3vh' />
         }
         {
