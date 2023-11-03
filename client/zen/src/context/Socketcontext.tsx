@@ -42,12 +42,15 @@ const SocketProvider = (props: any) => {
         setSocketId(data)
     }
 
-    const controlCamera = () => {
+    const controlCamera = () => {        
         setMyCamera(!mycamera)
+        console.log(mycamera);
+
     }
 
     const controlMic = () => {
         setMyMic(!mymic)
+        console.log(mymic);
     }
 
     const getZenList = async (id: string | undefined) => {

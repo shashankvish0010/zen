@@ -30,7 +30,7 @@ const VideoCall: React.FC = () => {
           />
         )) : null}
       </div>
-      <div className='relative h-max w-max p-2 rounded-md'>
+      <div className='h-max w-max p-2 rounded-md'>
         {socketcontext?.remoteStream && (
           <ReactPlayer
             playing
@@ -41,14 +41,14 @@ const VideoCall: React.FC = () => {
           />
         )}
       </div>
-      <div className='absolute flex w-screen h-[5vh] p-3 flex-row justify-around bg-transparent'>
+      <div className='mt-[100%] absolute flex w-screen h-[5vh] p-3 flex-row gap-5 bg-transparent'>
         {
           socketcontext?.mycamera == true ? <Icon color='red' onclick={()=>{socketcontext?.controlCamera}} icon="pepicons-pop:camera-circle-off" height='5vh' />
-            : <Icon color='blue' onclick={()=>{socketcontext?.controlCamera}} icon="pepicons-pop:camera" height='3vh' />
+            : <Icon color='blue' onclick={()=>{socketcontext?.controlCamera}} icon="pepicons-pop:camera" height='5vh' />
         }
         {
-          socketcontext?.mymic == true ? <Icon color='red' onclick={()=>{socketcontext?.controlMic}} icon="bi:mic-mute-fill" height='3vh' />
-            : <Icon color='green' onclick={()=>{socketcontext?.controlMic}} icon="eva:mic-fill"  height='3vh' />
+          socketcontext?.mymic == true ? <Icon color='red' onclick={()=>{socketcontext?.controlMic}} icon="bi:mic-mute-fill" height='5vh' />
+            : <Icon color='green' onclick={()=>{socketcontext?.controlMic}} icon="eva:mic-fill"  height='5vh' />
         }
       </div>
     </div>
