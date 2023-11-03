@@ -7,7 +7,7 @@ const VideoCall: React.FC = () => {
   const socketcontext = useContext(Socketcontext);
 
   useEffect(() => {
-    console.log(    socketcontext?.mycamera      );
+    console.log(    socketcontext?.mycamera,  socketcontext?.mymic     );
   }, [socketcontext]);
 
   return (
