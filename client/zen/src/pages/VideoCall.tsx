@@ -7,7 +7,7 @@ const VideoCall: React.FC = () => {
   const socketcontext = useContext(Socketcontext);
 
   useEffect(() => {
-    console.log(    socketcontext?.mycamera,  socketcontext?.mymic     );
+    console.log(socketcontext?.mycamera, socketcontext?.mymic);
   }, [socketcontext]);
 
   return (
@@ -15,18 +15,18 @@ const VideoCall: React.FC = () => {
       {socketcontext?.mycamera == true ?
         (<div className='h-max w-max p-2 ml-[80%] mb-[70%] absolute'>
           {socketcontext?.LocalStream &&
-          <ReactPlayer className='border border-white rounded-md'
-            playing
-            muted
-            url={socketcontext.LocalStream} // Provide the actual URL here
-            height={'20vh'}
-            width={'20vw'}
-          />}
+            <ReactPlayer className='rounded-md'
+              playing
+              muted
+              url={socketcontext.LocalStream} // Provide the actual URL here
+              height={'20vh'}
+              width={'20vw'}
+            />}
         </div>
         ) : null}
       <div className='h-max w-max p-2'>
         {socketcontext?.remoteStream && (
-          <ReactPlayer className='border border-white rounded-md shadow-slate-300'
+          <ReactPlayer className='rounded-md shadow-slate-300'
             playing
             muted
             url={socketcontext.remoteStream} // Provide the actual URL here
