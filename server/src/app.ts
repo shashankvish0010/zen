@@ -97,7 +97,7 @@ io.on('connection', (socket) => {
                 rtcMinPort: 10000,
                 rtcMaxPort: 59999
             }).then(async () => {
-                console.log(mediasoupWorker);
+                console.log(mediacodecs);
                 mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
                 const RTPCapabilities = mediasoupRouter.rtpCapabilities
                 socket.emit('GetRTPCapabilities', { RTPCapabilities })
