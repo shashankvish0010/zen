@@ -94,8 +94,17 @@ io.on('connection', (socket) => {
     socket.on('livestream', async () => {
         try {
             mediasoupWorker = await mediasoup.createWorker({
+                logLevel: 'debug',
+                logTags: [
+                    'info',
+                    'ice',
+                    'dtls',
+                    'rtp',
+                    'srtp',
+                    'rtcp'
+                ],
                 rtcMinPort: 10000,
-                rtcMaxPort: 59999
+                rtcMaxPort: 10100,
             }).then(async () => {
                 console.log(mediacodecs);
                 mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
