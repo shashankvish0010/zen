@@ -116,7 +116,15 @@ io.on('connection', (socket) => {
         }
     })
 
-    const createWebRTCTransport = async () => {
+    socket.on('createWebRTCTransport', async ({sender}, callback: any) => {
+        if(sender == true){
+           streamerTransport = await createWebRTCTransport(callback)
+        }else{
+            viewerTransport = await createWebRTCTransport(callback)
+        }
+    })
+
+    const createWebRTCTransport = async (callback: any) => {
         try {
             const WebRTCOptions = {
                 listenIps: [
@@ -140,7 +148,7 @@ io.on('connection', (socket) => {
                 console.log('transport closed');
             })
 
-            socket.emit('transportParams', {
+            callback({
                 params:
                 {
                     id: transport.id,
@@ -156,14 +164,6 @@ io.on('connection', (socket) => {
             console.log(error);
         }
     }
-
-    socket.on('WebRTCTransport', ({ streamer }) => {
-        if (streamer) {
-            streamerTransport = createWebRTCTransport()
-        } else {
-            viewerTransport = createWebRTCTransport()
-        }
-    })
 
     socket.on('transportConnect', async ({ dtlsParameters }) => {
         streamerTransport.connect({ dtlsParameters })

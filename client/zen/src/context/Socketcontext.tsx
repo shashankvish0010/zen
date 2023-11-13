@@ -203,7 +203,10 @@ const SocketProvider = (props: any) => {
             const currentDevice = new mediasoupClient.Device()
             currentDevice.load({
                 routerRtpCapabilities: RTPCapabilities
-            }).then(() => console.log("device created"))
+            }).then(() => {
+                createStreamerTransport();
+                console.log("device created")
+            })
                 .catch((error) => console.log(error))
         } catch (error) {
             console.log(error);
@@ -213,6 +216,12 @@ const SocketProvider = (props: any) => {
     const getRtpCapabilities = ({ RTPCapabilities }: any) => {
         console.log(RTPCapabilities);
         createDevice(RTPCapabilities)
+    }
+
+    const createStreamerTransport = () => {
+        socket.emit('createWebRTCTransport', { sender: true }, ({ params }: any) => {
+            console.log(params);
+        })
     }
 
     useEffect(() => {
