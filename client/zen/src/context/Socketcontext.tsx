@@ -183,7 +183,7 @@ const SocketProvider = (props: any) => {
 
     const [localLiveStream, setLocalLiveStream] = useState<any>()
     const [liveStream, setLiveStream] = useState<any>()
-    const [device, setDevice] = useState<any>()
+    // const [device, setDevice] = useState<any>()
 
     const addLocalStream = (stream: MediaStream) => {
         const Localtracks = stream.getTracks()[0]
@@ -201,7 +201,6 @@ const SocketProvider = (props: any) => {
     const createDevice = (RTPCapabilities: RtpCapabilities) => {
         try {
             const currentDevice = new mediasoupClient.Device()
-            setDevice(currentDevice)
             currentDevice.load({
                 routerRtpCapabilities: RTPCapabilities
             }).then(() => console.log("device created"))
