@@ -118,13 +118,13 @@ io.on('connection', (socket) => {
 
     socket.on('createWebRTCTransport', async ({sender}, callback: any) => {
         if(sender == true){
-           streamerTransport = await createWebRTCTransport(callback)
+           streamerTransport = await createTransport(callback)
         }else{
-            viewerTransport = await createWebRTCTransport(callback)
+            viewerTransport = await createTransport(callback)
         }
     })
 
-    const createWebRTCTransport = async (callback: any) => {
+    const createTransport = async (callback: any) => {
         try {
             const WebRTCOptions = {
                 listenIps: [
