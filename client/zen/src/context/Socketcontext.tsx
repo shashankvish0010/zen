@@ -44,14 +44,14 @@ const SocketProvider = (props: any) => {
         setSocketId(data)
     }
 
-    const controlCamera = () => {        
+    const controlCamera = () => {
         setMyCamera(!mycamera)
-        console.log("cam",mycamera);
+        console.log("cam", mycamera);
     }
 
     const controlMic = () => {
         setMyMic(!mymic)
-        console.log("mic",mymic);
+        console.log("mic", mymic);
     }
 
     const getZenList = async (id: string | undefined) => {
@@ -198,33 +198,31 @@ const SocketProvider = (props: any) => {
         })
     }
 
-    const createDevice = async (RTPCapabilities: RtpCapabilities) => {
+    const createDevice = (RTPCapabilities: RtpCapabilities) => {
         try {
             const currentDevice = new mediasoupClient.Device()
             setDevice(currentDevice)
-            await currentDevice.load({
-                routerRtpCapabilities : RTPCapabilities
-            })
-
-            console.log("device created");
-            
+            currentDevice.load({
+                routerRtpCapabilities: RTPCapabilities
+            }).then(() => console.log("device created"))
+                .catch((error) => console.log(error))
         } catch (error) {
-         console.log(error);
+            console.log(error);
         }
     }
 
-    const getRtpCapabilities = ({RTPCapabilities}: any) => {
+    const getRtpCapabilities = ({ RTPCapabilities }: any) => {
         console.log(RTPCapabilities);
         createDevice(RTPCapabilities)
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         socket.on('GetRTPCapabilities', getRtpCapabilities)
 
         return () => {
             socket.off('GetRTPCapabilities', getRtpCapabilities)
         }
-    },[])
+    }, [])
 
 
 
