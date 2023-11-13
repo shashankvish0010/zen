@@ -7,6 +7,8 @@ import cors from "cors"
 import pool from "../dbconnect"
 import { Server } from 'socket.io'
 import * as mediasoup from "mediasoup";
+import { AppData } from "mediasoup-client/lib/types"
+import { RouterOptions } from "mediasoup/node/lib/types"
 // const keyfile = './routers/key.pem'
 // const certfile = './routers/cert.pem'
 // const options: any = {
@@ -34,7 +36,7 @@ let receiver: string | string[];
 let sender: string | string[];
 let sendersOffer: any;
 
-const mediacodecs: any = [
+const mediaCodecs: any = [
     {
         kind: "audio",
         mimeType: "audio/opus",
@@ -43,13 +45,10 @@ const mediacodecs: any = [
     },
     {
         kind: "video",
-        mimeType: "video/H264",
+        mimeType: "video/VP8",
         clockRate: 90000,
-        parameters:
-        {
-            "packetization-mode": 1,
-            "profile-level-id": "42e01f",
-            "level-asymmetry-allowed": 1
+        parameters: {
+            'x-google-start-bitrate': 1000
         }
     }
 ];
@@ -93,7 +92,7 @@ io.on('connection', (socket) => {
 
     socket.on('livestream', async () => {
         try {
-            mediasoupWorker = await mediasoup.createWorker({
+            mediasoup.createWorker({
                 logLevel: 'debug',
                 logTags: [
                     'info',
@@ -105,9 +104,9 @@ io.on('connection', (socket) => {
                 ],
                 rtcMinPort: 10000,
                 rtcMaxPort: 10100,
-            }).then(async () => {
-                console.log(mediacodecs);
-                mediasoupRouter = await mediasoupWorker.createRouter({ mediacodecs })
+            }).then(async (worker) => {
+                mediasoupWorker = worker
+                mediasoupRouter = await worker.createRouter({ mediaCodecs })
                 const RTPCapabilities = mediasoupRouter.rtpCapabilities
                 socket.emit('GetRTPCapabilities', { RTPCapabilities })
                 console.log("worker created");
