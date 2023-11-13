@@ -1,6 +1,8 @@
 import { createContext, useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 import peer from '../services/peer'
+import mediasoupClient from 'mediasoup-client'
+import { RtpCapabilities } from 'mediasoup-client/lib/RtpParameters'
 const socket = io('https://zen-backend-6acy.onrender.com')
 
 interface Contextvalue {
@@ -181,6 +183,7 @@ const SocketProvider = (props: any) => {
 
     const [localLiveStream, setLocalLiveStream] = useState<any>()
     const [liveStream, setLiveStream] = useState<any>()
+    const [device, setDevice] = useState<any>()
 
     const addLocalStream = (stream: MediaStream) => {
         const Localtracks = stream.getTracks()[0]
@@ -195,8 +198,24 @@ const SocketProvider = (props: any) => {
         })
     }
 
+    const createDevice = async (RTPCapabilities: RtpCapabilities) => {
+        try {
+            setDevice(new mediasoupClient.Device())
+
+            await device.load({
+                routerCapabilities : RTPCapabilities
+            })
+
+            console.log("device created");
+            
+        } catch (error) {
+         console.log(error);
+        }
+    }
+
     const getRtpCapabilities = ({RTPCapabilities}: any) => {
         console.log(RTPCapabilities);
+        createDevice(RTPCapabilities)
     }
 
     useEffect(()=>{
