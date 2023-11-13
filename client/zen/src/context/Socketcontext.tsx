@@ -200,10 +200,10 @@ const SocketProvider = (props: any) => {
 
     const createDevice = async (RTPCapabilities: RtpCapabilities) => {
         try {
-            setDevice(new mediasoupClient.Device())
-
-            await device.load({
-                routerCapabilities : RTPCapabilities
+            const currentDevice = new mediasoupClient.Device()
+            setDevice(currentDevice)
+            await currentDevice.load({
+                routerRtpCapabilities : RTPCapabilities
             })
 
             console.log("device created");
