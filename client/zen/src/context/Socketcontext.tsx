@@ -251,8 +251,9 @@ const SocketProvider = (props: any) => {
             
             streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: ()=> void) => {
                 try {
+                    console.log("entered in createStreamerTransport connect");
+
                      socket.emit('transportConnect', {
-                        console.log("entered in createStreamerTransport connect");
                         dtlsParameters : dtlsParameters
                     })
 
