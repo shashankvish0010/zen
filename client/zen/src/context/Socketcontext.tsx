@@ -213,8 +213,9 @@ const SocketProvider = (props: any) => {
     const addLocalStream = async (stream: any | MediaStream) => {
         for (const track of stream.getTracks()) {
         setLiveStream(track)
-        setParams({
-             ...params, track
+        setParams(
+            (track: any)=>{
+              track
           })
         }
         socket.emit('livestream')
