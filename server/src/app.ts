@@ -171,7 +171,7 @@ io.on('connection', (socket) => {
     socket.on('transportConnect', async ({ dtlsParameters }) => {
         streamerTransport.connect({ dtlsParameters })
         console.log("transportConnected");
-        
+
     })
 
     socket.on('transportProduce', async ({kind, rtpParameters}, callback) => {

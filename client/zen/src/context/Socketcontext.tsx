@@ -250,9 +250,7 @@ const SocketProvider = (props: any) => {
             console.log(params);
             streamerTransport = device.createSendTransport(params);
             console.log("entered in createStreamerTransport");
-            streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: ()=> void, errback: any) => {
-                console.log();
-                
+            streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: ()=> void, errback: any) => {                
                 try {
                     console.log("entered in createStreamerTransport connect");
 
@@ -274,7 +272,6 @@ const SocketProvider = (props: any) => {
                     }, ({id}: any) => {
                         callback({id})
                         console.log({id});
-                        connectStreamerTransport()
                     })
                 } catch (error) {
                     console.log(error);
