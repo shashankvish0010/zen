@@ -183,7 +183,8 @@ const SocketProvider = (props: any) => {
 
     const [localLiveStream, setLocalLiveStream] = useState<any>()
     const [liveStream, setLiveStream] = useState<any>()
-    const [device, setDevice] = useState<any>()
+    // const [device, setDevice] = useState<any>()
+    let device: any;
     let streamerTransport: any;
     let streamer: any;
     let params = {
@@ -224,15 +225,14 @@ const SocketProvider = (props: any) => {
 
     const createDevice = (RTPCapabilities: RtpCapabilities) => {
         try {
-            const currentDevice = new mediasoupClient.Device()
-            setDevice(currentDevice)
-            currentDevice.load({
+            device = new mediasoupClient.Device()
+            // setDevice(device)
+            device.load({
                 routerRtpCapabilities: RTPCapabilities
             }).then(() => {
                 createStreamerTransport();
                 console.log("device created")
-            })
-                .catch((error) => console.log(error))
+            }).catch((error: Error) => console.log(error))
         } catch (error) {
             console.log(error);
         }
@@ -246,7 +246,6 @@ const SocketProvider = (props: any) => {
     const createStreamerTransport = async () => {
         socket.emit('createWebRTCTransport', { sender: true }, ({ params }: any) => {
             console.log(params);
-            console.log(device);
             streamerTransport = device.createSendTransport(params);
             streamerTransport.on('connect', async ({ dtlsParameters }: any) => {
                 try {
