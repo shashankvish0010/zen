@@ -247,10 +247,11 @@ const SocketProvider = (props: any) => {
         socket.emit('createWebRTCTransport', { sender: true }, async ({ params }: any) => {
             console.log(params);
             streamerTransport = device.createSendTransport(params);
+            console.log("entered in createStreamerTransport");
             
             streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: ()=> void) => {
                 try {
-                    await socket.emit('transportConnect', {
+                     socket.emit('transportConnect', {
                         dtlsParameters : dtlsParameters
                     })
 
