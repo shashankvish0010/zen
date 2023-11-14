@@ -187,7 +187,7 @@ const SocketProvider = (props: any) => {
     let device: any;
     let streamerTransport: any;
     let streamer: any;
-    let params : MediaStream | any = {
+    const [params, setParams] = useState<any>({
         encoding: [
             {
                 rid: 'r0',
@@ -208,15 +208,14 @@ const SocketProvider = (props: any) => {
         codecOptions: {
             videoGoogleStartBitrate: 1000,
         }
-    }
+    })
 
     const addLocalStream = async (stream: any | MediaStream) => {
         const tracks = stream.getTracks()[0]
         setLiveStream(tracks)
-        params = {
-            ...params,
-             tracks: stream.getTracks()[0],
-          };
+        setParams({
+             ...params, tracks
+          })
         socket.emit('livestream')
     }
 
