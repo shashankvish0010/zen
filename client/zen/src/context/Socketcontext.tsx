@@ -211,11 +211,11 @@ const SocketProvider = (props: any) => {
     }
 
     const addLocalStream = async (stream: any | MediaStream) => {
-        const tracks = await stream.getTracks()[0]
+        const tracks = stream.getTracks()[0]
         setLiveStream(tracks)
         params = {
             ...params,
-             stream,
+             tracks: stream.getTracks()[0],
           };
         socket.emit('livestream')
     }
@@ -288,7 +288,7 @@ const SocketProvider = (props: any) => {
     }
 
     const connectStreamerTransport = async () => {
-        console.log("entered connectStreamerTransport", params);
+        console.log("entered connectStreamerTransport", params.tra);
 
         if(!params){
             console.log("Local Tracks are Missing");
