@@ -62,6 +62,7 @@ const io = new socket_io_1.Server(server, ({
 dotenv_1.default.config();
 app.use(require('./routers/routes'));
 app.use(express_1.default.json());
+let streamer;
 let mediasoupWorker;
 let mediasoupRouter;
 let streamerTransport;
@@ -69,7 +70,7 @@ let viewerTransport;
 let receiver;
 let sender;
 let sendersOffer;
-const mediacodecs = [
+const mediaCodecs = [
     {
         kind: "audio",
         mimeType: "audio/opus",
@@ -78,12 +79,10 @@ const mediacodecs = [
     },
     {
         kind: "video",
-        mimeType: "video/H264",
+        mimeType: "video/VP8",
         clockRate: 90000,
         parameters: {
-            "packetization-mode": 1,
-            "profile-level-id": "42e01f",
-            "level-asymmetry-allowed": 1
+            'x-google-start-bitrate': 1000
         }
     }
 ];
@@ -118,12 +117,21 @@ io.on('connection', (socket) => {
     // --------------------------------------- WebSocket connection for Zen Live || Live Streaming --------------------------------- 
     socket.on('livestream', () => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            mediasoupWorker = yield mediasoup.createWorker({
+            mediasoup.createWorker({
+                logLevel: 'debug',
+                logTags: [
+                    'info',
+                    'ice',
+                    'dtls',
+                    'rtp',
+                    'srtp',
+                    'rtcp'
+                ],
                 rtcMinPort: 10000,
-                rtcMaxPort: 59999
-            }).then(() => __awaiter(void 0, void 0, void 0, function* () {
-                console.log(mediasoupWorker);
-                mediasoupRouter = yield mediasoupWorker.createRouter({ mediacodecs });
+                rtcMaxPort: 10100,
+            }).then((worker) => __awaiter(void 0, void 0, void 0, function* () {
+                mediasoupWorker = worker;
+                mediasoupRouter = yield worker.createRouter({ mediaCodecs });
                 const RTPCapabilities = mediasoupRouter.rtpCapabilities;
                 socket.emit('GetRTPCapabilities', { RTPCapabilities });
                 console.log("worker created");
@@ -133,7 +141,15 @@ io.on('connection', (socket) => {
             console.log(error);
         }
     }));
-    const createWebRTCTransport = () => __awaiter(void 0, void 0, void 0, function* () {
+    socket.on('createWebRTCTransport', ({ sender }, callback) => __awaiter(void 0, void 0, void 0, function* () {
+        if (sender == true) {
+            streamerTransport = yield createTransport(callback);
+        }
+        else {
+            viewerTransport = yield createTransport(callback);
+        }
+    }));
+    const createTransport = (callback) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const WebRTCOptions = {
                 listenIps: [
@@ -145,7 +161,8 @@ io.on('connection', (socket) => {
                 enableTcp: true,
                 preferUdp: true
             };
-            let transport = yield mediasoupRouter.createWebRTCTransport(WebRTCOptions);
+            console.log(mediasoupRouter);
+            let transport = yield mediasoupRouter.createWebRtcTransport(WebRTCOptions);
             transport.on('dtlsstatechnage', (dtlsState) => {
                 if (dtlsState === 'closed') {
                     transport.close();
@@ -154,7 +171,7 @@ io.on('connection', (socket) => {
             transport.on('close', () => {
                 console.log('transport closed');
             });
-            socket.emit('transportParams', {
+            callback({
                 params: {
                     id: transport.id,
                     iceParameters: transport.iceParameters,
@@ -168,16 +185,22 @@ io.on('connection', (socket) => {
             console.log(error);
         }
     });
-    socket.on('WebRTCTransport', ({ streamer }) => {
-        if (streamer) {
-            streamerTransport = createWebRTCTransport();
-        }
-        else {
-            viewerTransport = createWebRTCTransport();
-        }
-    });
     socket.on('transportConnect', ({ dtlsParameters }) => __awaiter(void 0, void 0, void 0, function* () {
         streamerTransport.connect({ dtlsParameters });
+        console.log("transportConnected");
+    }));
+    socket.on('transportProduce', ({ kind, rtpParameters }, callback) => __awaiter(void 0, void 0, void 0, function* () {
+        streamer = yield streamerTransport.produce({
+            kind, rtpParameters
+        });
+        streamerTransport.on('transportclose', () => {
+            console.log("transport for streamer is closed");
+            streamer.close();
+        });
+        callback({
+            id: streamer.id
+        });
+        console.log("transportProduced");
     }));
 });
 server.listen(process.env.PORT, () => console.log("server running"));
