@@ -24,7 +24,6 @@ interface Contextvalue {
     // Context Values for Zen Live
     getLocalStream: () => void
     localLiveStream: any
-    liveStream: any
 }
 
 const Socketcontext = createContext<Contextvalue | null>(null)
@@ -182,12 +181,12 @@ const SocketProvider = (props: any) => {
     // --------------------------------------------- Live Streaming Code -----------------------------------------------------
 
     const [localLiveStream, setLocalLiveStream] = useState<any>()
-    const [liveStream, setLiveStream] = useState<any>()
+    // const [liveStream, setLiveStream] = useState<any>()
     // const [device, setDevice] = useState<any>()
     let device: any;
     let streamerTransport: any;
     let streamer: any;
-    const [params, setParams] = useState<any>({
+    let params: any = {
         encoding: [
             {
                 rid: 'r0',
@@ -208,15 +207,13 @@ const SocketProvider = (props: any) => {
         codecOptions: {
             videoGoogleStartBitrate: 1000,
         }
-    })
+    }
 
     const addLocalStream = async (stream: any | MediaStream) => {
-        for (const track of stream.getTracks()) {
-        setLiveStream(track)
-        setParams(
-            (track: any)=>{
-              track
-          })
+        let track = stream.getTracks()[0]
+        params = {
+              track,
+              ...params
         }
         socket.emit('livestream')
     }
@@ -317,7 +314,7 @@ const SocketProvider = (props: any) => {
         // Context Values for Video Calling || Zen Call
         LocalStream, remoteStream, mycamera, controlCamera, mymic, controlMic, setPicked, picked, pickCall, reciever, calling, getZenList, zenList,
         // Context Values for Live Stream || Zen Live
-        getLocalStream, localLiveStream, liveStream
+        getLocalStream, localLiveStream
     }
     return (
         <Socketcontext.Provider value={info}>
