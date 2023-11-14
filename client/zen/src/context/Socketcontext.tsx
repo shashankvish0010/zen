@@ -250,8 +250,6 @@ const SocketProvider = (props: any) => {
             console.log(params);
             streamerTransport = device.createSendTransport(params);
             console.log("entered in createStreamerTransport");
-            connectStreamerTransport()
-
             streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: ()=> void, errback: any) => {
                 console.log();
                 
@@ -282,6 +280,7 @@ const SocketProvider = (props: any) => {
                     console.log(error);
                 }
             })
+            connectStreamerTransport()
         })
     }
 
