@@ -215,7 +215,7 @@ const SocketProvider = (props: any) => {
         setLiveStream(tracks)
         params = {
             ...params,
-            tracks: tracks,
+             tracks,
           };
         socket.emit('livestream')
     }
@@ -288,9 +288,9 @@ const SocketProvider = (props: any) => {
     }
 
     const connectStreamerTransport = async () => {
-        console.log("entered connectStreamerTransport", params.tracks);
+        console.log("entered connectStreamerTransport", params);
 
-        if(! params.tracks){
+        if(!params){
             console.log("Local Tracks are Missing");
         }else{
             streamer = await streamerTransport.produce(params)
