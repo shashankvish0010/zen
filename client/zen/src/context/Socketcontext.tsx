@@ -265,9 +265,8 @@ const SocketProvider = (props: any) => {
                         kind: parameters.kind,
                         rtpParameters: parameters.rtpParameters,
                     }, ({id}: any) => {
-                        callback(id)
-                        console.log(id);
-                        
+                        callback({id})
+                        console.log({id});
                         connectStreamerTransport()
                     })
                 } catch (error) {
