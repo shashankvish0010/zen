@@ -210,8 +210,8 @@ const SocketProvider = (props: any) => {
         }
     }
 
-    const addLocalStream = (stream: any | MediaStream) => {
-        const Localtracks = stream.getTracks()[0]
+    const addLocalStream = async (stream: any | MediaStream) => {
+        const Localtracks = await stream.getTracks()[0]
         setLiveStream(Localtracks)
         params = {
             ...params,
@@ -290,7 +290,7 @@ const SocketProvider = (props: any) => {
     const connectStreamerTransport = async () => {
         console.log("entered connectStreamerTransport");
         
-        streamer = streamerTransport.produce(params)
+        streamer = await streamerTransport.produce(params)
 
         streamer.on('trackended', () => console.log("track ended") );
 
