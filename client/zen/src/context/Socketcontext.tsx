@@ -292,7 +292,7 @@ const SocketProvider = (props: any) => {
             console.log("Local Tracks are Missing");
         }else{
             streamer = await streamerTransport.produce(params)
-
+            createStreamerTransport()
             streamer.on('trackended', () => console.log("track ended") );
     
             streamer.on('transportclose', () => console.log("trasport ended") );
