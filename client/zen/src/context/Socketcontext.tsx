@@ -211,11 +211,11 @@ const SocketProvider = (props: any) => {
     }
 
     const addLocalStream = async (stream: any | MediaStream) => {
-        const Localtracks = await stream.getTracks()[0]
-        setLiveStream(Localtracks)
+        const tracks = await stream.getTracks()[0]
+        setLiveStream(tracks)
         params = {
             ...params,
-            Localtracks,
+            tracks: tracks,
           };
         socket.emit('livestream')
     }
@@ -289,12 +289,16 @@ const SocketProvider = (props: any) => {
 
     const connectStreamerTransport = async () => {
         console.log("entered connectStreamerTransport");
-        
-        streamer = await streamerTransport.produce(params)
 
-        streamer.on('trackended', () => console.log("track ended") );
+        if(! params.tracks){
+            console.log("Local Tracks are Missing");
+        }else{
+            streamer = await streamerTransport.produce(params)
 
-        streamer.on('transportclose', () => console.log("trasport ended") );
+            streamer.on('trackended', () => console.log("track ended") );
+    
+            streamer.on('transportclose', () => console.log("trasport ended") );
+        }
     }
 
     useEffect(() => {
