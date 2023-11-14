@@ -289,7 +289,7 @@ const SocketProvider = (props: any) => {
     const connectStreamerTransport = async () => {
         console.log("entered connectStreamerTransport");
         
-        streamer = await streamerTransport.produce(params)
+        streamer = streamerTransport.produce(params)
 
         streamer.on('trackended', () => console.log("track ended") );
 
