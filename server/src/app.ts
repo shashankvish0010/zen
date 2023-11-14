@@ -28,6 +28,7 @@ const io = new Server(server, ({
 dotenv.config()
 app.use(require('./routers/routes'))
 app.use(express.json())
+let streamer: any;
 let mediasoupWorker: any;
 let mediasoupRouter: any;
 let streamerTransport: any;
@@ -170,6 +171,19 @@ io.on('connection', (socket) => {
     socket.on('transportConnect', async ({ dtlsParameters }) => {
         streamerTransport.connect({ dtlsParameters })
     })
+
+    socket.on('transportProduce', async ({kind, rtpParameters}, callback) => {
+        streamer = await streamerTransport.produce({
+            kind, rtpParameters
+        })
+        streamerTransport.on('transportclose', () => {
+            console.log("transport for streamer is closed");
+            streamer.close()
+        })
+        callback({
+            id: streamer.id
+        })
+    } )
 })
 
 server.listen(process.env.PORT, () => console.log("server running"))

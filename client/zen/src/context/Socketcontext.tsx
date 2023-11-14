@@ -183,7 +183,31 @@ const SocketProvider = (props: any) => {
 
     const [localLiveStream, setLocalLiveStream] = useState<any>()
     const [liveStream, setLiveStream] = useState<any>()
-    // const [device, setDevice] = useState<any>()
+    const [device, setDevice] = useState<any>()
+    let streamerTransport: any;
+    let streamer: any;
+    let params = {
+        encoding: [
+            {
+                rid: 'r0',
+                maxBitrate: 100000,
+                scalabilityMode: 'SIT3',
+            },
+            {
+                rid: 'r1',
+                maxBitrate: 300000,
+                scalabilityMode: 'SIT3',
+            },
+            {
+                rid: 'r2',
+                maxBitrate: 900000,
+                scalabilityMode: 'SIT3',
+            },
+        ],
+        codecOptions: {
+            videoGoogleStartBitrate: 1000,
+        }
+    }
 
     const addLocalStream = (stream: MediaStream) => {
         const Localtracks = stream.getTracks()[0]
@@ -201,6 +225,7 @@ const SocketProvider = (props: any) => {
     const createDevice = (RTPCapabilities: RtpCapabilities) => {
         try {
             const currentDevice = new mediasoupClient.Device()
+            setDevice(currentDevice)
             currentDevice.load({
                 routerRtpCapabilities: RTPCapabilities
             }).then(() => {
@@ -218,10 +243,45 @@ const SocketProvider = (props: any) => {
         createDevice(RTPCapabilities)
     }
 
-    const createStreamerTransport = () => {
+    const createStreamerTransport = async () => {
         socket.emit('createWebRTCTransport', { sender: true }, ({ params }: any) => {
             console.log(params);
+            streamerTransport = device.createSendTransport(params);
+            streamerTransport.on('connect', async ({ dtlsParameters }: any) => {
+                try {
+                    socket.emit('transportConnect', {
+                        dtlsParameters : dtlsParameters
+                    })
+                } catch (error) {
+                    console.log(error);     
+                }
+            })
+
+            streamerTransport.on('produce', async (parameters: any, callback: any) => {
+                try {
+                     socket.emit('transportProduce', {
+                        kind: parameters.kind,
+                        rtpParameters: parameters.rtpParameters,
+                    }, ({id}: any) => {
+                        callback(id)
+                        console.log(id);
+                        
+                        connectStreamerTransport()
+                    })
+                } catch (error) {
+                    console.log(error);
+                }
+            })
         })
+    }
+
+    const connectStreamerTransport = async () => {
+        streamer = await streamerTransport.produce(params)
+        console.log(streamer);
+        
+        streamer.on('trackended', () => console.log("track ended") );
+
+        streamer.on('transportclose', () => console.log("trasport ended") );
     }
 
     useEffect(() => {
