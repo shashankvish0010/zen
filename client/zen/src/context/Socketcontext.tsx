@@ -287,7 +287,7 @@ const SocketProvider = (props: any) => {
     }
 
     const connectStreamerTransport = async () => {
-        console.log("entered connectStreamerTransport", params.tracks);
+        console.log("entered connectStreamerTransport", params);
 
         if(!params){
             console.log("Local Tracks are Missing");
