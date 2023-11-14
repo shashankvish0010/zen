@@ -187,7 +187,7 @@ const SocketProvider = (props: any) => {
     let device: any;
     let streamerTransport: any;
     let streamer: any;
-    let params = {
+    let params : MediaStream | any = {
         encoding: [
             {
                 rid: 'r0',
@@ -210,9 +210,12 @@ const SocketProvider = (props: any) => {
         }
     }
 
-    const addLocalStream = (stream: MediaStream) => {
+    const addLocalStream = (stream: any | MediaStream) => {
         const Localtracks = stream.getTracks()[0]
         setLiveStream(Localtracks)
+        params = {
+             ...params, Localtracks
+        }
         socket.emit('livestream')
     }
 
