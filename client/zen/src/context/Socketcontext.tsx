@@ -249,7 +249,7 @@ const SocketProvider = (props: any) => {
             streamerTransport = device.createSendTransport(params);
             console.log("entered in createStreamerTransport");
             
-            streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: ()=> void) => {
+            streamerTransport.emit('connect', async ({ dtlsParameters }: any, callback: ()=> void) => {
                 try {
                     console.log("entered in createStreamerTransport connect");
 
