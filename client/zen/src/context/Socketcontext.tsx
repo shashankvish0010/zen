@@ -230,8 +230,8 @@ const SocketProvider = (props: any) => {
             device.load({
                 routerRtpCapabilities: RTPCapabilities
             }).then(() => {
-                createStreamerTransport();
                 console.log("device created")
+                createStreamerTransport();
             }).catch((error: Error) => console.log(error))
         } catch (error) {
             console.log(error);
@@ -250,7 +250,7 @@ const SocketProvider = (props: any) => {
             
             streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: ()=> void) => {
                 try {
-                    socket.emit('transportConnect', {
+                    await socket.emit('transportConnect', {
                         dtlsParameters : dtlsParameters
                     })
 
