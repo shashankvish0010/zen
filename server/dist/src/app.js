@@ -176,7 +176,9 @@ io.on('connection', (socket) => {
                     id: transport.id,
                     iceParameters: transport.iceParameters,
                     iceCandidates: transport.iceCandidates,
-                    dtlsParameters: transport.dtlsParameters
+                    dtlsParameters: transport.dtlsParameters,
+                    rtpParameters: transport.rtpParameters,
+                    kind: transport.kind,
                 }
             });
             return transport;
