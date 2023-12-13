@@ -210,11 +210,11 @@ const SocketProvider = (props: any) => {
     }
 
     const addLocalStream = async (stream: any | MediaStream) => {
-        const track = stream.getTracks()
-        console.log(track);
+        const streamtrack = stream.getTracks()
+        console.log(streamtrack);
         
         params = {
-              track,
+            streamtrack,
               ...params
         }
         socket.emit('livestream')
