@@ -140,7 +140,8 @@ io.on('connection', (socket) => {
             console.log(mediasoupRouter);
             
             let transport = await mediasoupRouter.createWebRtcTransport(WebRTCOptions)
-
+            console.log(transport);
+            
             transport.on('dtlsstatechnage', (dtlsState: any) => {
                 if (dtlsState === 'closed') {
                     transport.close()
