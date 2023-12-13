@@ -161,7 +161,6 @@ io.on('connection', (socket) => {
                 enableTcp: true,
                 preferUdp: true
             };
-            console.log(mediasoupRouter);
             let transport = yield mediasoupRouter.createWebRtcTransport(WebRTCOptions);
             console.log(transport);
             transport.on('dtlsstatechnage', (dtlsState) => {
