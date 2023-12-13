@@ -268,8 +268,10 @@ const SocketProvider = (props: any) => {
                 }
             })
 
-            streamerTransport.on('produce', async (parameters: any, callback: any) => {
+            streamerTransport.on('produce', async (parameters: any, callback: any) => {               
                 try {
+                    console.log("entered in createStreamerTransport produce")
+
                      socket.emit('transportProduce', {
                         kind: parameters.kind,
                         rtpParameters: parameters.rtpParameters,
