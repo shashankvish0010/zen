@@ -186,6 +186,7 @@ const SocketProvider = (props: any) => {
     let device: any;
     let streamerTransport: any;
     let streamer: any;
+    let transparams : any;
     let params: any = {
         encoding: [
             {
@@ -212,7 +213,7 @@ const SocketProvider = (props: any) => {
     const addLocalStream = async (stream: any | MediaStream) => {
         console.log("enteres add local stream");
         
-        const track = stream.getTracks()[0]
+        const track = stream.getTracks()
         console.log(track);
         
         params={
@@ -252,6 +253,7 @@ const SocketProvider = (props: any) => {
     const createStreamerTransport = async () => {
         socket.emit('createWebRTCTransport', { sender: true }, async ({ params }: any) => {
             console.log(params);
+            transparams = params;
             streamerTransport = device.createSendTransport(params);
             console.log("entered in createStreamerTransport");
             connectStreamerTransport()
@@ -294,7 +296,7 @@ const SocketProvider = (props: any) => {
         if(!params){
             console.log("Local Tracks are Missing");
         }else{
-            streamer = await streamerTransport.produce(params)
+            streamer = await streamerTransport.produce(transparams)
             streamer.on('trackended', () => console.log("track ended") );    
             streamer.on('transportclose', () => console.log("trasport ended") );
         }
