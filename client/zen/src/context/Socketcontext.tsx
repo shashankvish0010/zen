@@ -218,7 +218,7 @@ const SocketProvider = (props: any) => {
             
             setParams((params: any)=> ({
                 ...params,
-                tracks
+                track: tracks
             }))
             socket.emit('livestream')
         })
