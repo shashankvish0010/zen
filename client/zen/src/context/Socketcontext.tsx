@@ -186,7 +186,6 @@ const SocketProvider = (props: any) => {
     let device: any;
     let streamerTransport: any;
     let streamer: any;
-    let transparams : any;
     let params: any = {
         encoding: [
             {
@@ -214,11 +213,11 @@ const SocketProvider = (props: any) => {
         console.log("enteres add local stream");
         
         const tracks = stream.getTracks()
-        console.log(tracks);
+        console.log("tracks",tracks);
         
         params={
-            tracks,
               ...params,
+              tracks
         }
         socket.emit('livestream')
     }
