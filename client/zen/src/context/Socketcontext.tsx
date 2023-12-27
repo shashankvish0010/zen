@@ -216,10 +216,10 @@ const SocketProvider = (props: any) => {
             const tracks = myLocalStream.getTracks()[1]
             console.log("tracks",tracks);
             
-            setParams({
+            setParams((params: any)=> ({
                 ...params,
-                ...tracks,
-            })
+                tracks
+            }))
             socket.emit('livestream')
         })
     }
