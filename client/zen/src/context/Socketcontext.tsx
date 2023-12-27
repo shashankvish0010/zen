@@ -186,7 +186,7 @@ const SocketProvider = (props: any) => {
     let device: any;
     let streamerTransport: any;
     let streamer: any;
-    let params: any;
+    let transparams: any;
 
     const getLocalStream = () => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((myLocalStream) => {
@@ -194,7 +194,7 @@ const SocketProvider = (props: any) => {
             const track = myLocalStream.getTracks()
             console.log("tracks",track);
             setLocalLiveStream(myLocalStream)
-            params = ({
+            transparams = {
                 encoding: [
                     {
                         rid: 'r0',
@@ -216,7 +216,7 @@ const SocketProvider = (props: any) => {
                     videoGoogleStartBitrate: 1000,
                 },
                 track
-            })
+            }
             socket.emit('livestream')
         })
     }
@@ -281,12 +281,12 @@ const SocketProvider = (props: any) => {
     }
 
     const connectStreamerTransport = async () => {
-        console.log("entered connectStreamerTransport", params);
+        console.log("entered connectStreamerTransport", transparams);
 
-        if(!params || !params.tracks || params.tracks.length === 0){
+        if(!transparams || !transparams.tracks || transparams.tracks.length === 0){
             console.log("Local Tracks are Missing");
         }else{
-            streamer = await streamerTransport.produce(params)
+            streamer = await streamerTransport.produce(transparams)
             streamer.on('trackended', () => console.log("track ended") );    
             streamer.on('transportclose', () => console.log("trasport ended") );
         }
