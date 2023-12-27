@@ -211,14 +211,13 @@ const SocketProvider = (props: any) => {
 
     const getLocalStream = () => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((myLocalStream) => {
-            setLocalLiveStream(myLocalStream)
             // addLocalStream(myLocalStream)
             const tracks = myLocalStream.getTracks()[1]
             console.log("tracks",tracks);
-            
+            setLocalLiveStream(myLocalStream)
             setParams((params: any)=> ({
                 ...params,
-                track: tracks
+                tracks: tracks
             }))
             socket.emit('livestream')
         })
