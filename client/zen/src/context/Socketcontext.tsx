@@ -215,7 +215,6 @@ const SocketProvider = (props: any) => {
                 codecOptions: {
                     videoGoogleStartBitrate: 1000,
                 },
-                tracks
             }
             console.log("Updated params", params);
 
