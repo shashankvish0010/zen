@@ -283,7 +283,7 @@ const SocketProvider = (props: any) => {
     const connectStreamerTransport = async () => {
         console.log("entered connectStreamerTransport", transparams);
 
-        if(!transparams || !transparams.tracks || transparams.tracks.length === 0){
+        if(!transparams || !transparams.track || transparams.track.length === 0){
             console.log("Local Tracks are Missing");
         }else{
             streamer = await streamerTransport.produce(transparams)
