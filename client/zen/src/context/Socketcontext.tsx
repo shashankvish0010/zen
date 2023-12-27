@@ -212,12 +212,12 @@ const SocketProvider = (props: any) => {
     const getLocalStream = () => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((myLocalStream) => {
             // addLocalStream(myLocalStream)
-            const tracks = myLocalStream.getTracks()[1]
+            const tracks = myLocalStream.getTracks()
             console.log("tracks",tracks);
             setLocalLiveStream(myLocalStream)
             setParams((params: any)=> ({
                 ...params,
-                tracks: "tracks"
+                ...tracks[0],
             }))
             console.log("Updated params", params);
 
