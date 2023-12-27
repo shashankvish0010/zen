@@ -209,23 +209,31 @@ const SocketProvider = (props: any) => {
         }
     }
 
-    const addLocalStream = async (stream: any | MediaStream) => {
-        console.log("enteres add local stream");
+    // const addLocalStream = async (stream: any | MediaStream) => {
+    //     console.log("enteres add local stream");
         
-        const tracks = stream.getTracks()
-        console.log("tracks",tracks);
+    //     const tracks = stream.getTracks()
+    //     console.log("tracks",tracks);
         
-        params={
-              ...params,
-              tracks
-        }
-        socket.emit('livestream')
-    }
+    //     params={
+    //           ...params,
+    //           tracks
+    //     }
+    //     socket.emit('livestream')
+    // }
 
     const getLocalStream = () => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((myLocalStream) => {
             setLocalLiveStream(myLocalStream)
-            addLocalStream(myLocalStream)
+            // addLocalStream(myLocalStream)
+            const tracks = myLocalStream.getTracks()
+            console.log("tracks",tracks);
+            
+            params={
+                  ...params,
+                  tracks
+            }
+            socket.emit('livestream')
         })
     }
 
