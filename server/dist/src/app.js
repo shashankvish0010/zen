@@ -50,7 +50,10 @@ const mediasoup = __importStar(require("mediasoup"));
 //     cert: fs.readFileSync(certfile, 'utf-8')
 // }
 const server = http_1.default.createServer(app);
-const io = new socket_io_1.Server(server);
+const io = new socket_io_1.Server(server, { cors: {
+        origin: 'https://zen-gamma.vercel.app',
+        methods: ['GET', 'POST', 'PUT'],
+    } });
 app.use((0, cors_1.default)({
     origin: 'https://zen-gamma.vercel.app',
     methods: ['GET', 'POST', 'PUT'],

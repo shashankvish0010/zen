@@ -16,7 +16,10 @@ import { RouterOptions } from "mediasoup/node/lib/types"
 //     cert: fs.readFileSync(certfile, 'utf-8')
 // }
 const server = http.createServer(app)
-const io = new Server(server)
+const io = new Server(server, {cors: {
+    origin: 'https://zen-gamma.vercel.app',
+    methods: ['GET', 'POST', 'PUT'],
+}} )
 
 app.use(cors({
     origin: 'https://zen-gamma.vercel.app',
