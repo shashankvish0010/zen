@@ -194,7 +194,7 @@ const SocketProvider = (props: any) => {
             const track = myLocalStream.getTracks()
             console.log("tracks",track);
             setLocalLiveStream(myLocalStream)
-            params={
+            params = ({
                 encoding: [
                     {
                         rid: 'r0',
@@ -216,9 +216,7 @@ const SocketProvider = (props: any) => {
                     videoGoogleStartBitrate: 1000,
                 },
                 track
-            }
-            console.log("Updated params", params);
-
+            })
             socket.emit('livestream')
         })
     }
