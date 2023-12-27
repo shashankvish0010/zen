@@ -186,28 +186,7 @@ const SocketProvider = (props: any) => {
     let device: any;
     let streamerTransport: any;
     let streamer: any;
-    const [params, setParams] = useState<any>({
-        encoding: [
-            {
-                rid: 'r0',
-                maxBitrate: 100000,
-                scalabilityMode: 'SIT3',
-            },
-            {
-                rid: 'r1',
-                maxBitrate: 300000,
-                scalabilityMode: 'SIT3',
-            },
-            {
-                rid: 'r2',
-                maxBitrate: 900000,
-                scalabilityMode: 'SIT3',
-            },
-        ],
-        codecOptions: {
-            videoGoogleStartBitrate: 1000,
-        }
-    })
+    const [params, setParams] = useState<any>()
 
     const getLocalStream = () => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((myLocalStream) => {
@@ -215,10 +194,29 @@ const SocketProvider = (props: any) => {
             const tracks = myLocalStream.getTracks()
             console.log("tracks",tracks);
             setLocalLiveStream(myLocalStream)
-            setParams((params: any)=> ({
-                ...params,
-                ...tracks[0],
-            }))
+            setParams({
+                encoding: [
+                    {
+                        rid: 'r0',
+                        maxBitrate: 100000,
+                        scalabilityMode: 'SIT3',
+                    },
+                    {
+                        rid: 'r1',
+                        maxBitrate: 300000,
+                        scalabilityMode: 'SIT3',
+                    },
+                    {
+                        rid: 'r2',
+                        maxBitrate: 900000,
+                        scalabilityMode: 'SIT3',
+                    },
+                ],
+                codecOptions: {
+                    videoGoogleStartBitrate: 1000,
+                },
+                tracks
+            })
             console.log("Updated params", params);
 
             socket.emit('livestream')
