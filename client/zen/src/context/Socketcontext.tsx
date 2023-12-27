@@ -191,8 +191,8 @@ const SocketProvider = (props: any) => {
     const getLocalStream = () => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((myLocalStream) => {
             // addLocalStream(myLocalStream)
-            const tracks = myLocalStream.getTracks()
-            console.log("tracks",tracks);
+            const track = myLocalStream.getTracks()
+            console.log("tracks",track);
             setLocalLiveStream(myLocalStream)
             params={
                 encoding: [
@@ -215,6 +215,7 @@ const SocketProvider = (props: any) => {
                 codecOptions: {
                     videoGoogleStartBitrate: 1000,
                 },
+                track
             }
             console.log("Updated params", params);
 
