@@ -217,7 +217,7 @@ const SocketProvider = (props: any) => {
             setLocalLiveStream(myLocalStream)
             setParams((params: any)=> ({
                 ...params,
-                tracks: tracks
+                tracks: "tracks"
             }))
             console.log("Updated params", params);
 
