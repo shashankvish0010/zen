@@ -209,19 +209,6 @@ const SocketProvider = (props: any) => {
         }
     })
 
-    // const addLocalStream = async (stream: any | MediaStream) => {
-    //     console.log("enteres add local stream");
-        
-    //     const tracks = stream.getTracks()
-    //     console.log("tracks",tracks);
-        
-    //     params={
-    //           ...params,
-    //           tracks
-    //     }
-    //     socket.emit('livestream')
-    // }
-
     const getLocalStream = () => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((myLocalStream) => {
             setLocalLiveStream(myLocalStream)
@@ -230,8 +217,8 @@ const SocketProvider = (props: any) => {
             console.log("tracks",tracks);
             
             setParams({
-                tracks,
                 ...params,
+                ...tracks,
             })
             socket.emit('livestream')
         })
