@@ -219,9 +219,9 @@ const SocketProvider = (props: any) => {
                 ...params,
                 tracks: tracks
             }))
-            socket.emit('livestream')
             console.log("Updated params", params);
 
+            socket.emit('livestream')
         })
     }
 
