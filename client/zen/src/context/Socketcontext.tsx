@@ -230,8 +230,8 @@ const SocketProvider = (props: any) => {
             console.log("tracks",tracks);
             
             params={
+                tracks,
                   ...params,
-                  tracks
             }
             socket.emit('livestream')
         })
