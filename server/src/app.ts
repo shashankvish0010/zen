@@ -15,16 +15,16 @@ import { RouterOptions } from "mediasoup/node/lib/types"
 //     key: fs.readFileSync(keyfile, 'utf-8'),
 //     cert: fs.readFileSync(certfile, 'utf-8')
 // }
+app.use(cors({
+    origin: 'https://zen-gamma.vercel.app',
+    methods: ['GET', 'POST', 'PUT'],
+}));
 const server = http.createServer(app)
 const io = new Server(server, {cors: {
     origin: 'https://zen-gamma.vercel.app',
     methods: ['GET', 'POST', 'PUT'],
 }} )
 
-app.use(cors({
-    origin: 'https://zen-gamma.vercel.app',
-    methods: ['GET', 'POST', 'PUT'],
-}));
 dotenv.config()
 app.use(require('./routers/routes'))
 app.use(express.json())
