@@ -246,7 +246,7 @@ const SocketProvider = (props: any) => {
             console.log(params);
             streamerTransport = device.createSendTransport(params);
             console.log("entered in createStreamerTransport");
-            connectStreamerTransport()
+            connectStreamerTransport(transparams)
 
             streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: ()=> void, errback: any) => {                
                 try {
@@ -280,13 +280,13 @@ const SocketProvider = (props: any) => {
         })
     }
 
-    const connectStreamerTransport = async () => {
-        console.log("entered connectStreamerTransport", transparams);
+    const connectStreamerTransport = async (params: any) => {
+        console.log("entered connectStreamerTransport", params);
 
-        if(!transparams || !transparams.track || transparams.track.length === 0){
+        if(!params || !params.track || params.track.length === 0){
             console.log("Local Tracks are Missing");
         }else{
-            streamer = await streamerTransport.produce(transparams)
+            streamer = await streamerTransport.produce(params)
             streamer.on('trackended', () => console.log("track ended") );    
             streamer.on('transportclose', () => console.log("trasport ended") );
         }
