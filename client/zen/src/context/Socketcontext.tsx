@@ -24,6 +24,8 @@ interface Contextvalue {
     // Context Values for Zen Live
     getLocalStream: () => void
     localLiveStream: any
+    liveStream: any
+    createViewerTransport: () => void
 }
 
 const Socketcontext = createContext<Contextvalue | null>(null)
@@ -181,11 +183,13 @@ const SocketProvider = (props: any) => {
     // --------------------------------------------- Live Streaming Code -----------------------------------------------------
 
     const [localLiveStream, setLocalLiveStream] = useState<any>()
-    // const [liveStream, setLiveStream] = useState<any>()
+    const [liveStream, setLiveStream] = useState<any>()
     // const [device, setDevice] = useState<any>()
     let device: any;
     let streamerTransport: any;
+    let viewerTransport: any;
     let streamer: any;
+    let viewer: any;
     let transparams: any;
 
     const getLocalStream = useCallback(() => {
@@ -245,37 +249,37 @@ const SocketProvider = (props: any) => {
         socket.emit('createWebRTCTransport', { sender: true }, async ({ params }: any) => {
             streamerTransport = await device.createSendTransport(params);
             console.log("entered in createStreamerTransport", params);
-            if(streamerTransport && params.dtlsParameters )
-            {streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: () => void, errback: any) => {
-                try {
-                    console.log("entered in createStreamerTransport connect");
+            if (streamerTransport && params.dtlsParameters) {
+                streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: () => void, errback: any) => {
+                    try {
+                        console.log("entered in createStreamerTransport connect");
 
-                    await socket.emit('transportConnect', {
-                        dtlsParameters: dtlsParameters
-                    })
-                    callback()
-                } catch (error) {
-                    errback(error)
-                }
-            })
+                        await socket.emit('transportConnect', {
+                            dtlsParameters: dtlsParameters
+                        })
+                        callback()
+                    } catch (error) {
+                        errback(error)
+                    }
+                })
 
-            streamerTransport.on('produce', async (parameters: any, callback: any) => {
-                try {
-                    console.log("entered in createStreamerTransport produce", parameters)
+                streamerTransport.on('produce', async (parameters: any, callback: any) => {
+                    try {
+                        console.log("entered in createStreamerTransport produce", parameters)
 
-                    socket.emit('transportProduce', {
-                        kind: parameters.kind,
-                        rtpParameters: parameters.rtpParameters,
-                    }, ({ id }: any) => {
-                        callback({ id })
-                        console.log({ id });
-                    })
-                } catch (error) {
-                    console.log(error);
-                }
-            })
-            connectStreamerTransport(transparams);
-        }
+                        socket.emit('transportProduce', {
+                            kind: parameters.kind,
+                            rtpParameters: parameters.rtpParameters,
+                        }, ({ id }: any) => {
+                            callback({ id })
+                            console.log({ id });
+                        })
+                    } catch (error) {
+                        console.log(error);
+                    }
+                })
+                connectStreamerTransport(transparams);
+            }
         })
     }
 
@@ -289,6 +293,48 @@ const SocketProvider = (props: any) => {
             streamer.on('trackended', () => console.log("track ended"));
             streamer.on('transportclose', () => console.log("trasport ended"));
         }
+    }
+
+    const createViewerTransport = async () => {
+        socket.emit('createWebRTCTransport', { sender: false }, ({ params }: any) => {
+            if (params.error) {
+                console.log(params.error);
+            }
+            viewerTransport = device.createRecvTransport(params)
+
+            viewerTransport.on('connect', async ({ dtlsParameters }: any, callback: any, errback: any) => {
+                try {
+                    await socket.emit('transportViewerConnect', {
+                        dtlsParameters
+                    })
+                    callback();
+                } catch (error) {
+                    errback(error)
+                }
+            })
+        })
+        connectViewerTransport()
+    }
+
+    const connectViewerTransport = async () => {
+        socket.emit('consume', {
+            rtpCapabilities: device.rtpCapabilities,
+        }, async ({ params }: any) => {
+            if (params.error) {
+                console.log(params.error);
+            }
+            viewer = await viewerTransport.consume({
+                id: params.id,
+                streamerId: params.streamerId,
+                kind: params.kind,
+                rtpParameters: params.rtpParameters
+            })
+
+            const { track } = viewer;
+            console.log(track);
+            setLiveStream(track[0])
+            socket.emit('consumerResume')
+        })
     }
 
     useEffect(() => {
@@ -306,7 +352,7 @@ const SocketProvider = (props: any) => {
         // Context Values for Video Calling || Zen Call
         LocalStream, remoteStream, mycamera, controlCamera, mymic, controlMic, setPicked, picked, pickCall, reciever, calling, getZenList, zenList,
         // Context Values for Live Stream || Zen Live
-        getLocalStream, localLiveStream
+        getLocalStream, localLiveStream, liveStream, createViewerTransport
     }
     return (
         <Socketcontext.Provider value={info}>

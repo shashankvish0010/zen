@@ -20,15 +20,18 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT'],
 }));
 const server = http.createServer(app)
-const io = new Server(server, {cors: {
-    origin: 'https://zen-gamma.vercel.app',
-    methods: ['GET', 'POST', 'PUT'],
-}} )
+const io = new Server(server, {
+    cors: {
+        origin: 'https://zen-gamma.vercel.app',
+        methods: ['GET', 'POST', 'PUT'],
+    }
+})
 
 dotenv.config()
 app.use(require('./routers/routes'))
 app.use(express.json())
 let streamer: any;
+let viewer: any;
 let mediasoupWorker: any;
 let mediasoupRouter: any;
 let streamerTransport: any;
@@ -117,10 +120,10 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on('createWebRTCTransport', async ({sender}, callback: any) => {
-        if(sender == true){
-           streamerTransport = await createTransport(callback)
-        }else{
+    socket.on('createWebRTCTransport', async ({ sender }, callback: any) => {
+        if (sender == true) {
+            streamerTransport = await createTransport(callback)
+        } else {
             viewerTransport = await createTransport(callback)
         }
     })
@@ -130,14 +133,15 @@ io.on('connection', (socket) => {
             const WebRTCOptions = {
                 listenIps: [
                     {
-                        ip: '127.0.0.1'
+                        ip: '0.0.0.0',
+                        announcedIp: '127.0.0.1'
                     }
                 ],
                 enableUdp: true,
                 enableTcp: true,
                 preferUdp: true
             }
-            
+
             let transport = await mediasoupRouter.createWebRtcTransport(WebRTCOptions)
             console.log(transport)
             transport.on('dtlsstatechnage', (dtlsState: any) => {
@@ -175,7 +179,50 @@ io.on('connection', (socket) => {
 
     })
 
-    socket.on('transportProduce', async ({kind, rtpParameters}, callback) => {
+    socket.on('consume', async ({ rtpCapabilities }, callback) => {
+        try {
+            if (mediasoupRouter.canConsume({
+                streamerId: streamer.id,
+                rtpCapabilities
+            })) {
+                viewer = await viewerTransport.consume({
+                    streamerId: streamer.id,
+                    rtpCapabilities,
+                    paused: true
+                })
+
+                viewer.on('transportclose', () => {
+                    console.log("transport close of viewer");
+                })
+
+                viewer.on('producerclose', () => {
+                    console.log("producer close of viewer");
+                })
+
+                const params = {
+                    id: viewer.id,
+                    streamerId: streamer.id,
+                    kind: viewer.kind,
+                    rtpParameters: viewer.rtpParameters
+                }
+
+                callback({params})
+            }
+        } catch (error: any) {
+            console.log(error.message);
+            callback({
+                params: {
+                    error: error
+                }
+            })
+        }
+        socket.on('consumerResume', async () => {
+            console.log("Consumer resume");
+            await streamer.resume()
+        })
+    })
+
+    socket.on('transportProduce', async ({ kind, rtpParameters }, callback) => {
         streamer = await streamerTransport.produce({
             kind, rtpParameters
         })
@@ -188,7 +235,8 @@ io.on('connection', (socket) => {
         })
         console.log("transportProduced");
 
-    } )
+    })
+
 })
 
 server.listen(process.env.PORT, () => console.log("server running"))

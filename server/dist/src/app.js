@@ -54,14 +54,17 @@ app.use((0, cors_1.default)({
     methods: ['GET', 'POST', 'PUT'],
 }));
 const server = http_1.default.createServer(app);
-const io = new socket_io_1.Server(server, { cors: {
+const io = new socket_io_1.Server(server, {
+    cors: {
         origin: 'https://zen-gamma.vercel.app',
         methods: ['GET', 'POST', 'PUT'],
-    } });
+    }
+});
 dotenv_1.default.config();
 app.use(require('./routers/routes'));
 app.use(express_1.default.json());
 let streamer;
+let viewer;
 let mediasoupWorker;
 let mediasoupRouter;
 let streamerTransport;
@@ -153,7 +156,8 @@ io.on('connection', (socket) => {
             const WebRTCOptions = {
                 listenIps: [
                     {
-                        ip: '127.0.0.1'
+                        ip: '0.0.0.0',
+                        announcedIp: '127.0.0.1'
                     }
                 ],
                 enableUdp: true,
@@ -189,6 +193,45 @@ io.on('connection', (socket) => {
     socket.on('transportConnect', ({ dtlsParameters }) => __awaiter(void 0, void 0, void 0, function* () {
         streamerTransport.connect({ dtlsParameters });
         console.log("transportConnected");
+    }));
+    socket.on('consume', ({ rtpCapabilities }, callback) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            if (mediasoupRouter.canConsume({
+                streamerId: streamer.id,
+                rtpCapabilities
+            })) {
+                viewer = yield viewerTransport.consume({
+                    streamerId: streamer.id,
+                    rtpCapabilities,
+                    paused: true
+                });
+                viewer.on('transportclose', () => {
+                    console.log("transport close of viewer");
+                });
+                viewer.on('producerclose', () => {
+                    console.log("producer close of viewer");
+                });
+                const params = {
+                    id: viewer.id,
+                    streamerId: streamer.id,
+                    kind: viewer.kind,
+                    rtpParameters: viewer.rtpParameters
+                };
+                callback({ params });
+            }
+        }
+        catch (error) {
+            console.log(error.message);
+            callback({
+                params: {
+                    error: error
+                }
+            });
+        }
+        socket.on('consumerResume', () => __awaiter(void 0, void 0, void 0, function* () {
+            console.log("Consumer resume");
+            yield streamer.resume();
+        }));
     }));
     socket.on('transportProduce', ({ kind, rtpParameters }, callback) => __awaiter(void 0, void 0, void 0, function* () {
         streamer = yield streamerTransport.produce({
