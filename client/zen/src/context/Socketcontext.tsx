@@ -245,6 +245,8 @@ const SocketProvider = (props: any) => {
         socket.emit('createWebRTCTransport', { sender: true }, async ({ params }: any) => {
             console.log(params);
             streamerTransport = device.createSendTransport(params);
+            console.log("ST",streamerTransport);
+            
             console.log("entered in createStreamerTransport");
             connectStreamerTransport(transparams)
 
