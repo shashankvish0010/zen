@@ -188,7 +188,7 @@ const SocketProvider = (props: any) => {
     let streamer: any;
     let transparams: any;
 
-    const getLocalStream = () => useCallback(() => {
+    const getLocalStream = useCallback(() => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((myLocalStream) => {
             // addLocalStream(myLocalStream)
             const track = myLocalStream.getTracks()
