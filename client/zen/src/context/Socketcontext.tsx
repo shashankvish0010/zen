@@ -282,6 +282,40 @@ const SocketProvider = (props: any) => {
                 }
             })
         })
+
+        return () =>{
+            removeEventListener('connect',()=>{
+                streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: () => void, errback: any) => {
+                    try {
+                        console.log("entered in createStreamerTransport connect");
+    
+                        socket.emit('transportConnect', {
+                            dtlsParameters: dtlsParameters
+                        })
+    
+                        callback()
+                    } catch (error) {
+                        errback(error)
+                    }
+                })
+    
+                streamerTransport.on('produce', async (parameters: any, callback: any) => {
+                    try {
+                        console.log("entered in createStreamerTransport produce")
+    
+                        socket.emit('transportProduce', {
+                            kind: parameters.kind,
+                            rtpParameters: parameters.rtpParameters,
+                        }, ({ id }: any) => {
+                            callback({ id })
+                            console.log({ id });
+                        })
+                    } catch (error) {
+                        console.log(error);
+                    }
+                })
+            })
+        }
     }, [])
 
     const connectStreamerTransport = useCallback(async (params: any) => {
