@@ -246,31 +246,20 @@ const SocketProvider = (props: any) => {
             console.log(params);
             streamerTransport = device.createSendTransport(params);
             console.log("entered in createStreamerTransport");
-            connectStreamerTransport(transparams)
 
             streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: () => void, errback: any) => {
                 try {
                     console.log("entered in createStreamerTransport connect");
 
-                    socket.emit('transportConnect', {
+                    await socket.emit('transportConnect', {
                         dtlsParameters: dtlsParameters
                     })
-
                     callback()
                 } catch (error) {
                     errback(error)
                 }
             })
-        })
-    }, [])
 
-    const connectStreamerTransport = useCallback(async (params: any) => {
-        console.log("entered connectStreamerTransport", params);
-
-        if (!params || !params.track || params.track.length === 0) {
-            console.log("Local Tracks are Missing");
-        } else {
-            
             streamerTransport.on('produce', async (parameters: any, callback: any) => {
                 try {
                     console.log("entered in createStreamerTransport produce")
@@ -286,7 +275,17 @@ const SocketProvider = (props: any) => {
                     console.log(error);
                 }
             })
-            
+
+            connectStreamerTransport(transparams)
+        })
+    }, [])
+
+    const connectStreamerTransport = useCallback(async (params: any) => {
+        console.log("entered connectStreamerTransport", params);
+
+        if (!params || !params.track || params.track.length === 0) {
+            console.log("Local Tracks are Missing");
+        } else {
             streamer = await streamerTransport.produce(params)
             streamer.on('trackended', () => console.log("track ended"));
             streamer.on('transportclose', () => console.log("trasport ended"));
