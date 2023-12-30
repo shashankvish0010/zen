@@ -26,7 +26,7 @@ const App: React.FC = () => {
       <Route path='/zenlist/:id' element={<List/>} />
       <Route path='/calling/:zenno' element={<Calling/>} />
       <Route path='/livestream' element={<CreatorLiveStream/>} />
-      <Route path='/live' element={<LiveStream/>} />
+      <Route path='/livecall' element={<LiveStream/>} />
     </Routes>
     </>
   )
