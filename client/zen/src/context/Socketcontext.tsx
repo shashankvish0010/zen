@@ -191,8 +191,8 @@ const SocketProvider = (props: any) => {
     const getLocalStream = useCallback(() => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((myLocalStream) => {
             // addLocalStream(myLocalStream)
-            const track = myLocalStream.getTracks()
-            console.log("tracks", track);
+            const tracks = myLocalStream.getTracks()
+            console.log("tracks", tracks);
             setLocalLiveStream(myLocalStream)
             transparams = {
                 encoding: [
@@ -215,7 +215,7 @@ const SocketProvider = (props: any) => {
                 codecOptions: {
                     videoGoogleStartBitrate: 1000,
                 },
-                track
+                tracks
             }
             socket.emit('livestream')
         })
@@ -283,7 +283,7 @@ const SocketProvider = (props: any) => {
     const connectStreamerTransport = async (params: any) => {
         console.log("entered connectStreamerTransport", params);
 
-        if (!params || !params.track || params.track.length === 0) {
+        if (!params || !params.tracks || params.tracks.length === 0) {
             console.log("Local Tracks are Missing");
         } else {
             streamer = await streamerTransport.produce(params)
