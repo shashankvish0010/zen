@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 import peer from '../services/peer'
 import mediasoupClient from 'mediasoup-client'
@@ -188,11 +188,11 @@ const SocketProvider = (props: any) => {
     let streamer: any;
     let transparams: any;
 
-    const getLocalStream = () => {
+    const getLocalStream = () => useCallback(() => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((myLocalStream) => {
             // addLocalStream(myLocalStream)
             const track = myLocalStream.getTracks()
-            console.log("tracks",track);
+            console.log("tracks", track);
             setLocalLiveStream(myLocalStream)
             transparams = {
                 encoding: [
@@ -219,7 +219,7 @@ const SocketProvider = (props: any) => {
             }
             socket.emit('livestream')
         })
-    }
+    }, [])
 
     const createDevice = (RTPCapabilities: RtpCapabilities) => {
         try {
@@ -245,17 +245,15 @@ const SocketProvider = (props: any) => {
         socket.emit('createWebRTCTransport', { sender: true }, async ({ params }: any) => {
             console.log(params);
             streamerTransport = device.createSendTransport(params);
-            console.log("ST",streamerTransport);
-            
             console.log("entered in createStreamerTransport");
             connectStreamerTransport(transparams)
 
-            streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: ()=> void, errback: any) => {                
+            streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: () => void, errback: any) => {
                 try {
                     console.log("entered in createStreamerTransport connect");
 
-                     socket.emit('transportConnect', {
-                        dtlsParameters : dtlsParameters
+                    socket.emit('transportConnect', {
+                        dtlsParameters: dtlsParameters
                     })
 
                     callback()
@@ -264,16 +262,16 @@ const SocketProvider = (props: any) => {
                 }
             })
 
-            streamerTransport.on('produce', async (parameters: any, callback: any) => {               
+            streamerTransport.on('produce', async (parameters: any, callback: any) => {
                 try {
                     console.log("entered in createStreamerTransport produce")
 
-                     socket.emit('transportProduce', {
+                    socket.emit('transportProduce', {
                         kind: parameters.kind,
                         rtpParameters: parameters.rtpParameters,
-                    }, ({id}: any) => {
-                        callback({id})
-                        console.log({id});
+                    }, ({ id }: any) => {
+                        callback({ id })
+                        console.log({ id });
                     })
                 } catch (error) {
                     console.log(error);
@@ -285,12 +283,12 @@ const SocketProvider = (props: any) => {
     const connectStreamerTransport = async (params: any) => {
         console.log("entered connectStreamerTransport", params);
 
-        if(!params || !params.track || params.track.length === 0){
+        if (!params || !params.track || params.track.length === 0) {
             console.log("Local Tracks are Missing");
-        }else{
+        } else {
             streamer = await streamerTransport.produce(params)
-            streamer.on('trackended', () => console.log("track ended") );    
-            streamer.on('transportclose', () => console.log("trasport ended") );
+            streamer.on('trackended', () => console.log("track ended"));
+            streamer.on('transportclose', () => console.log("trasport ended"));
         }
     }
 
