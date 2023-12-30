@@ -328,6 +328,8 @@ const SocketProvider = (props: any) => {
             if (params.error) {
                 console.log(params.error);
             }
+            console.log(params);
+            
             viewer = await viewerTransport.consume({
                 id: params.id,
                 streamerId: params.streamerId,
