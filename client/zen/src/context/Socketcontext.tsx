@@ -247,11 +247,48 @@ const SocketProvider = (props: any) => {
             streamerTransport = device.createSendTransport(params);
             console.log("entered in createStreamerTransport");
             connectStreamerTransport(transparams)
+
+            // streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: () => void, errback: any) => {
+            //     try {
+            //         console.log("entered in createStreamerTransport connect");
+
+            //         socket.emit('transportConnect', {
+            //             dtlsParameters: dtlsParameters
+            //         })
+
+            //         callback()
+            //     } catch (error) {
+            //         errback(error)
+            //     }
+            // })
+
+            // streamerTransport.on('produce', async (parameters: any, callback: any) => {
+            //     try {
+            //         console.log("entered in createStreamerTransport produce")
+
+            //         socket.emit('transportProduce', {
+            //             kind: parameters.kind,
+            //             rtpParameters: parameters.rtpParameters,
+            //         }, ({ id }: any) => {
+            //             callback({ id })
+            //             console.log({ id });
+            //         })
+            //     } catch (error) {
+            //         console.log(error);
+            //     }
+            // })
         })
     }, [])
 
-    useEffect(()=>{
-        addEventListener('connect', ()=>{
+    const connectStreamerTransport = useCallback(async (params: any) => {
+        console.log("entered connectStreamerTransport", params);
+
+        if (!params || !params.track || params.track.length === 0) {
+            console.log("Local Tracks are Missing");
+        } else {
+            streamer = await streamerTransport.produce(params)
+            streamer.on('trackended', () => console.log("track ended"));
+            streamer.on('transportclose', () => console.log("trasport ended"));
             streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: () => void, errback: any) => {
                 try {
                     console.log("entered in createStreamerTransport connect");
@@ -281,52 +318,6 @@ const SocketProvider = (props: any) => {
                     console.log(error);
                 }
             })
-        })
-
-        return () =>{
-            removeEventListener('connect',()=>{
-                streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: () => void, errback: any) => {
-                    try {
-                        console.log("entered in createStreamerTransport connect");
-    
-                        socket.emit('transportConnect', {
-                            dtlsParameters: dtlsParameters
-                        })
-    
-                        callback()
-                    } catch (error) {
-                        errback(error)
-                    }
-                })
-    
-                streamerTransport.on('produce', async (parameters: any, callback: any) => {
-                    try {
-                        console.log("entered in createStreamerTransport produce")
-    
-                        socket.emit('transportProduce', {
-                            kind: parameters.kind,
-                            rtpParameters: parameters.rtpParameters,
-                        }, ({ id }: any) => {
-                            callback({ id })
-                            console.log({ id });
-                        })
-                    } catch (error) {
-                        console.log(error);
-                    }
-                })
-            })
-        }
-    }, [])
-
-    const connectStreamerTransport = useCallback(async (params: any) => {
-        console.log("entered connectStreamerTransport", params);
-
-        if (!params || !params.track || params.track.length === 0) {
-            console.log("Local Tracks are Missing");
-        } else {
-            streamer = await streamerTransport.produce(params)
-            streamer.on('trackended', () => console.log("track ended"));
-            streamer.on('transportclose', () => console.log("trasport ended"));
         }
     }, [])
 
