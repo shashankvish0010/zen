@@ -268,13 +268,14 @@ const SocketProvider = (props: any) => {
                         rtpParameters: parameters.rtpParameters,
                     }, ({ id }: any) => {
                         callback({ id })
-                        connectStreamerTransport(transparams)
                         console.log({ id });
                     })
                 } catch (error) {
                     console.log(error);
                 }
-            })}
+            })
+            connectStreamerTransport(transparams);
+        }
         })
     }
 
