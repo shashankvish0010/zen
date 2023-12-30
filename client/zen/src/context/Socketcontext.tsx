@@ -184,7 +184,7 @@ const SocketProvider = (props: any) => {
 
     const [localLiveStream, setLocalLiveStream] = useState<any>()
     const [liveStream, setLiveStream] = useState<any>()
-    // const [device, setDevice] = useState<any>()
+    const [key, setKey] = useState<boolean>(false)
     let device: any;
     let streamerTransport: any;
     let viewerTransport: any;
@@ -221,11 +221,12 @@ const SocketProvider = (props: any) => {
                 },
                 track
             }
-            socket.emit('livestream')
+            setKey(true)
+            socket.emit('livestream', key)
         })
     }, [])
 
-    const createDevice = useCallback((RTPCapabilities: RtpCapabilities) => {
+    const createDevice = useCallback((RTPCapabilities: RtpCapabilities, key: boolean) => {
         try {
             device = new mediasoupClient.Device()
             // setDevice(device)
@@ -233,16 +234,18 @@ const SocketProvider = (props: any) => {
                 routerRtpCapabilities: RTPCapabilities
             }).then(() => {
                 console.log("device created")
-                createStreamerTransport();
+                key == true ?
+                createStreamerTransport():
+                createViewerTransport()
             }).catch((error: Error) => console.log(error))
         } catch (error) {
             console.log(error);
         }
     }, [])
 
-    const getRtpCapabilities = ({ RTPCapabilities }: any) => {
+    const getRtpCapabilities = ({ RTPCapabilities }: any, key: boolean) => {
         console.log(RTPCapabilities);
-        createDevice(RTPCapabilities)
+        createDevice(RTPCapabilities, key)
     }
 
     const createStreamerTransport = async () => {
@@ -306,7 +309,7 @@ const SocketProvider = (props: any) => {
 
             viewerTransport.on('connect', async ({ dtlsParameters }: any, callback: any, errback: any) => {
                 try {
-                    await socket.emit('transportViewerConnect', {
+                    socket.emit('transportViewerConnect', {
                         dtlsParameters
                     })
                     callback();
@@ -331,7 +334,6 @@ const SocketProvider = (props: any) => {
                 kind: params.kind,
                 rtpParameters: params.rtpParameters
             })
-
             const { track } = viewer;
             console.log(track);
             setLiveStream(track[0])

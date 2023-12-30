@@ -94,7 +94,7 @@ io.on('connection', (socket) => {
 
     // --------------------------------------- WebSocket connection for Zen Live || Live Streaming --------------------------------- 
 
-    socket.on('livestream', async () => {
+    socket.on('livestream', async (key) => {
         try {
             mediasoup.createWorker({
                 logLevel: 'debug',
@@ -112,7 +112,7 @@ io.on('connection', (socket) => {
                 mediasoupWorker = worker
                 mediasoupRouter = await worker.createRouter({ mediaCodecs })
                 const RTPCapabilities = mediasoupRouter.rtpCapabilities
-                socket.emit('GetRTPCapabilities', { RTPCapabilities })
+                socket.emit('GetRTPCapabilities', { RTPCapabilities }, key)
                 console.log("worker created");
             })
         } catch (error) {
