@@ -247,7 +247,11 @@ const SocketProvider = (props: any) => {
             streamerTransport = device.createSendTransport(params);
             console.log("entered in createStreamerTransport");
             connectStreamerTransport(transparams)
+        })
+    }, [])
 
+    useEffect(()=>{
+        addEventListener('connect', ()=>{
             streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: () => void, errback: any) => {
                 try {
                     console.log("entered in createStreamerTransport connect");
