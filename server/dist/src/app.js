@@ -161,7 +161,7 @@ io.on('connection', (socket) => {
                 preferUdp: true
             };
             let transport = yield mediasoupRouter.createWebRtcTransport(WebRTCOptions);
-            console.log(transport.rtpParameters, transport.kind);
+            console.log(transport);
             transport.on('dtlsstatechnage', (dtlsState) => {
                 if (dtlsState === 'closed') {
                     transport.close();
