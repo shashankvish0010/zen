@@ -245,74 +245,73 @@ const SocketProvider = (props: any) => {
         socket.emit('createWebRTCTransport', { sender: true }, async ({ params }: any) => {
             streamerTransport = device.createSendTransport(params);
             console.log("entered in createStreamerTransport", params);
-            if (streamerTransport) {
-                streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: () => void, errback: any) => {
-                    try {
-                        console.log("entered in createStreamerTransport connect");
+            if(streamerTransport)
+            {streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: () => void, errback: any) => {
+                try {
+                    console.log("entered in createStreamerTransport connect");
 
-                        await socket.emit('transportConnect', {
-                            dtlsParameters: dtlsParameters
-                        })
-                        callback()
-                    } catch (error) {
-                        errback(error)
-                    }
-                })
+                    await socket.emit('transportConnect', {
+                        dtlsParameters: dtlsParameters
+                    })
+                    callback()
+                } catch (error) {
+                    errback(error)
+                }
+            })
 
-                streamerTransport.on('produce', async (parameters: any, callback: any) => {
-                    try {
-                        console.log("entered in createStreamerTransport produce", parameters)
+            streamerTransport.on('produce', async (parameters: any, callback: any) => {
+                try {
+                    console.log("entered in createStreamerTransport produce", parameters)
 
-                        socket.emit('transportProduce', {
-                            kind: parameters.kind,
-                            rtpParameters: parameters.rtpParameters,
-                        }, ({ id }: any) => {
-                            callback({ id })
-                            connectStreamerTransport(transparams)
-                            console.log({ id });
-                        })
-                    } catch (error) {
-                        console.log(error);
-                    }
-                })
-            }
+                    socket.emit('transportProduce', {
+                        kind: parameters.kind,
+                        rtpParameters: parameters.rtpParameters,
+                    }, ({ id }: any) => {
+                        callback({ id })
+                        connectStreamerTransport(transparams)
+                        console.log({ id });
+                    })
+                } catch (error) {
+                    console.log(error);
+                }
+            })}
         })
-
-
-        const connectStreamerTransport = async (params: any) => {
-            console.log("entered connectStreamerTransport", params);
-
-            if (!params || !params.track || params.track.length === 0) {
-                console.log("Local Tracks are Missing");
-            } else {
-                streamer = await streamerTransport.produce(params)
-                streamer.on('trackended', () => console.log("track ended"));
-                streamer.on('transportclose', () => console.log("trasport ended"));
-            }
-        }
-
-        useEffect(() => {
-            socket.on('GetRTPCapabilities', getRtpCapabilities)
-
-            return () => {
-                socket.off('GetRTPCapabilities', getRtpCapabilities)
-            }
-        }, [])
-
-
-
-        // -------------------------------------------- Value Provider Object ----------------------------------------------------------
-        const info: Contextvalue = {
-            // Context Values for Video Calling || Zen Call
-            LocalStream, remoteStream, mycamera, controlCamera, mymic, controlMic, setPicked, picked, pickCall, reciever, calling, getZenList, zenList,
-            // Context Values for Live Stream || Zen Live
-            getLocalStream, localLiveStream
-        }
-        return (
-            <Socketcontext.Provider value={info}>
-                {props.children}
-            </Socketcontext.Provider>
-        )
     }
 
-    export { Socketcontext, SocketProvider }
+    const connectStreamerTransport = async (params: any) => {
+        console.log("entered connectStreamerTransport", params);
+
+        if (!params || !params.track || params.track.length === 0) {
+            console.log("Local Tracks are Missing");
+        } else {
+            streamer = await streamerTransport.produce(params)
+            streamer.on('trackended', () => console.log("track ended"));
+            streamer.on('transportclose', () => console.log("trasport ended"));
+        }
+    }
+
+    useEffect(() => {
+        socket.on('GetRTPCapabilities', getRtpCapabilities)
+
+        return () => {
+            socket.off('GetRTPCapabilities', getRtpCapabilities)
+        }
+    }, [])
+
+
+
+    // -------------------------------------------- Value Provider Object ----------------------------------------------------------
+    const info: Contextvalue = {
+        // Context Values for Video Calling || Zen Call
+        LocalStream, remoteStream, mycamera, controlCamera, mymic, controlMic, setPicked, picked, pickCall, reciever, calling, getZenList, zenList,
+        // Context Values for Live Stream || Zen Live
+        getLocalStream, localLiveStream
+    }
+    return (
+        <Socketcontext.Provider value={info}>
+            {props.children}
+        </Socketcontext.Provider>
+    )
+}
+
+export { Socketcontext, SocketProvider }
