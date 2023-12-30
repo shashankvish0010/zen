@@ -221,7 +221,7 @@ const SocketProvider = (props: any) => {
         })
     }, [])
 
-    const createDevice = (RTPCapabilities: RtpCapabilities) => {
+    const createDevice = useCallback((RTPCapabilities: RtpCapabilities) => {
         try {
             device = new mediasoupClient.Device()
             // setDevice(device)
@@ -234,14 +234,14 @@ const SocketProvider = (props: any) => {
         } catch (error) {
             console.log(error);
         }
-    }
+    }, [])
 
     const getRtpCapabilities = ({ RTPCapabilities }: any) => {
         console.log(RTPCapabilities);
         createDevice(RTPCapabilities)
     }
 
-    const createStreamerTransport = async () => {
+    const createStreamerTransport = useCallback(async () => {
         socket.emit('createWebRTCTransport', { sender: true }, async ({ params }: any) => {
             console.log(params);
             streamerTransport = device.createSendTransport(params);
@@ -278,7 +278,7 @@ const SocketProvider = (props: any) => {
                 }
             })
         })
-    }
+    }, [])
 
     const connectStreamerTransport = useCallback(async (params: any) => {
         console.log("entered connectStreamerTransport", params);
