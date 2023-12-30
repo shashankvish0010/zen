@@ -21,6 +21,7 @@ const Home: React.FC = () => {
             <p className='text-base text-gray-700 font-medium'>Discover Zen Live, Our cutting-edge technology combined with a seamless user experience ensures your live broadcasts are smooth and stress-free. Share your moments, inspire your audience, and reach new heights with Zen Live</p>
           </span>
           <span onClick={()=>{navigate('/livestream')}} className='flex justify-center items-center gap-3 shadow-md cursor-pointer md:w-[20vw] w-[65vw] p-4 bg-orange-600 font-semibold text-2xl text-white rounded-md'> <Icon icon="ri:live-fill" /><p>ZEN Live</p></span>
+          <span onClick={()=>{navigate('/livecall')}} className='flex justify-center items-center gap-3 shadow-md cursor-pointer md:w-[20vw] w-[65vw] p-4 bg-orange-600 font-semibold text-2xl text-white rounded-md'> <Icon icon="ri:live-fill" /><p>Live</p></span>
         </div>
         <div>
           {/* <img src="https://img.freepik.com/premium-vector/concept-live-streaming-with-people-scene-flat-cartoon-design-presenter-conducts-live-broadcast-which-she-tells-important-information-vector-illustration_198565-2333.jpg?w=996" width='1300px' alt="" /> */}
