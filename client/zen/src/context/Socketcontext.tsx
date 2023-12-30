@@ -243,7 +243,7 @@ const SocketProvider = (props: any) => {
 
     const createStreamerTransport = async () => {
         socket.emit('createWebRTCTransport', { sender: true }, async ({ params }: any) => {
-            streamerTransport = device.createSendTransport(params);
+            streamerTransport = await device.createSendTransport(params);
             console.log("entered in createStreamerTransport", params);
             if(streamerTransport)
             {streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: () => void, errback: any) => {
