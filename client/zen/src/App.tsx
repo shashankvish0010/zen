@@ -10,6 +10,7 @@ import VideoCall from './pages/VideoCall'
 import List from './pages/List'
 import Calling from './pages/Calling'
 import CreatorLiveStream from './pages/CreatorLiveStream'
+import LiveStream from './pages/LiveStream'
 
 const App: React.FC = () => {
   return (
@@ -25,6 +26,7 @@ const App: React.FC = () => {
       <Route path='/zenlist/:id' element={<List/>} />
       <Route path='/calling/:zenno' element={<Calling/>} />
       <Route path='/livestream' element={<CreatorLiveStream/>} />
+      <Route path='/live' element={<LiveStream/>} />
     </Routes>
     </>
   )
