@@ -241,7 +241,7 @@ const SocketProvider = (props: any) => {
         createDevice(RTPCapabilities)
     }
 
-    const createStreamerTransport = useCallback(async () => {
+    const createStreamerTransport = async () => {
         socket.emit('createWebRTCTransport', { sender: true }, async ({ params }: any) => {
             console.log(params);
             streamerTransport = device.createSendTransport(params);
@@ -277,9 +277,9 @@ const SocketProvider = (props: any) => {
                 }
             })
         })
-    }, [])
+    }
 
-    const connectStreamerTransport = useCallback(async (params: any) => {
+    const connectStreamerTransport = async (params: any) => {
         console.log("entered connectStreamerTransport", params);
 
         if (!params || !params.track || params.track.length === 0) {
@@ -289,7 +289,7 @@ const SocketProvider = (props: any) => {
             streamer.on('trackended', () => console.log("track ended"));
             streamer.on('transportclose', () => console.log("trasport ended"));
         }
-    }, [])
+    }
 
     useEffect(() => {
         socket.on('GetRTPCapabilities', getRtpCapabilities)
