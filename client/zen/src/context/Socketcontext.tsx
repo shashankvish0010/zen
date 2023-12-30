@@ -300,6 +300,8 @@ const SocketProvider = (props: any) => {
             if (params.error) {
                 console.log(params.error);
             }
+            console.log(params);
+            
             viewerTransport = device.createRecvTransport(params)
 
             viewerTransport.on('connect', async ({ dtlsParameters }: any, callback: any, errback: any) => {
