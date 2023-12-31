@@ -313,7 +313,7 @@ const SocketProvider = (props: any) => {
             if (params.error) {
                 console.log(params.error);
             }
-            console.log(params);
+            console.log("createViewerTransport",params);
 
             viewerTransport = device.createRecvTransport(params)
 
