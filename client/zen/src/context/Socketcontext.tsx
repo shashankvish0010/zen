@@ -194,11 +194,11 @@ const SocketProvider = (props: any) => {
     let transparams: any;
 
     const getLocalStream = useCallback(() => {
-        setKey(true)
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((myLocalStream) => {
             // addLocalStream(myLocalStream)
             const track = myLocalStream.getTracks()[1]
             console.log("tracks", track);
+            setKey(true)
             setLocalLiveStream(myLocalStream)
             transparams = {
                 encoding: [
