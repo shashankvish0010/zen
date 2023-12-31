@@ -235,9 +235,11 @@ const SocketProvider = (props: any) => {
                 routerRtpCapabilities: RTPCapabilities
             }).then(() => {
                 console.log("device created")
-                key == true ?
-                createStreamerTransport() :
-                createViewerTransport()
+                if (key = true) {
+                    createStreamerTransport()
+                } else {
+                    createViewerTransport()
+                }
             }).catch((error: Error) => console.log(error))
         } catch (error) {
             console.log(error);
@@ -311,7 +313,7 @@ const SocketProvider = (props: any) => {
                 console.log(params.error);
             }
             console.log(params);
-            
+
             viewerTransport = device.createRecvTransport(params)
 
             viewerTransport.on('connect', async ({ dtlsParameters }: any, callback: any, errback: any) => {
@@ -330,7 +332,7 @@ const SocketProvider = (props: any) => {
 
     const connectViewerTransport = async () => {
         console.log('device', device);
-        
+
         socket.emit('consume', {
             rtpCapabilities: device.rtpCapabilities,
         }, async ({ params }: any) => {
@@ -338,7 +340,7 @@ const SocketProvider = (props: any) => {
                 console.log(params.error);
             }
             console.log(params);
-            
+
             viewer = await viewerTransport.consume({
                 id: params.id,
                 streamerId: params.streamerId,
