@@ -26,6 +26,7 @@ interface Contextvalue {
     localLiveStream: any
     liveStream: any
     createViewerTransport: () => void
+    linkStream: () => void
 }
 
 const Socketcontext = createContext<Contextvalue | null>(null)
@@ -235,7 +236,7 @@ const SocketProvider = (props: any) => {
             }).then(() => {
                 console.log("device created")
                 key == true ?
-                createStreamerTransport():
+                createStreamerTransport() :
                 createViewerTransport()
             }).catch((error: Error) => console.log(error))
         } catch (error) {
@@ -298,6 +299,11 @@ const SocketProvider = (props: any) => {
         }
     }
 
+    const linkStream = () => {
+        setKey(false)
+        socket.emit('livestream', key)
+    }
+
     const createViewerTransport = async () => {
         socket.emit('createWebRTCTransport', { sender: false }, ({ params }: any) => {
             if (params.error) {
@@ -358,7 +364,7 @@ const SocketProvider = (props: any) => {
         // Context Values for Video Calling || Zen Call
         LocalStream, remoteStream, mycamera, controlCamera, mymic, controlMic, setPicked, picked, pickCall, reciever, calling, getZenList, zenList,
         // Context Values for Live Stream || Zen Live
-        getLocalStream, localLiveStream, liveStream, createViewerTransport
+        getLocalStream, localLiveStream, liveStream, createViewerTransport, linkStream
     }
     return (
         <Socketcontext.Provider value={info}>

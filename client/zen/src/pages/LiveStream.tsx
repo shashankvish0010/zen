@@ -12,7 +12,7 @@ const LiveStream: React.FC = () => {
                     <ReactPlayer playing url={livestreamContext?.liveStream} height={400} width={500} />
                 }
             </div>
-            <button onClick={()=>{livestreamContext?.createViewerTransport()}}>Click</button>
+            <button onClick={()=>{livestreamContext?.linkStream()}}>Click</button>
         </div>
     )
 }
