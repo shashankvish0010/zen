@@ -185,7 +185,7 @@ const SocketProvider = (props: any) => {
 
     const [localLiveStream, setLocalLiveStream] = useState<any>()
     const [liveStream, setLiveStream] = useState<any>()
-    const [key, setKey] = useState<any>(false)
+    let key: boolean = false
     let device: any;
     let streamerTransport: any;
     let viewerTransport: any;
@@ -198,7 +198,7 @@ const SocketProvider = (props: any) => {
             // addLocalStream(myLocalStream)
             const track = myLocalStream.getTracks()[1]
             console.log("tracks", track);
-            setKey(true)
+            key = true
             setLocalLiveStream(myLocalStream)
             transparams = {
                 encoding: [
@@ -304,7 +304,7 @@ const SocketProvider = (props: any) => {
     }
 
     const linkStream = () => {
-        setKey(false)
+        key = false
         socket.emit('livestream', key)
     }
 
