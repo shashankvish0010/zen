@@ -194,9 +194,6 @@ io.on('connection', (socket) => {
         streamerTransport.connect({ dtlsParameters });
         console.log("transportConnected");
     }));
-    socket.on('transportViewerConnect', ({ dtlsParameters }) => __awaiter(void 0, void 0, void 0, function* () {
-        viewerTransport.connect({ dtlsParameters });
-    }));
     socket.on('consume', ({ rtpCapabilities }, callback) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             if (mediasoupRouter.canConsume({
@@ -248,6 +245,9 @@ io.on('connection', (socket) => {
             id: streamer.id
         });
         console.log("transportProduced");
+        socket.on('transportViewerConnect', ({ dtlsParameters }) => __awaiter(void 0, void 0, void 0, function* () {
+            viewerTransport.connect({ dtlsParameters });
+        }));
     }));
 });
 server.listen(process.env.PORT, () => console.log("server running"));

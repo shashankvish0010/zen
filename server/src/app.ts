@@ -179,10 +179,6 @@ io.on('connection', (socket) => {
 
     })
 
-    socket.on('transportViewerConnect', async ({dtlsParameters}) => {
-        viewerTransport.connect({dtlsParameters})
-    })
-
     socket.on('consume', async ({ rtpCapabilities }, callback) => {
         try {
             if (mediasoupRouter.canConsume({
@@ -238,7 +234,9 @@ io.on('connection', (socket) => {
             id: streamer.id
         })
         console.log("transportProduced");
-
+        socket.on('transportViewerConnect', async ({dtlsParameters}) => {
+            viewerTransport.connect({dtlsParameters})
+        })
     })
 
 })
