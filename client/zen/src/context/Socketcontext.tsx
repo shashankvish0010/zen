@@ -223,6 +223,8 @@ const SocketProvider = (props: any) => {
                 },
                 track
             }
+            console.log("key", key);
+            
             socket.emit('livestream', key)
         })
     }, [])
