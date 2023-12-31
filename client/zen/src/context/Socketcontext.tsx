@@ -185,7 +185,7 @@ const SocketProvider = (props: any) => {
 
     const [localLiveStream, setLocalLiveStream] = useState<any>()
     const [liveStream, setLiveStream] = useState<any>()
-    const [key, setKey] = useState<boolean>(false)
+    const [key, setKey] = useState<any>(false)
     let device: any;
     let streamerTransport: any;
     let viewerTransport: any;
