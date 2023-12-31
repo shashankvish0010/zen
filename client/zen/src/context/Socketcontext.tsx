@@ -249,7 +249,6 @@ const SocketProvider = (props: any) => {
     const getRtpCapabilities = ({ RTPCapabilities }: any, key: boolean) => {
         console.log(RTPCapabilities, key);
         createDevice(RTPCapabilities, key)
-
     }
 
     const createStreamerTransport = async () => {
