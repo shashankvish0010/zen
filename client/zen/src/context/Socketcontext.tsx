@@ -235,7 +235,7 @@ const SocketProvider = (props: any) => {
                 routerRtpCapabilities: RTPCapabilities
             }).then(() => {
                 console.log("device created")
-                if (key = true) {
+                if (key == true) {
                     createStreamerTransport()
                 } else {
                     createViewerTransport()
