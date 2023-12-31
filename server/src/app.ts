@@ -182,11 +182,11 @@ io.on('connection', (socket) => {
     socket.on('consume', async ({ rtpCapabilities }, callback) => {
         try {
             if (mediasoupRouter.canConsume({
-                streamerId: streamer.id,
+                producerId: streamer.id,
                 rtpCapabilities
             })) {
                 viewer = await viewerTransport.consume({
-                    streamerId: streamer.id,
+                    producerId: streamer.id,
                     rtpCapabilities,
                     paused: true
                 })
@@ -201,7 +201,7 @@ io.on('connection', (socket) => {
 
                 const params = {
                     id: viewer.id,
-                    streamerId: streamer.id,
+                    producerId: streamer.id,
                     kind: viewer.kind,
                     rtpParameters: viewer.rtpParameters
                 }

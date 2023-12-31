@@ -341,13 +341,14 @@ const SocketProvider = (props: any) => {
             rtpCapabilities: device.rtpCapabilities,
         }, async ({ params }: any) => {
             if (params.error) {
-                console.log(params.error);
+                console.log("Cant consume");
+                return
             }
             console.log("params", params);
 
             viewer = await viewerTransport.consume({
                 id: params.id,
-                streamerId: params.streamerId,
+                producerId: params.producerId,
                 kind: params.kind,
                 rtpParameters: params.rtpParameters
             })
