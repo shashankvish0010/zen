@@ -224,7 +224,7 @@ const SocketProvider = (props: any) => {
                 track
             }
             console.log("key", key);
-            
+
             socket.emit('livestream', key)
         })
     }, [])
@@ -313,20 +313,22 @@ const SocketProvider = (props: any) => {
             if (params.error) {
                 console.log(params.error);
             }
-            console.log("createViewerTransport",params);
+            console.log("createViewerTransport", params);
 
-            viewerTransport = device.createRecvTransport(params)
+            if (params && params.dtlsParameters) {
+                viewerTransport = device.createRecvTransport(params)
 
-            viewerTransport.on('connect', async ({ dtlsParameters }: any, callback: any, errback: any) => {
-                try {
-                    socket.emit('transportViewerConnect', {
-                        dtlsParameters
-                    })
-                    callback();
-                } catch (error) {
-                    errback(error)
-                }
-            })
+                viewerTransport.on('connect', async ({ dtlsParameters }: any, callback: any, errback: any) => {
+                    try {
+                        socket.emit('transportViewerConnect', {
+                            dtlsParameters
+                        })
+                        callback();
+                    } catch (error) {
+                        errback(error)
+                    }
+                })
+            }
         })
         connectViewerTransport()
     }
