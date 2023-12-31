@@ -324,6 +324,7 @@ const SocketProvider = (props: any) => {
                             dtlsParameters
                         })
                         callback();
+                        console.log("createViewerTransport connect");
                     } catch (error) {
                         errback(error)
                     }
