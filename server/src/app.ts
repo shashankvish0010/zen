@@ -179,6 +179,10 @@ io.on('connection', (socket) => {
 
     })
 
+    socket.on('transportViewerConnect', async ({dtlsParameters}) => {
+        viewerTransport.connect({dtlsParameters})
+    })
+
     socket.on('consume', async ({ rtpCapabilities }, callback) => {
         try {
             if (mediasoupRouter.canConsume({
