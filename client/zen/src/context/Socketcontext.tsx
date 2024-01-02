@@ -330,6 +330,9 @@ const SocketProvider = (props: any) => {
                         errback(error)
                     }
                 })
+                viewerTransport.emit('connect', { dtlsParameters: params.dtlsParameters }, () => {
+                    console.log("Manually triggered connect event");
+                });
             }
         })
     }
