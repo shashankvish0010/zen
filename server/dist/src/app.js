@@ -242,10 +242,10 @@ io.on('connection', (socket) => {
                     }
                 });
             }
-            socket.on('consumerResume', () => __awaiter(void 0, void 0, void 0, function* () {
-                console.log("Consumer resume");
-                yield streamer.resume();
-            }));
+        }));
+        socket.on('consumerResume', () => __awaiter(void 0, void 0, void 0, function* () {
+            console.log("Consumer resume");
+            yield streamer.resume();
         }));
         console.log("transportProduced");
     }));

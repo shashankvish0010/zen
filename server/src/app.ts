@@ -230,14 +230,13 @@ io.on('connection', (socket) => {
                     }
                 })
             }
-            socket.on('consumerResume', async () => {
-                console.log("Consumer resume");
-                await streamer.resume()
-            })
+        })
+        socket.on('consumerResume', async () => {
+            console.log("Consumer resume");
+            await streamer.resume()
         })
         console.log("transportProduced");
     })
-
 })
 
 server.listen(process.env.PORT, () => console.log("server running"))
