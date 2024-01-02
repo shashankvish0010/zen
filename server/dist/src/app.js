@@ -205,7 +205,7 @@ io.on('connection', (socket) => {
             // })) {
             console.log(streamer.id, rtpCapabilities);
             viewer = yield viewerTransport.consume({
-                producerId: streamer.id,
+                streamerId: streamer.id,
                 rtpCapabilities,
                 paused: true
             });
@@ -218,7 +218,7 @@ io.on('connection', (socket) => {
             });
             const params = {
                 id: viewer.id,
-                producerId: streamer.id,
+                streamerId: streamer.id,
                 kind: viewer.kind,
                 rtpParameters: viewer.rtpParameters
             };
