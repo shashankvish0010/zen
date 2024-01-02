@@ -31,7 +31,7 @@ class Peerconnection {
                     //     credential: "NBrSkTE3xWZTzRlx"
                     // }
                     {
-                        urls: "relay.backups.cz"
+                        urls: "stun:stun.relay.backups.cz"
                     }
                 ],
             }
