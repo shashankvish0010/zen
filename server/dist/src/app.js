@@ -244,10 +244,10 @@ io.on('connection', (socket) => {
         callback({
             id: streamer.id
         });
-        console.log("transportProduced");
         socket.on('transportViewerConnect', ({ dtlsParameters }) => __awaiter(void 0, void 0, void 0, function* () {
             viewerTransport.connect({ dtlsParameters });
         }));
+        console.log("transportProduced");
     }));
 });
 server.listen(process.env.PORT, () => console.log("server running"));

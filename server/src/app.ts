@@ -233,10 +233,10 @@ io.on('connection', (socket) => {
         callback({
             id: streamer.id
         })
-        console.log("transportProduced");
         socket.on('transportViewerConnect', async ({dtlsParameters}) => {
             viewerTransport.connect({dtlsParameters})
         })
+        console.log("transportProduced");
     })
 
 })
