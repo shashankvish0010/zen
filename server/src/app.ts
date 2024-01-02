@@ -143,7 +143,6 @@ io.on('connection', (socket) => {
             }
 
             let transport = await mediasoupRouter.createWebRtcTransport(WebRTCOptions)
-            console.log(transport)
             transport.on('dtlsstatechnage', (dtlsState: any) => {
                 if (dtlsState === 'closed') {
                     transport.close()
@@ -192,6 +191,7 @@ io.on('connection', (socket) => {
         })
         socket.on('transportViewerConnect', async ({dtlsParameters}) => {
             viewerTransport.connect({dtlsParameters})
+            console.log("transportViewerConnect called");
         })
         socket.on('consume', async ({ rtpCapabilities }, callback) => {
             try {
@@ -204,7 +204,8 @@ io.on('connection', (socket) => {
                         rtpCapabilities,
                         paused: true
                     })
-    
+                    console.log("Viewer",viewer);
+
                     viewer.on('transportclose', () => {
                         console.log("transport close of viewer");
                     })
@@ -219,7 +220,8 @@ io.on('connection', (socket) => {
                         kind: viewer.kind,
                         rtpParameters: viewer.rtpParameters
                     }
-    
+                    console.log("Params to send", params);
+
                     callback({params})
                 }
             } catch (error: any) {
