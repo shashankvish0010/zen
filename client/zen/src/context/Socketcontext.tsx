@@ -317,6 +317,7 @@ const SocketProvider = (props: any) => {
 
             if (params && params.dtlsParameters) {
                 viewerTransport = device.createRecvTransport(params)
+                console.log("Viewer Transport", viewerTransport);
 
                 viewerTransport.on('connect', async ({ dtlsParameters }: any, callback: any, errback: any) => {
                     try {
@@ -335,7 +336,7 @@ const SocketProvider = (props: any) => {
     }
 
     const connectViewerTransport = async () => {
-        console.log('device', device);
+        console.log('connectViewerTransport device', device);
 
         socket.emit('consume', {
             rtpCapabilities: device.rtpCapabilities,

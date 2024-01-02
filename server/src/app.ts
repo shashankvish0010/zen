@@ -179,49 +179,6 @@ io.on('connection', (socket) => {
 
     })
 
-    socket.on('consume', async ({ rtpCapabilities }, callback) => {
-        try {
-            if (mediasoupRouter.canConsume({
-                producerId: streamer.id,
-                rtpCapabilities
-            })) {
-                viewer = await viewerTransport.consume({
-                    producerId: streamer.id,
-                    rtpCapabilities,
-                    paused: true
-                })
-
-                viewer.on('transportclose', () => {
-                    console.log("transport close of viewer");
-                })
-
-                viewer.on('producerclose', () => {
-                    console.log("producer close of viewer");
-                })
-
-                const params = {
-                    id: viewer.id,
-                    producerId: streamer.id,
-                    kind: viewer.kind,
-                    rtpParameters: viewer.rtpParameters
-                }
-
-                callback({params})
-            }
-        } catch (error: any) {
-            console.log(error.message);
-            callback({
-                params: {
-                    error: error
-                }
-            })
-        }
-        socket.on('consumerResume', async () => {
-            console.log("Consumer resume");
-            await streamer.resume()
-        })
-    })
-
     socket.on('transportProduce', async ({ kind, rtpParameters }, callback) => {
         streamer = await streamerTransport.produce({
             kind, rtpParameters
@@ -235,6 +192,48 @@ io.on('connection', (socket) => {
         })
         socket.on('transportViewerConnect', async ({dtlsParameters}) => {
             viewerTransport.connect({dtlsParameters})
+        })
+        socket.on('consume', async ({ rtpCapabilities }, callback) => {
+            try {
+                if (mediasoupRouter.canConsume({
+                    producerId: streamer.id,
+                    rtpCapabilities
+                })) {
+                    viewer = await viewerTransport.consume({
+                        producerId: streamer.id,
+                        rtpCapabilities,
+                        paused: true
+                    })
+    
+                    viewer.on('transportclose', () => {
+                        console.log("transport close of viewer");
+                    })
+    
+                    viewer.on('producerclose', () => {
+                        console.log("producer close of viewer");
+                    })
+    
+                    const params = {
+                        id: viewer.id,
+                        producerId: streamer.id,
+                        kind: viewer.kind,
+                        rtpParameters: viewer.rtpParameters
+                    }
+    
+                    callback({params})
+                }
+            } catch (error: any) {
+                console.log(error.message);
+                callback({
+                    params: {
+                        error: error
+                    }
+                })
+            }
+            socket.on('consumerResume', async () => {
+                console.log("Consumer resume");
+                await streamer.resume()
+            })
         })
         console.log("transportProduced");
     })
