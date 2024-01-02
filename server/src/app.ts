@@ -188,6 +188,8 @@ io.on('connection', (socket) => {
             //     producerId: streamer.id,
             //     rtpCapabilities
             // })) {
+                console.log(streamer.id, rtpCapabilities);
+                
                 viewer = await viewerTransport.consume({
                     producerId: streamer.id,
                     rtpCapabilities,

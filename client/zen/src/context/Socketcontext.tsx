@@ -346,7 +346,7 @@ const SocketProvider = (props: any) => {
             rtpCapabilities: device.rtpCapabilities,
         }, async ({ params }: any) => {
             if (params.error) {
-                console.log("Cant consume");
+                console.log("Cant consume", params);
                 return
             }
             console.log("params", params);

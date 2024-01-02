@@ -203,6 +203,7 @@ io.on('connection', (socket) => {
             //     producerId: streamer.id,
             //     rtpCapabilities
             // })) {
+            console.log(streamer.id, rtpCapabilities);
             viewer = yield viewerTransport.consume({
                 producerId: streamer.id,
                 rtpCapabilities,
