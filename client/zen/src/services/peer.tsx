@@ -7,28 +7,53 @@ class Peerconnection {
 
             this.peer = new RTCPeerConnection({
                 iceServers: [
+                    // {
+                    //     urls: "stun:stun.relay.metered.ca:80"
+                    // },
+                    // {
+                    //     urls: "turn:a.relay.metered.ca:80",
+                    //     username: "9feb6522d3b0d94f7d4bdc53",
+                    //     credential: "NBrSkTE3xWZTzRlx"
+                    // },
+                    // {
+                    //     urls: "turn:a.relay.metered.ca:80?transport=tcp",
+                    //     username: "9feb6522d3b0d94f7d4bdc53",
+                    //     credential: "NBrSkTE3xWZTzRlx"
+                    // },
+                    // {
+                    //     urls: "turn:a.relay.metered.ca:443",
+                    //     username: "9feb6522d3b0d94f7d4bdc53",
+                    //     credential: "NBrSkTE3xWZTzRlx"
+                    // },
+                    // {
+                    //     urls: "turn:a.relay.metered.ca:443?transport=tcp",
+                    //     username: "9feb6522d3b0d94f7d4bdc53",
+                    //     credential: "NBrSkTE3xWZTzRlx"
+                    // }
                     {
-                        urls: "stun:stun.relay.metered.ca:80"
+                        url: 'turn:numb.viagenie.ca',
+                        credential: 'muazkh',
+                        username: 'webrtc@live.com'
                     },
                     {
-                        urls: "turn:a.relay.metered.ca:80",
-                        username: "9feb6522d3b0d94f7d4bdc53",
-                        credential: "NBrSkTE3xWZTzRlx"
+                        url: 'turn:192.158.29.39:3478?transport=udp',
+                        credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+                        username: '28224511:1379330808'
                     },
                     {
-                        urls: "turn:a.relay.metered.ca:80?transport=tcp",
-                        username: "9feb6522d3b0d94f7d4bdc53",
-                        credential: "NBrSkTE3xWZTzRlx"
+                        url: 'turn:192.158.29.39:3478?transport=tcp',
+                        credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+                        username: '28224511:1379330808'
                     },
                     {
-                        urls: "turn:a.relay.metered.ca:443",
-                        username: "9feb6522d3b0d94f7d4bdc53",
-                        credential: "NBrSkTE3xWZTzRlx"
-                    },
-                    {
-                        urls: "turn:a.relay.metered.ca:443?transport=tcp",
-                        username: "9feb6522d3b0d94f7d4bdc53",
-                        credential: "NBrSkTE3xWZTzRlx"
+                        url: 'turn:turn.bistri.com:80',
+                        credential: 'homeo',
+                        username: 'homeo'
+                     },
+                     {
+                        url: 'turn:turn.anyfirewall.com:443?transport=tcp',
+                        credential: 'webrtc',
+                        username: 'webrtc'
                     }
                 ],
             }
