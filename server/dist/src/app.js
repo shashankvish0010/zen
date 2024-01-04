@@ -63,11 +63,11 @@ const io = new socket_io_1.Server(server, {
 dotenv_1.default.config();
 app.use(require('./routers/routes'));
 app.use(express_1.default.json());
-let streamer;
+let producer;
 let viewer;
 let mediasoupWorker;
 let mediasoupRouter;
-let streamerTransport;
+let producerTransport;
 let viewerTransport;
 let receiver;
 let sender;
@@ -145,7 +145,7 @@ io.on('connection', (socket) => {
     }));
     socket.on('createWebRTCTransport', ({ sender }, callback) => __awaiter(void 0, void 0, void 0, function* () {
         if (sender == true) {
-            streamerTransport = yield createTransport(callback);
+            producerTransport = yield createTransport(callback);
         }
         else {
             viewerTransport = yield createTransport(callback);
@@ -190,7 +190,7 @@ io.on('connection', (socket) => {
         }
     });
     socket.on('transportConnect', ({ dtlsParameters }) => __awaiter(void 0, void 0, void 0, function* () {
-        yield streamerTransport.connect({ dtlsParameters });
+        yield producerTransport.connect({ dtlsParameters });
         console.log("transportConnected");
     }));
     // socket.on('transportViewerConnect', async ({dtlsParameters}) => {
@@ -200,12 +200,12 @@ io.on('connection', (socket) => {
     // socket.on('consume', async ({ rtpCapabilities }, callback) => {
     //     try {
     //         // if (mediasoupRouter.canConsume({
-    //         //     producerId: streamer.id,
+    //         //     producerId: producer.id,
     //         //     rtpCapabilities
     //         // })) {
-    //             console.log(streamer.id, rtpCapabilities);
+    //             console.log producer.id, rtpCapabilities);
     //             viewer = await viewerTransport.consume({
-    //                 streamerId: streamer.id,
+    //                 producerId: producer.id,
     //                 rtpCapabilities,
     //                 paused: true
     //             })
@@ -218,7 +218,7 @@ io.on('connection', (socket) => {
     //             })
     //             const params = {
     //                 id: viewer.id,
-    //                 streamerId: streamer.id,
+    //                 producerId: producer.id,
     //                 kind: viewer.kind,
     //                 rtpParameters: viewer.rtpParameters
     //             }
@@ -236,7 +236,7 @@ io.on('connection', (socket) => {
     // })
     // socket.on('consumerResume', async () => {
     //     console.log("Consumer resume");
-    //     await streamer.resume()
+    //     await producer.resume()
     // })
     socket.on('transportViewerConnect', ({ dtlsParameters }) => __awaiter(void 0, void 0, void 0, function* () {
         yield viewerTransport.connect({ dtlsParameters });
@@ -245,11 +245,11 @@ io.on('connection', (socket) => {
     socket.on('consume', ({ rtpCapabilities }, callback) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             // if (mediasoupRouter.canConsume({
-            //     producerId: streamer.id,
+            //     producerId: producer.id,
             //     rtpCapabilities
             // })) {
             viewer = yield viewerTransport.consume({
-                producerId: streamer.id,
+                producerId: producer.id,
                 rtpCapabilities,
                 paused: true
             });
@@ -262,7 +262,7 @@ io.on('connection', (socket) => {
             });
             const params = {
                 id: viewer.id,
-                producerId: streamer.id,
+                producerId: producer.id,
                 kind: viewer.kind,
                 rtpParameters: viewer.rtpParameters
             };
@@ -281,18 +281,18 @@ io.on('connection', (socket) => {
     }));
     socket.on('consumerResume', () => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Consumer resume");
-        yield streamer.resume();
+        yield producer.resume();
     }));
     socket.on('transportProduce', ({ kind, rtpParameters }, callback) => __awaiter(void 0, void 0, void 0, function* () {
-        streamer = yield streamerTransport.produce({
+        producer = yield producerTransport.produce({
             kind, rtpParameters
         });
-        streamer.on('transportclose', () => {
-            console.log("transport for streamer is closed");
-            streamer.close();
+        producer.on('transportclose', () => {
+            console.log("transport for producer is closed");
+            producer.close();
         });
         callback({
-            id: streamer.id
+            id: producer.id
         });
     }));
     // socket.on('transportViewerConnect', async ({dtlsParameters}) => {
@@ -302,11 +302,11 @@ io.on('connection', (socket) => {
     // socket.on('consume', async ({ rtpCapabilities }, callback) => {
     //     try {
     //         if (mediasoupRouter.canConsume({
-    //             producerId: streamer.id,
+    //             producerId: producer.id,
     //             rtpCapabilities
     //         })) {
     //             viewer = await viewerTransport.consume({
-    //                 producerId: streamer.id,
+    //                 producerId: producer.id,
     //                 rtpCapabilities,
     //                 paused: true
     //             })
@@ -319,7 +319,7 @@ io.on('connection', (socket) => {
     //             })
     //             const params = {
     //                 id: viewer.id,
-    //                 producerId: streamer.id,
+    //                 producerId: producer.id,
     //                 kind: viewer.kind,
     //                 rtpParameters: viewer.rtpParameters
     //             }
@@ -337,7 +337,7 @@ io.on('connection', (socket) => {
     // })
     // socket.on('consumerResume', async () => {
     //     console.log("Consumer resume");
-    //     await streamer.resume()
+    //     await producer.resume()
     // })
     console.log("transportProduced");
 });

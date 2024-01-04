@@ -353,7 +353,7 @@ const SocketProvider = (props: any) => {
 
             viewer = await viewerTransport.consume({
                 id: params.id,
-                streamerId: params.streamerId,
+                producererId: params.producererId,
                 kind: params.kind,
                 rtpParameters: params.rtpParameters
             })
