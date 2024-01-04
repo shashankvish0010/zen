@@ -147,16 +147,6 @@ io.on('connection', (socket) => {
     socket.on('createWebRTCTransport', ({ sender }, callback) => __awaiter(void 0, void 0, void 0, function* () {
         if (sender == true) {
             producerTransport = yield createTransport(callback);
-            if (producerTransport) {
-                try {
-                    const id = (0, uuid_1.v4)();
-                    const result = yield dbconnect_1.default.query('INSERT INTO Livestream( id ,title ,streamer ,producer_id) Values($1, $2, $3, $4)', [id, "Test Live Stream", "Shashank", producerTransport.id]);
-                    result ? console.log("Live Stream Saved") : console.log("Cant save Live Stream");
-                }
-                catch (error) {
-                    console.log(error);
-                }
-            }
         }
         else {
             viewerTransport = yield createTransport(callback);
@@ -298,6 +288,16 @@ io.on('connection', (socket) => {
         producer = yield producerTransport.produce({
             kind, rtpParameters
         });
+        if (producer) {
+            try {
+                const id = (0, uuid_1.v4)();
+                const result = yield dbconnect_1.default.query('INSERT INTO Livestream( id ,title ,streamer ,producer_id) Values($1, $2, $3, $4)', [id, "Test Live Stream", "Shashank", producer.id]);
+                result ? console.log("Live Stream Saved") : console.log("Cant save Live Stream");
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
         producer.on('transportclose', () => {
             console.log("transport for producer is closed");
             producer.close();

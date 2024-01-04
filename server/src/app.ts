@@ -124,15 +124,6 @@ io.on('connection', (socket) => {
     socket.on('createWebRTCTransport', async ({ sender }, callback: any) => {
         if (sender == true) {
             producerTransport = await createTransport(callback)
-            if (producerTransport) {
-                try {
-                    const id = uuidv4()
-                    const result = await pool.query('INSERT INTO Livestream( id ,title ,streamer ,producer_id) Values($1, $2, $3, $4)', [id, "Test Live Stream", "Shashank", producerTransport.id])
-                    result ? console.log("Live Stream Saved") : console.log("Cant save Live Stream");
-                } catch (error) {
-                    console.log(error);
-                }
-            }
         } else {
             viewerTransport = await createTransport(callback)
         }
@@ -293,6 +284,15 @@ io.on('connection', (socket) => {
         producer = await producerTransport.produce({
             kind, rtpParameters
         })
+        if (producer) {
+            try {
+                const id = uuidv4()
+                const result = await pool.query('INSERT INTO Livestream( id ,title ,streamer ,producer_id) Values($1, $2, $3, $4)', [id, "Test Live Stream", "Shashank", producer.id])
+                result ? console.log("Live Stream Saved") : console.log("Cant save Live Stream");
+            } catch (error) {
+                console.log(error);
+            }
+        }
         producer.on('transportclose', () => {
             console.log("transport for producer is closed");
             producer.close()
