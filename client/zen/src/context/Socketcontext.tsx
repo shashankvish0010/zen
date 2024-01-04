@@ -338,7 +338,7 @@ const SocketProvider = (props: any) => {
     }
 
     const connectViewerTransport = async () => {
-        console.log('connectViewerTransport device', device.routerRtpCapabilities);
+        console.log('connectViewerTransport device', device.rtpCapabilities);
 
         socket.emit('consume', {
             rtpCapabilities: device.rtpCapabilities,
