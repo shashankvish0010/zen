@@ -255,7 +255,7 @@ const SocketProvider = (props: any) => {
 
     const createStreamerTransport = async () => {
         socket.emit('createWebRTCTransport', { sender: true }, async ({ params }: any) => {
-            streamerTransport = await device.createSendTransport(params);
+            params ? streamerTransport = await device.createSendTransport(params) : console.log("Params not available");
             console.log("entered in createStreamerTransport", params);
             if (streamerTransport && params.dtlsParameters) {
                 streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: () => void, errback: any) => {
@@ -271,7 +271,7 @@ const SocketProvider = (props: any) => {
                     }
                 })
 
-                streamerTransport.on('produce', async (parameters: any, callback: any) => {
+                streamerTransport.on('produce', async (parameters: any, callback: any, errback: any) => {
                     try {
                         console.log("entered in createStreamerTransport produce", parameters)
 
@@ -283,7 +283,7 @@ const SocketProvider = (props: any) => {
                             console.log({ id });
                         })
                     } catch (error) {
-                        console.log(error);
+                        errback(error);
                     }
                 })
                 connectStreamerTransport(transparams);
@@ -312,14 +312,14 @@ const SocketProvider = (props: any) => {
         socket.emit('createWebRTCTransport', { sender: false }, ({ params }: any) => {
             if (params.error) {
                 console.log(params.error);
+                return
             }
             console.log("createViewerTransport", params);
 
             if (params && params.dtlsParameters) {
                 viewerTransport = device.createRecvTransport(params)
                 console.log("Viewer Transport", viewerTransport);
-                connectViewerTransport()
-                viewerTransport.on('connect', ({ dtlsParameters }: any, callback: any, errback: any) => {
+                viewerTransport.on('connect', async ({ dtlsParameters }: any, callback: any, errback: any) => {
                     try {
                         console.log("Viewer Transport dtlsParameters", dtlsParameters);
 
@@ -332,9 +332,7 @@ const SocketProvider = (props: any) => {
                         errback(error)
                     }
                 })
-                viewerTransport.emit('connect', { dtlsParameters: params.dtlsParameters }, () => {
-                    console.log("Manually triggered connect event");
-                });
+                connectViewerTransport()
             }
         })
     }

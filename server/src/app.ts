@@ -173,123 +173,124 @@ io.on('connection', (socket) => {
     }
 
     socket.on('transportConnect', async ({ dtlsParameters }) => {
-        streamerTransport.connect({ dtlsParameters })
+        await streamerTransport.connect({ dtlsParameters })
         console.log("transportConnected");
 
     })
 
-    socket.on('transportViewerConnect', async ({dtlsParameters}) => {
-        viewerTransport.connect({dtlsParameters})
-        console.log("transportViewerConnect called");
-    })
-    socket.on('consume', async ({ rtpCapabilities }, callback) => {
-        try {
-            // if (mediasoupRouter.canConsume({
-            //     producerId: streamer.id,
-            //     rtpCapabilities
-            // })) {
-                console.log(streamer.id, rtpCapabilities);
+    // socket.on('transportViewerConnect', async ({dtlsParameters}) => {
+    //     await viewerTransport.connect({dtlsParameters})
+    //     console.log("transportViewerConnect called");
+    // })
+    // socket.on('consume', async ({ rtpCapabilities }, callback) => {
+    //     try {
+    //         // if (mediasoupRouter.canConsume({
+    //         //     producerId: streamer.id,
+    //         //     rtpCapabilities
+    //         // })) {
+    //             console.log(streamer.id, rtpCapabilities);
                 
-                viewer = await viewerTransport.consume({
-                    streamerId: streamer.id,
-                    rtpCapabilities,
-                    paused: true
-                })
-                console.log("Viewer",viewer);
+    //             viewer = await viewerTransport.consume({
+    //                 streamerId: streamer.id,
+    //                 rtpCapabilities,
+    //                 paused: true
+    //             })
+    //             console.log("Viewer",viewer);
 
-                viewer.on('transportclose', () => {
-                    console.log("transport close of viewer");
-                })
+    //             viewer.on('transportclose', () => {
+    //                 console.log("transport close of viewer");
+    //             })
 
-                viewer.on('producerclose', () => {
-                    console.log("producer close of viewer");
-                })
+    //             viewer.on('producerclose', () => {
+    //                 console.log("producer close of viewer");
+    //             })
 
-                const params = {
-                    id: viewer.id,
-                    streamerId: streamer.id,
-                    kind: viewer.kind,
-                    rtpParameters: viewer.rtpParameters
-                }
-                console.log("Params to send", params);
+    //             const params = {
+    //                 id: viewer.id,
+    //                 streamerId: streamer.id,
+    //                 kind: viewer.kind,
+    //                 rtpParameters: viewer.rtpParameters
+    //             }
+    //             console.log("Params to send", params);
 
-                callback({params})
-        // }
-        } catch (error: any) {
-            console.log(error.message);
-            callback({
-                params: {
-                    error: error
-                }
-            })
-        }
-    })
-    socket.on('consumerResume', async () => {
-        console.log("Consumer resume");
-        await streamer.resume()
-    })
+    //             callback({params})
+    //     // }
+    //     } catch (error: any) {
+    //         console.log(error.message);
+    //         callback({
+    //             params: {
+    //                 error: error
+    //             }
+    //         })
+    //     }
+    // })
+    // socket.on('consumerResume', async () => {
+    //     console.log("Consumer resume");
+    //     await streamer.resume()
+    // })
 
     socket.on('transportProduce', async ({ kind, rtpParameters }, callback) => {
         streamer = await streamerTransport.produce({
             kind, rtpParameters
         })
-        streamerTransport.on('transportclose', () => {
+        streamer.on('transportclose', () => {
             console.log("transport for streamer is closed");
             streamer.close()
         })
         callback({
             id: streamer.id
         })
-        // socket.on('transportViewerConnect', async ({dtlsParameters}) => {
-        //     viewerTransport.connect({dtlsParameters})
-        //     console.log("transportViewerConnect called");
-        // })
-        // socket.on('consume', async ({ rtpCapabilities }, callback) => {
-        //     try {
-        //         if (mediasoupRouter.canConsume({
-        //             producerId: streamer.id,
-        //             rtpCapabilities
-        //         })) {
-        //             viewer = await viewerTransport.consume({
-        //                 producerId: streamer.id,
-        //                 rtpCapabilities,
-        //                 paused: true
-        //             })
-        //             console.log("Viewer",viewer);
-
-        //             viewer.on('transportclose', () => {
-        //                 console.log("transport close of viewer");
-        //             })
-    
-        //             viewer.on('producerclose', () => {
-        //                 console.log("producer close of viewer");
-        //             })
-    
-        //             const params = {
-        //                 id: viewer.id,
-        //                 producerId: streamer.id,
-        //                 kind: viewer.kind,
-        //                 rtpParameters: viewer.rtpParameters
-        //             }
-        //             console.log("Params to send", params);
-
-        //             callback({params})
-        //         }
-        //     } catch (error: any) {
-        //         console.log(error.message);
-        //         callback({
-        //             params: {
-        //                 error: error
-        //             }
-        //         })
-        //     }
-        // })
-        // socket.on('consumerResume', async () => {
-        //     console.log("Consumer resume");
-        //     await streamer.resume()
-        // })
-        console.log("transportProduced");
     })
+        socket.on('transportViewerConnect', async ({dtlsParameters}) => {
+            viewerTransport.connect({dtlsParameters})
+            console.log("transportViewerConnect called");
+        })
+        
+        socket.on('consume', async ({ rtpCapabilities }, callback) => {
+            try {
+                if (mediasoupRouter.canConsume({
+                    producerId: streamer.id,
+                    rtpCapabilities
+                })) {
+                    viewer = await viewerTransport.consume({
+                        producerId: streamer.id,
+                        rtpCapabilities,
+                        paused: true
+                    })
+                    console.log("Viewer",viewer);
+
+                    viewer.on('transportclose', () => {
+                        console.log("transport close of viewer");
+                    })
+    
+                    viewer.on('producerclose', () => {
+                        console.log("producer close of viewer");
+                    })
+    
+                    const params = {
+                        id: viewer.id,
+                        producerId: streamer.id,
+                        kind: viewer.kind,
+                        rtpParameters: viewer.rtpParameters
+                    }
+                    console.log("Params to send", params);
+
+                    callback({params})
+                }
+            } catch (error: any) {
+                console.log(error.message);
+                callback({
+                    params: {
+                        error: error
+                    }
+                })
+            }
+        })
+        socket.on('consumerResume', async () => {
+            console.log("Consumer resume");
+            await streamer.resume()
+        })
+        console.log("transportProduced");
 })
 
 server.listen(process.env.PORT, () => console.log("server running"))
