@@ -42,6 +42,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 const dbconnect_1 = __importDefault(require("../dbconnect"));
 const socket_io_1 = require("socket.io");
+const uuid_1 = require("uuid");
 const mediasoup = __importStar(require("mediasoup"));
 // const keyfile = './routers/key.pem'
 // const certfile = './routers/cert.pem'
@@ -146,6 +147,16 @@ io.on('connection', (socket) => {
     socket.on('createWebRTCTransport', ({ sender }, callback) => __awaiter(void 0, void 0, void 0, function* () {
         if (sender == true) {
             producerTransport = yield createTransport(callback);
+            if (producerTransport) {
+                try {
+                    const id = (0, uuid_1.v4)();
+                    const result = yield dbconnect_1.default.query('INSERT INTO Livestream( id ,title ,streamer ,producer_id) Values($1, $2, $3, $4)', [id, "Test Live Stream", "Shashank", producerTransport.id]);
+                    result ? console.log("Live Stream Saved") : console.log("Cant save Live Stream");
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            }
         }
         else {
             viewerTransport = yield createTransport(callback);

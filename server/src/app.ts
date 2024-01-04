@@ -6,6 +6,7 @@ import dotenv from "dotenv"
 import cors from "cors"
 import pool from "../dbconnect"
 import { Server } from 'socket.io'
+import { v4 as uuidv4 } from "uuid";
 import * as mediasoup from "mediasoup";
 import { AppData } from "mediasoup-client/lib/types"
 import { RouterOptions } from "mediasoup/node/lib/types"
@@ -122,7 +123,16 @@ io.on('connection', (socket) => {
 
     socket.on('createWebRTCTransport', async ({ sender }, callback: any) => {
         if (sender == true) {
-         producerTransport = await createTransport(callback)
+            producerTransport = await createTransport(callback)
+            if (producerTransport) {
+                try {
+                    const id = uuidv4()
+                    const result = await pool.query('INSERT INTO Livestream( id ,title ,streamer ,producer_id) Values($1, $2, $3, $4)', [id, "Test Live Stream", "Shashank", producerTransport.id])
+                    result ? console.log("Live Stream Saved") : console.log("Cant save Live Stream");
+                } catch (error) {
+                    console.log(error);
+                }
+            }
         } else {
             viewerTransport = await createTransport(callback)
         }
@@ -189,7 +199,7 @@ io.on('connection', (socket) => {
     //         //     rtpCapabilities
     //         // })) {
     //             console.log producer.id, rtpCapabilities);
-                
+
     //             viewer = await viewerTransport.consume({
     //                 producerId: producer.id,
     //                 rtpCapabilities,
@@ -229,41 +239,41 @@ io.on('connection', (socket) => {
     //     await producer.resume()
     // })
 
-    socket.on('transportViewerConnect', async ({dtlsParameters}) => {
-        await viewerTransport.connect({dtlsParameters})
+    socket.on('transportViewerConnect', async ({ dtlsParameters }) => {
+        await viewerTransport.connect({ dtlsParameters })
         console.log("transportViewerConnect called");
     })
-    
+
     socket.on('consume', async ({ rtpCapabilities }, callback) => {
         try {
             // if (mediasoupRouter.canConsume({
             //     producerId: producer.id,
             //     rtpCapabilities
             // })) {
-                viewer = await viewerTransport.consume({
-                    producerId: producer.id,
-                    rtpCapabilities,
-                    paused: true
-                })
-                console.log("Viewer",viewer);
+            viewer = await viewerTransport.consume({
+                producerId: producer.id,
+                rtpCapabilities,
+                paused: true
+            })
+            console.log("Viewer", viewer);
 
-                viewer.on('transportclose', () => {
-                    console.log("transport close of viewer");
-                })
+            viewer.on('transportclose', () => {
+                console.log("transport close of viewer");
+            })
 
-                viewer.on('producerclose', () => {
-                    console.log("producer close of viewer");
-                })
+            viewer.on('producerclose', () => {
+                console.log("producer close of viewer");
+            })
 
-                const params = {
-                    id: viewer.id,
-                    producerId: producer.id,
-                    kind: viewer.kind,
-                    rtpParameters: viewer.rtpParameters
-                }
-                console.log("Params to send", params);
+            const params = {
+                id: viewer.id,
+                producerId: producer.id,
+                kind: viewer.kind,
+                rtpParameters: viewer.rtpParameters
+            }
+            console.log("Params to send", params);
 
-                callback({params})
+            callback({ params })
             // }
         } catch (error: any) {
             console.log(error.message);
@@ -280,67 +290,67 @@ io.on('connection', (socket) => {
     })
 
     socket.on('transportProduce', async ({ kind, rtpParameters }, callback) => {
-     producer = await producerTransport.produce({
+        producer = await producerTransport.produce({
             kind, rtpParameters
         })
-     producer.on('transportclose', () => {
+        producer.on('transportclose', () => {
             console.log("transport for producer is closed");
-         producer.close()
+            producer.close()
         })
         callback({
             id: producer.id
         })
     })
-        // socket.on('transportViewerConnect', async ({dtlsParameters}) => {
-        //     viewerTransport.connect({dtlsParameters})
-        //     console.log("transportViewerConnect called");
-        // })
-        
-        // socket.on('consume', async ({ rtpCapabilities }, callback) => {
-        //     try {
-        //         if (mediasoupRouter.canConsume({
-        //             producerId: producer.id,
-        //             rtpCapabilities
-        //         })) {
-        //             viewer = await viewerTransport.consume({
-        //                 producerId: producer.id,
-        //                 rtpCapabilities,
-        //                 paused: true
-        //             })
-        //             console.log("Viewer",viewer);
+    // socket.on('transportViewerConnect', async ({dtlsParameters}) => {
+    //     viewerTransport.connect({dtlsParameters})
+    //     console.log("transportViewerConnect called");
+    // })
 
-        //             viewer.on('transportclose', () => {
-        //                 console.log("transport close of viewer");
-        //             })
-    
-        //             viewer.on('producerclose', () => {
-        //                 console.log("producer close of viewer");
-        //             })
-    
-        //             const params = {
-        //                 id: viewer.id,
-        //                 producerId: producer.id,
-        //                 kind: viewer.kind,
-        //                 rtpParameters: viewer.rtpParameters
-        //             }
-        //             console.log("Params to send", params);
+    // socket.on('consume', async ({ rtpCapabilities }, callback) => {
+    //     try {
+    //         if (mediasoupRouter.canConsume({
+    //             producerId: producer.id,
+    //             rtpCapabilities
+    //         })) {
+    //             viewer = await viewerTransport.consume({
+    //                 producerId: producer.id,
+    //                 rtpCapabilities,
+    //                 paused: true
+    //             })
+    //             console.log("Viewer",viewer);
 
-        //             callback({params})
-        //         }
-        //     } catch (error: any) {
-        //         console.log(error.message);
-        //         callback({
-        //             params: {
-        //                 error: error
-        //             }
-        //         })
-        //     }
-        // })
-        // socket.on('consumerResume', async () => {
-        //     console.log("Consumer resume");
-        //     await producer.resume()
-        // })
-        console.log("transportProduced");
+    //             viewer.on('transportclose', () => {
+    //                 console.log("transport close of viewer");
+    //             })
+
+    //             viewer.on('producerclose', () => {
+    //                 console.log("producer close of viewer");
+    //             })
+
+    //             const params = {
+    //                 id: viewer.id,
+    //                 producerId: producer.id,
+    //                 kind: viewer.kind,
+    //                 rtpParameters: viewer.rtpParameters
+    //             }
+    //             console.log("Params to send", params);
+
+    //             callback({params})
+    //         }
+    //     } catch (error: any) {
+    //         console.log(error.message);
+    //         callback({
+    //             params: {
+    //                 error: error
+    //             }
+    //         })
+    //     }
+    // })
+    // socket.on('consumerResume', async () => {
+    //     console.log("Consumer resume");
+    //     await producer.resume()
+    // })
+    console.log("transportProduced");
 })
 
 
