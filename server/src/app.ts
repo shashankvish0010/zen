@@ -230,16 +230,16 @@ io.on('connection', (socket) => {
     // })
 
     socket.on('transportViewerConnect', async ({dtlsParameters}) => {
-        viewerTransport.connect({dtlsParameters})
+        await viewerTransport.connect({dtlsParameters})
         console.log("transportViewerConnect called");
     })
     
     socket.on('consume', async ({ rtpCapabilities }, callback) => {
         try {
-            if (mediasoupRouter.canConsume({
-                producerId: streamer.id,
-                rtpCapabilities
-            })) {
+            // if (mediasoupRouter.canConsume({
+            //     producerId: streamer.id,
+            //     rtpCapabilities
+            // })) {
                 viewer = await viewerTransport.consume({
                     producerId: streamer.id,
                     rtpCapabilities,
@@ -264,7 +264,7 @@ io.on('connection', (socket) => {
                 console.log("Params to send", params);
 
                 callback({params})
-            }
+            // }
         } catch (error: any) {
             console.log(error.message);
             callback({
