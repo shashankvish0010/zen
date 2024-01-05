@@ -235,9 +235,9 @@ io.on('connection', (socket) => {
         console.log("transportViewerConnect called");
     })
 
-    socket.on('consume', async ({ rtpCapabilities }, streamId, callback) => {
+    socket.on('consume', async ({ rtpCapabilities }, callback) => {
         try {
-            const producerData = await pool.query('SELECT producer_id from Livestream WHERE id=$1', [streamId]);
+            const producerData = await pool.query('SELECT producer_id from Livestream');
             console.log(producerData);
             if (mediasoupRouter.canConsume({
                 producerId: producer.id,

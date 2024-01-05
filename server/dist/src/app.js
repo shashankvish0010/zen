@@ -243,9 +243,9 @@ io.on('connection', (socket) => {
         yield viewerTransport.connect({ dtlsParameters });
         console.log("transportViewerConnect called");
     }));
-    socket.on('consume', ({ rtpCapabilities }, streamId, callback) => __awaiter(void 0, void 0, void 0, function* () {
+    socket.on('consume', ({ rtpCapabilities }, callback) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const producerData = yield dbconnect_1.default.query('SELECT producer_id from Livestream WHERE id=$1', [streamId]);
+            const producerData = yield dbconnect_1.default.query('SELECT producer_id from Livestream');
             console.log(producerData);
             if (mediasoupRouter.canConsume({
                 producerId: producer.id,
