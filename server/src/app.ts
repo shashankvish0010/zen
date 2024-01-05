@@ -238,7 +238,7 @@ io.on('connection', (socket) => {
     socket.on('consume', async ({ rtpCapabilities }, callback) => {
         try {
             const producerData = await pool.query('SELECT producer_id from Livestream');
-            console.log(producerData);
+            console.log(producerData.rows[0].producer_id);
             if (mediasoupRouter.canConsume({
                 producerId: producer.id,
                 rtpCapabilities
