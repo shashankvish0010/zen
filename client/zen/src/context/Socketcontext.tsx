@@ -309,7 +309,7 @@ const SocketProvider = (props: any) => {
     }
 
     const createViewerTransport = async () => {
-        socket.emit('createWebRTCTransport', { sender: false }, ({ params }: any) => {
+       await socket.emit('createWebRTCTransport', { sender: false }, ({ params }: any) => {
             if (params.error) {
                 console.log(params.error);
                 return
@@ -332,9 +332,9 @@ const SocketProvider = (props: any) => {
                         errback(error)
                     }
                 })
-                connectViewerTransport()
             }
         })
+        connectViewerTransport()
     }
 
     const connectViewerTransport = async () => {
