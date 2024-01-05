@@ -248,7 +248,7 @@ io.on('connection', (socket) => {
             const producerData = yield dbconnect_1.default.query('SELECT producer_id from Livestream WHERE id=$1', [streamId]);
             console.log(producerData);
             if (mediasoupRouter.canConsume({
-                producerId: ,
+                producerId: producer.id,
                 rtpCapabilities
             })) {
                 viewer = yield viewerTransport.consume({
@@ -271,19 +271,16 @@ io.on('connection', (socket) => {
                 };
                 console.log("Params to send", params);
                 callback({ params });
-                // }
-            }
-            try { }
-            catch (error) {
-                console.log(error.message);
-                callback({
-                    params: {
-                        error: error
-                    }
-                });
             }
         }
-        finally { }
+        catch (error) {
+            console.log(error.message);
+            callback({
+                params: {
+                    error: error
+                }
+            });
+        }
     }));
     socket.on('consumerResume', () => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Consumer resume");
