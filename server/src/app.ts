@@ -240,11 +240,11 @@ io.on('connection', (socket) => {
             const producerData = await pool.query('SELECT producer_id from Livestream');
             console.log(producerData.rows[0].producer_id);
             if (mediasoupRouter.canConsume({
-                producerId: producer.id,
+                producerId: producerData.rows[0].producer_id,
                 rtpCapabilities
             })) {
             viewer = await viewerTransport.consume({
-                producerId: producer.id,
+                producerId: producerData.rows[0].producer_id,
                 rtpCapabilities,
                 paused: true
             })
@@ -260,7 +260,7 @@ io.on('connection', (socket) => {
 
             const params = {
                 id: viewer.id,
-                producerId: producer.id,
+                producerId: producerData.rows[0].producer_id,
                 kind: viewer.kind,
                 rtpParameters: viewer.rtpParameters
             }
