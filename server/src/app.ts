@@ -235,12 +235,15 @@ io.on('connection', (socket) => {
         console.log("transportViewerConnect called");
     })
 
-    socket.on('consume', async ({ rtpCapabilities }, callback) => {
+    socket.on('consume', async ({ rtpCapabilities }, streamId, callback) => {
         try {
-            // if (mediasoupRouter.canConsume({
-            //     producerId: producer.id,
-            //     rtpCapabilities
-            // })) {
+            const producerData = await pool.query('SELECT producer_id from Livestream WHERE id=$1', [streamId]);
+            console.log(producerData);
+            
+            if (mediasoupRouter.canConsume({
+                producerId: ,
+                rtpCapabilities
+            })) {
             viewer = await viewerTransport.consume({
                 producerId: producer.id,
                 rtpCapabilities,

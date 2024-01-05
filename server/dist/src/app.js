@@ -243,42 +243,47 @@ io.on('connection', (socket) => {
         yield viewerTransport.connect({ dtlsParameters });
         console.log("transportViewerConnect called");
     }));
-    socket.on('consume', ({ rtpCapabilities }, callback) => __awaiter(void 0, void 0, void 0, function* () {
+    socket.on('consume', ({ rtpCapabilities }, streamId, callback) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            // if (mediasoupRouter.canConsume({
-            //     producerId: producer.id,
-            //     rtpCapabilities
-            // })) {
-            viewer = yield viewerTransport.consume({
-                producerId: producer.id,
-                rtpCapabilities,
-                paused: true
-            });
-            console.log("Viewer", viewer);
-            viewer.on('transportclose', () => {
-                console.log("transport close of viewer");
-            });
-            viewer.on('producerclose', () => {
-                console.log("producer close of viewer");
-            });
-            const params = {
-                id: viewer.id,
-                producerId: producer.id,
-                kind: viewer.kind,
-                rtpParameters: viewer.rtpParameters
-            };
-            console.log("Params to send", params);
-            callback({ params });
-            // }
+            const producerData = yield dbconnect_1.default.query('SELECT producer_id from Livestream WHERE id=$1', [streamId]);
+            console.log(producerData);
+            if (mediasoupRouter.canConsume({
+                producerId: ,
+                rtpCapabilities
+            })) {
+                viewer = yield viewerTransport.consume({
+                    producerId: producer.id,
+                    rtpCapabilities,
+                    paused: true
+                });
+                console.log("Viewer", viewer);
+                viewer.on('transportclose', () => {
+                    console.log("transport close of viewer");
+                });
+                viewer.on('producerclose', () => {
+                    console.log("producer close of viewer");
+                });
+                const params = {
+                    id: viewer.id,
+                    producerId: producer.id,
+                    kind: viewer.kind,
+                    rtpParameters: viewer.rtpParameters
+                };
+                console.log("Params to send", params);
+                callback({ params });
+                // }
+            }
+            try { }
+            catch (error) {
+                console.log(error.message);
+                callback({
+                    params: {
+                        error: error
+                    }
+                });
+            }
         }
-        catch (error) {
-            console.log(error.message);
-            callback({
-                params: {
-                    error: error
-                }
-            });
-        }
+        finally { }
     }));
     socket.on('consumerResume', () => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Consumer resume");
