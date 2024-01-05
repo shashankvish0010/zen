@@ -247,31 +247,31 @@ io.on('connection', (socket) => {
         try {
             const producerData = yield dbconnect_1.default.query('SELECT producer_id from Livestream');
             console.log(producerData.rows[0].producer_id);
-            if (mediasoupRouter.canConsume({
+            // if (mediasoupRouter.canConsume({
+            //     producerId: producerData.rows[0].producer_id,
+            //     rtpCapabilities
+            // })) {
+            viewer = yield viewerTransport.consume({
                 producerId: producerData.rows[0].producer_id,
-                rtpCapabilities
-            })) {
-                viewer = yield viewerTransport.consume({
-                    producerId: producerData.rows[0].producer_id,
-                    rtpCapabilities,
-                    paused: true
-                });
-                console.log("Viewer", viewer);
-                viewer.on('transportclose', () => {
-                    console.log("transport close of viewer");
-                });
-                viewer.on('producerclose', () => {
-                    console.log("producer close of viewer");
-                });
-                const params = {
-                    id: viewer.id,
-                    producerId: producerData.rows[0].producer_id,
-                    kind: viewer.kind,
-                    rtpParameters: viewer.rtpParameters
-                };
-                console.log("Params to send", params);
-                callback({ params });
-            }
+                rtpCapabilities,
+                paused: true
+            });
+            console.log("Viewer", viewer);
+            viewer.on('transportclose', () => {
+                console.log("transport close of viewer");
+            });
+            viewer.on('producerclose', () => {
+                console.log("producer close of viewer");
+            });
+            const params = {
+                id: viewer.id,
+                producerId: producerData.rows[0].producer_id,
+                kind: viewer.kind,
+                rtpParameters: viewer.rtpParameters
+            };
+            console.log("Params to send", params);
+            callback({ params });
+            // }
         }
         catch (error) {
             console.log(error.message);

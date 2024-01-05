@@ -239,10 +239,10 @@ io.on('connection', (socket) => {
         try {
             const producerData = await pool.query('SELECT producer_id from Livestream');
             console.log(producerData.rows[0].producer_id);
-            if (mediasoupRouter.canConsume({
-                producerId: producerData.rows[0].producer_id,
-                rtpCapabilities
-            })) {
+            // if (mediasoupRouter.canConsume({
+            //     producerId: producerData.rows[0].producer_id,
+            //     rtpCapabilities
+            // })) {
             viewer = await viewerTransport.consume({
                 producerId: producerData.rows[0].producer_id,
                 rtpCapabilities,
@@ -267,7 +267,7 @@ io.on('connection', (socket) => {
             console.log("Params to send", params);
 
             callback({ params })
-            }
+            // }
         } catch (error: any) {
             console.log(error.message);
             callback({
