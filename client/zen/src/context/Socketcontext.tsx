@@ -260,8 +260,8 @@ const SocketProvider = (props: any) => {
                     try {
                         console.log("entered in createStreamerTransport connect");
 
-                        await socket.emit('transportConnect', {
-                            dtlsParameters: dtlsParameters
+                        socket.emit('transportConnect', {
+                            dtlsParameters
                         })
                         callback()
                     } catch (error) {
@@ -310,8 +310,8 @@ const SocketProvider = (props: any) => {
         createDevice(RTPCapabilities, key)
     }
 
-    const createViewerTransport = async () => {
-        await socket.emit('createWebRTCTransport', { sender: false }, ({ params }: any) => {
+    const createViewerTransport = () => {
+        socket.emit('createWebRTCTransport', { sender: false }, ({ params }: any) => {
             if (params.error) {
                 console.log(params.error);
                 return
@@ -321,12 +321,12 @@ const SocketProvider = (props: any) => {
             if (params && params.dtlsParameters) {
                 viewerTransport = device.createRecvTransport(params)
                 console.log("Viewer Transport", viewerTransport);
-                viewerTransport.on('connect', async ({ dtlsParameters }: any, callback: any, errback: any) => {
+                viewerTransport.on('connect', ({ dtlsParameters }: any, callback: any, errback: any) => {
                     try {
                         console.log("Viewer Transport dtlsParameters", dtlsParameters);
 
                         socket.emit('transportViewerConnect', {
-                            dtlsParameters: params.dtlsParameters
+                            dtlsParameters: dtlsParameters
                         })
                         callback();
                         console.log("createViewerTransport connect");
@@ -345,8 +345,6 @@ const SocketProvider = (props: any) => {
         socket.emit('consume', {
             rtpCapabilities: device.rtpCapabilities,
         }, async ({ params }: any) => {
-            console.log(params);
-
             if (params.error) {
                 console.log("Cant consume", params);
                 return
@@ -359,8 +357,8 @@ const SocketProvider = (props: any) => {
                 kind: params.kind,
                 rtpParameters: params.rtpParameters
             })
-            console.log("viewer", viewer._track);
-            setLiveStream(viewer._track)
+            console.log("viewer", viewer.track);
+            setLiveStream(viewer.track)
             socket.emit('consumerResume')
         })
     }, [])
