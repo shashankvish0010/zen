@@ -7,7 +7,7 @@ const LiveStream: React.FC = () => {
     const livestreamContext = useContext(Socketcontext)
     let key: boolean = false
     useEffect(() => {
-        console.log(livestreamContext?.liveStream);
+        console.log("media",livestreamContext?.liveStream);
         livestreamContext?.liveStream ? key=true : key = false
     }, [livestreamContext?.liveStream])
     return (
