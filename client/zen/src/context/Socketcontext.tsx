@@ -192,7 +192,6 @@ const SocketProvider = (props: any) => {
     let streamer: any;
     let viewer: any;
     let transparams: any;
-    let RtpCapability: any = {}
 
     const getLocalStream = useCallback(() => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((myLocalStream) => {
@@ -251,7 +250,6 @@ const SocketProvider = (props: any) => {
 
     const getRtpCapabilities = ({ RTPCapabilities }: any, key: boolean) => {
         console.log(RTPCapabilities, key);
-        RtpCapability = {...RTPCapabilities}
         createDevice(RTPCapabilities, key)
     }
 
@@ -307,9 +305,12 @@ const SocketProvider = (props: any) => {
 
     const linkStream = () => {
         key = false
-        console.log(RtpCapability);
-        
+        socket.emit('getRtp')        
         // createDevice(RtpCapability, key)
+    }
+    
+    const consumerRTP = (RTPCapabilities: RtpCapabilities) => {
+        createDevice(RTPCapabilities, key)
     }
 
     const createViewerTransport = async () => {
@@ -370,6 +371,7 @@ const SocketProvider = (props: any) => {
 
     useEffect(() => {
         socket.on('GetRTPCapabilities', getRtpCapabilities)
+        socket.on('consumerRTP', consumerRTP)
 
         return () => {
             socket.off('GetRTPCapabilities', getRtpCapabilities)

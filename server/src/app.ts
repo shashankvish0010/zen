@@ -8,7 +8,7 @@ import pool from "../dbconnect"
 import { Server } from 'socket.io'
 import { v4 as uuidv4 } from "uuid";
 import * as mediasoup from "mediasoup";
-import { AppData } from "mediasoup-client/lib/types"
+import { AppData, RtpCapabilities } from "mediasoup-client/lib/types"
 import { RouterOptions } from "mediasoup/node/lib/types"
 // const keyfile = './routers/key.pem'
 // const certfile = './routers/cert.pem'
@@ -31,6 +31,7 @@ const io = new Server(server, {
 dotenv.config()
 app.use(require('./routers/routes'))
 app.use(express.json())
+let RTPCapabilities: RtpCapabilities;
 let producer: any;
 let viewer: any;
 let mediasoupWorker: any;
@@ -112,7 +113,7 @@ io.on('connection', (socket) => {
             }).then(async (worker) => {
                 mediasoupWorker = worker
                 mediasoupRouter = await worker.createRouter({ mediaCodecs })
-                const RTPCapabilities = mediasoupRouter.rtpCapabilities
+                RTPCapabilities = mediasoupRouter.rtpCapabilities
                 socket.emit('GetRTPCapabilities', { RTPCapabilities }, key)
                 console.log("worker created");
             })
@@ -229,6 +230,10 @@ io.on('connection', (socket) => {
     //     console.log("Consumer resume");
     //     await producer.resume()
     // })
+
+    socket.on('getRtp', () => {
+        socket.emit('consumerRTP', RTPCapabilities)
+    })
 
     socket.on('transportViewerConnect', async ({ dtlsParameters }) => {
         await viewerTransport.connect({ dtlsParameters })
