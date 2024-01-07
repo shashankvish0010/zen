@@ -17,17 +17,6 @@ const CreatorLiveStream: React.FC = () => {
                     <ReactPlayer playing url={livestreamcontext?.localLiveStream} height={400} width={500} />
                 }
             </div>
-            <div>
-                {livestreamcontext ? (
-                    <ReactPlayer
-                        playing
-                        url={livestreamcontext.liveStream}
-                        height={400}
-                        width={500}
-                    />
-                ) : null}
-            </div>
-            <button onClick={() => livestreamcontext?.linkStream()}>Click</button>
         </div>
     )
 
