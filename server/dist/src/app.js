@@ -64,6 +64,7 @@ const io = new socket_io_1.Server(server, {
 dotenv_1.default.config();
 app.use(require('./routers/routes'));
 app.use(express_1.default.json());
+let RTPCapabilities;
 let producer;
 let viewer;
 let mediasoupWorker;
@@ -135,7 +136,7 @@ io.on('connection', (socket) => {
             }).then((worker) => __awaiter(void 0, void 0, void 0, function* () {
                 mediasoupWorker = worker;
                 mediasoupRouter = yield worker.createRouter({ mediaCodecs });
-                const RTPCapabilities = mediasoupRouter.rtpCapabilities;
+                RTPCapabilities = mediasoupRouter.rtpCapabilities;
                 socket.emit('GetRTPCapabilities', { RTPCapabilities }, key);
                 console.log("worker created");
             }));
@@ -239,6 +240,9 @@ io.on('connection', (socket) => {
     //     console.log("Consumer resume");
     //     await producer.resume()
     // })
+    socket.on('getRtp', () => {
+        socket.emit('consumerRTP', RTPCapabilities);
+    });
     socket.on('transportViewerConnect', ({ dtlsParameters }) => __awaiter(void 0, void 0, void 0, function* () {
         yield viewerTransport.connect({ dtlsParameters });
         console.log("transportViewerConnect called");

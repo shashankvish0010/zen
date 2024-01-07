@@ -329,7 +329,7 @@ const SocketProvider = (props: any) => {
                         console.log("Viewer Transport dtlsParameters", dtlsParameters);
 
                         socket.emit('transportViewerConnect', {
-                            dtlsParameters
+                            dtlsParameters: params.dtlsParameters
                         })
                         callback();
                         console.log("createViewerTransport connect");
