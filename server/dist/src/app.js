@@ -159,7 +159,7 @@ io.on('connection', (socket) => {
                 listenIps: [
                     {
                         ip: '0.0.0.0',
-                        announcedIp: '127.0.0.1'
+                        // announcedIp: '127.0.0.1'
                     }
                 ],
                 enableUdp: true,
@@ -195,51 +195,29 @@ io.on('connection', (socket) => {
         yield producerTransport.connect({ dtlsParameters });
         console.log("transportConnected");
     }));
-    // socket.on('transportViewerConnect', async ({dtlsParameters}) => {
-    //     await viewerTransport.connect({dtlsParameters})
-    //     console.log("transportViewerConnect called");
-    // })
-    // socket.on('consume', async ({ rtpCapabilities }, callback) => {
-    //     try {
-    //         // if (mediasoupRouter.canConsume({
-    //         //     producerId: producer.id,
-    //         //     rtpCapabilities
-    //         // })) {
-    //             console.log producer.id, rtpCapabilities);
-    //             viewer = await viewerTransport.consume({
-    //                 producerId: producer.id,
-    //                 rtpCapabilities,
-    //                 paused: true
-    //             })
-    //             console.log("Viewer",viewer);
-    //             viewer.on('transportclose', () => {
-    //                 console.log("transport close of viewer");
-    //             })
-    //             viewer.on('producerclose', () => {
-    //                 console.log("producer close of viewer");
-    //             })
-    //             const params = {
-    //                 id: viewer.id,
-    //                 producerId: producer.id,
-    //                 kind: viewer.kind,
-    //                 rtpParameters: viewer.rtpParameters
-    //             }
-    //             console.log("Params to send", params);
-    //             callback({params})
-    //     // }
-    //     } catch (error: any) {
-    //         console.log(error.message);
-    //         callback({
-    //             params: {
-    //                 error: error
-    //             }
-    //         })
-    //     }
-    // })
-    // socket.on('consumerResume', async () => {
-    //     console.log("Consumer resume");
-    //     await producer.resume()
-    // })
+    socket.on('transportProduce', ({ kind, rtpParameters }, callback) => __awaiter(void 0, void 0, void 0, function* () {
+        producer = yield producerTransport.produce({
+            kind, rtpParameters
+        });
+        if (producer) {
+            try {
+                const id = (0, uuid_1.v4)();
+                const result = yield dbconnect_1.default.query('INSERT INTO Livestream( id ,title ,streamer ,producer_id) Values($1, $2, $3, $4)', [id, "Test Live Stream", "Shashank", producer.id]);
+                result ? console.log("Live Stream Saved") : console.log("Cant save Live Stream");
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+        producer.on('transportclose', () => {
+            console.log("transport for producer is closed");
+            producer.close();
+        });
+        callback({
+            id: producer.id
+        });
+        console.log("transportProduced");
+    }));
     socket.on('getRtp', () => {
         socket.emit('consumerRTP', RTPCapabilities);
     });
@@ -288,72 +266,5 @@ io.on('connection', (socket) => {
         console.log("Consumer resume");
         yield viewer.resume();
     }));
-    socket.on('transportProduce', ({ kind, rtpParameters }, callback) => __awaiter(void 0, void 0, void 0, function* () {
-        producer = yield producerTransport.produce({
-            kind, rtpParameters
-        });
-        if (producer) {
-            try {
-                const id = (0, uuid_1.v4)();
-                const result = yield dbconnect_1.default.query('INSERT INTO Livestream( id ,title ,streamer ,producer_id) Values($1, $2, $3, $4)', [id, "Test Live Stream", "Shashank", producer.id]);
-                result ? console.log("Live Stream Saved") : console.log("Cant save Live Stream");
-            }
-            catch (error) {
-                console.log(error);
-            }
-        }
-        producer.on('transportclose', () => {
-            console.log("transport for producer is closed");
-            producer.close();
-        });
-        callback({
-            id: producer.id
-        });
-    }));
-    // socket.on('transportViewerConnect', async ({dtlsParameters}) => {
-    //     viewerTransport.connect({dtlsParameters})
-    //     console.log("transportViewerConnect called");
-    // })
-    // socket.on('consume', async ({ rtpCapabilities }, callback) => {
-    //     try {
-    //         if (mediasoupRouter.canConsume({
-    //             producerId: producer.id,
-    //             rtpCapabilities
-    //         })) {
-    //             viewer = await viewerTransport.consume({
-    //                 producerId: producer.id,
-    //                 rtpCapabilities,
-    //                 paused: true
-    //             })
-    //             console.log("Viewer",viewer);
-    //             viewer.on('transportclose', () => {
-    //                 console.log("transport close of viewer");
-    //             })
-    //             viewer.on('producerclose', () => {
-    //                 console.log("producer close of viewer");
-    //             })
-    //             const params = {
-    //                 id: viewer.id,
-    //                 producerId: producer.id,
-    //                 kind: viewer.kind,
-    //                 rtpParameters: viewer.rtpParameters
-    //             }
-    //             console.log("Params to send", params);
-    //             callback({params})
-    //         }
-    //     } catch (error: any) {
-    //         console.log(error.message);
-    //         callback({
-    //             params: {
-    //                 error: error
-    //             }
-    //         })
-    //     }
-    // })
-    // socket.on('consumerResume', async () => {
-    //     console.log("Consumer resume");
-    //     await producer.resume()
-    // })
-    console.log("transportProduced");
 });
 server.listen(process.env.PORT, () => console.log("server running"));
