@@ -307,7 +307,9 @@ const SocketProvider = (props: any) => {
 
     const linkStream = () => {
         key = false
-        createDevice(RtpCapability, key)
+        console.log(RtpCapability);
+        
+        // createDevice(RtpCapability, key)
     }
 
     const createViewerTransport = async () => {
