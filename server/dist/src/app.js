@@ -250,7 +250,7 @@ io.on('connection', (socket) => {
     socket.on('consume', ({ rtpCapabilities }, callback) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const producerData = yield dbconnect_1.default.query('SELECT producer_id from Livestream');
-            console.log(producerData.rows[0].producer_id);
+            console.log(producerData.rows[0].producer_id, producer.id);
             // if (mediasoupRouter.canConsume({
             //     producerId: producerData.rows[0].producer_id,
             //     rtpCapabilities
