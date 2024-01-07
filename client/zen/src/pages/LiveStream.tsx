@@ -15,7 +15,7 @@ const LiveStream: React.FC = () => {
                 {livestreamContext ? (
                     <ReactPlayer
                         playing
-                        url={livestreamContext?.liveStream}
+                        url={livestreamContext.liveStream}
                         height={400}
                         width={500}
                     />
