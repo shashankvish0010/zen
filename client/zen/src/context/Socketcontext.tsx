@@ -26,7 +26,7 @@ interface Contextvalue {
     localLiveStream: any
     liveStream: any
     createViewerTransport: () => void
-    // linkStream: () => void
+    linkStream: () => void
 }
 
 const Socketcontext = createContext<Contextvalue | null>(null)
@@ -192,6 +192,7 @@ const SocketProvider = (props: any) => {
     let streamer: any;
     let viewer: any;
     let transparams: any;
+    let RtpCapability: any
 
     const getLocalStream = useCallback(() => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((myLocalStream) => {
@@ -250,6 +251,7 @@ const SocketProvider = (props: any) => {
 
     const getRtpCapabilities = ({ RTPCapabilities }: any, key: boolean) => {
         console.log(RTPCapabilities, key);
+        RtpCapability = RTPCapabilities
         createDevice(RTPCapabilities, key)
     }
 
@@ -303,10 +305,10 @@ const SocketProvider = (props: any) => {
         }
     }
 
-    // const linkStream = () => {
-    //     key = false
-    //     socket.emit('livestream', key)
-    // }
+    const linkStream = () => {
+        key = false
+        createDevice(RtpCapability, key)
+    }
 
     const createViewerTransport = async () => {
        await socket.emit('createWebRTCTransport', { sender: false }, ({ params }: any) => {
@@ -380,7 +382,7 @@ const SocketProvider = (props: any) => {
         LocalStream, remoteStream, mycamera, controlCamera, mymic, controlMic, setPicked, picked, pickCall, reciever, calling, getZenList, zenList,
         // Context Values for Live Stream || Zen Live
         getLocalStream, localLiveStream, liveStream, createViewerTransport, 
-        // linkStream
+        linkStream
     }
     return (
         <Socketcontext.Provider value={info}>
