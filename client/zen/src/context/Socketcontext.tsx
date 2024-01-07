@@ -364,7 +364,7 @@ const SocketProvider = (props: any) => {
             })
             // const { track } = viewer;
             console.log("viewer", viewer._track);
-            setLiveStream(viewer._track)
+            setLiveStream(viewer._track[0])
             socket.emit('consumerResume')
         })
     }
