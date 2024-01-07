@@ -5,21 +5,19 @@ import { Socketcontext } from '../context/Socketcontext'
 
 const LiveStream: React.FC = () => {
     const livestreamContext = useContext(Socketcontext)
-    let key: boolean = false
     useEffect(() => {
         console.log("media",livestreamContext?.liveStream);
-        livestreamContext?.liveStream ? key=true : key = false
     }, [livestreamContext?.liveStream])
     return (
         <div className='h-screen w-screen flex items-center justify-center'>
             <div>
                 {
-                    key && livestreamContext ? 
+                    livestreamContext ? 
                     <ReactPlayer playing url={livestreamContext.liveStream} height={400} width={500} />
                     : null
                 }
             </div>
-            <button onClick={() => { livestreamContext?.linkStream() }}>Click</button>
+            <button onClick={() => livestreamContext?.linkStream() }>Click</button>
         </div>
     )
 }
