@@ -242,14 +242,12 @@ io.on('connection', (socket) => {
 
     socket.on('consume', async ({ rtpCapabilities }, callback) => {
         try {
-            const producerData = await pool.query('SELECT producer_id from Livestream');
-            console.log(producerData.rows[0].producer_id, producer.id);
-            // if (mediasoupRouter.canConsume({
-            //     producerId: producerData.rows[0].producer_id,
-            //     rtpCapabilities
-            // })) {
+            if (mediasoupRouter.canConsume({
+                producerId: producer.id,
+                rtpCapabilities
+            })) {
             viewer = await viewerTransport.consume({
-                producerId: producerData.rows[0].producer_id,
+                producerId: producer.id,
                 rtpCapabilities,
                 paused: true
             })
@@ -265,14 +263,14 @@ io.on('connection', (socket) => {
 
             const params = {
                 id: viewer.id,
-                producerId: producerData.rows[0].producer_id,
+                producerId: producer.id,
                 kind: viewer.kind,
                 rtpParameters: viewer.rtpParameters
             }
             console.log("Params to send", params);
 
             callback({ params })
-            // }
+            }
         } catch (error: any) {
             console.log(error.message);
             callback({

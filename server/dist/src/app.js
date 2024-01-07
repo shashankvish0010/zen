@@ -249,33 +249,31 @@ io.on('connection', (socket) => {
     }));
     socket.on('consume', ({ rtpCapabilities }, callback) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const producerData = yield dbconnect_1.default.query('SELECT producer_id from Livestream');
-            console.log(producerData.rows[0].producer_id, producer.id);
-            // if (mediasoupRouter.canConsume({
-            //     producerId: producerData.rows[0].producer_id,
-            //     rtpCapabilities
-            // })) {
-            viewer = yield viewerTransport.consume({
-                producerId: producerData.rows[0].producer_id,
-                rtpCapabilities,
-                paused: true
-            });
-            console.log("Viewer", viewer);
-            viewer.on('transportclose', () => {
-                console.log("transport close of viewer");
-            });
-            viewer.on('producerclose', () => {
-                console.log("producer close of viewer");
-            });
-            const params = {
-                id: viewer.id,
-                producerId: producerData.rows[0].producer_id,
-                kind: viewer.kind,
-                rtpParameters: viewer.rtpParameters
-            };
-            console.log("Params to send", params);
-            callback({ params });
-            // }
+            if (mediasoupRouter.canConsume({
+                producerId: producer.id,
+                rtpCapabilities
+            })) {
+                viewer = yield viewerTransport.consume({
+                    producerId: producer.id,
+                    rtpCapabilities,
+                    paused: true
+                });
+                console.log("Viewer", viewer);
+                viewer.on('transportclose', () => {
+                    console.log("transport close of viewer");
+                });
+                viewer.on('producerclose', () => {
+                    console.log("producer close of viewer");
+                });
+                const params = {
+                    id: viewer.id,
+                    producerId: producer.id,
+                    kind: viewer.kind,
+                    rtpParameters: viewer.rtpParameters
+                };
+                console.log("Params to send", params);
+                callback({ params });
+            }
         }
         catch (error) {
             console.log(error.message);
