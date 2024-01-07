@@ -251,7 +251,7 @@ const SocketProvider = (props: any) => {
 
     const getRtpCapabilities = ({ RTPCapabilities }: any, key: boolean) => {
         console.log(RTPCapabilities, key);
-        RtpCapability = RTPCapabilities
+        RtpCapability = {RTPCapabilities}
         createDevice(RTPCapabilities, key)
     }
 
