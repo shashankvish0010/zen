@@ -183,8 +183,8 @@ const SocketProvider = (props: any) => {
 
     // --------------------------------------------- Live Streaming Code -----------------------------------------------------
 
-    const [localLiveStream, setLocalLiveStream] = useState<any>()
-    const [liveStream, setLiveStream] = useState<any>()
+    const [localLiveStream, setLocalLiveStream] = useState<any | MediaStream>()
+    const [liveStream, setLiveStream] = useState<any | MediaStream>()
     let key: boolean = false
     let device: any;
     let streamerTransport: any;
@@ -195,7 +195,6 @@ const SocketProvider = (props: any) => {
 
     const getLocalStream = useCallback(() => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((myLocalStream) => {
-            // addLocalStream(myLocalStream)
             const track = myLocalStream.getTracks()[1]
             console.log("tracks", track);
             key = true
@@ -232,7 +231,6 @@ const SocketProvider = (props: any) => {
     const createDevice = useCallback((RTPCapabilities: RtpCapabilities, key: boolean) => {
         try {
             device = new mediasoupClient.Device()
-            // setDevice(device)
             device.load({
                 routerRtpCapabilities: RTPCapabilities
             }).then(() => {
@@ -306,7 +304,6 @@ const SocketProvider = (props: any) => {
     const linkStream = () => {
         key = false
         socket.emit('getRtp')        
-        // createDevice(RtpCapability, key)
     }
     
     const consumerRTP = (RTPCapabilities: RtpCapabilities) => {
@@ -364,7 +361,7 @@ const SocketProvider = (props: any) => {
             })
             // const { track } = viewer;
             console.log("viewer", viewer._track);
-            setLiveStream(viewer._track[0])
+            setLiveStream(viewer._track)
             socket.emit('consumerResume')
         })
     }
@@ -375,6 +372,7 @@ const SocketProvider = (props: any) => {
 
         return () => {
             socket.off('GetRTPCapabilities', getRtpCapabilities)
+            socket.off('consumerRTP', consumerRTP)
         }
     }, [])
 
