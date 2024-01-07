@@ -286,7 +286,7 @@ io.on('connection', (socket) => {
     }));
     socket.on('consumerResume', () => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Consumer resume");
-        yield producer.resume();
+        yield viewer.resume();
     }));
     socket.on('transportProduce', ({ kind, rtpParameters }, callback) => __awaiter(void 0, void 0, void 0, function* () {
         producer = yield producerTransport.produce({

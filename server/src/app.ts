@@ -282,7 +282,7 @@ io.on('connection', (socket) => {
     })
     socket.on('consumerResume', async () => {
         console.log("Consumer resume");
-        await producer.resume()
+        await viewer.resume()
     })
 
     socket.on('transportProduce', async ({ kind, rtpParameters }, callback) => {
