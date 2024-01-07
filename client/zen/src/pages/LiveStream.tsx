@@ -1,9 +1,13 @@
-import React, {useContext} from 'react'
+import React, {useContext, useEffect} from 'react'
 import ReactPlayer from 'react-player'
 import { Socketcontext } from '../context/Socketcontext'
 
+
 const LiveStream: React.FC = () => {
     const livestreamContext = useContext(Socketcontext)
+    useEffect(() => {
+        livestreamContext?.liveStream
+    }, [livestreamContext?.liveStream])
     return (
         <div className='h-screen w-screen flex items-center justify-center'>
             <div>
