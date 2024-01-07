@@ -303,15 +303,15 @@ const SocketProvider = (props: any) => {
 
     const linkStream = () => {
         key = false
-        socket.emit('getRtp')        
+        socket.emit('getRtp')
     }
-    
+
     const consumerRTP = (RTPCapabilities: RtpCapabilities) => {
         createDevice(RTPCapabilities, key)
     }
 
     const createViewerTransport = async () => {
-       await socket.emit('createWebRTCTransport', { sender: false }, ({ params }: any) => {
+        await socket.emit('createWebRTCTransport', { sender: false }, ({ params }: any) => {
             if (params.error) {
                 console.log(params.error);
                 return
@@ -339,14 +339,14 @@ const SocketProvider = (props: any) => {
         })
     }
 
-    const connectViewerTransport = async () => {
+    const connectViewerTransport = useCallback(async () => {
         console.log('connectViewerTransport device', device.rtpCapabilities);
 
         socket.emit('consume', {
             rtpCapabilities: device.rtpCapabilities,
         }, async ({ params }: any) => {
             console.log(params);
-            
+
             if (params.error) {
                 console.log("Cant consume", params);
                 return
@@ -363,7 +363,7 @@ const SocketProvider = (props: any) => {
             setLiveStream(viewer._track)
             socket.emit('consumerResume')
         })
-    }
+    }, [])
 
     useEffect(() => {
         socket.on('GetRTPCapabilities', getRtpCapabilities)
@@ -375,14 +375,12 @@ const SocketProvider = (props: any) => {
         }
     }, [])
 
-
-
     // -------------------------------------------- Value Provider Object ----------------------------------------------------------
     const info: Contextvalue = {
         // Context Values for Video Calling || Zen Call
         LocalStream, remoteStream, mycamera, controlCamera, mymic, controlMic, setPicked, picked, pickCall, reciever, calling, getZenList, zenList,
         // Context Values for Live Stream || Zen Live
-        getLocalStream, localLiveStream, liveStream, createViewerTransport, 
+        getLocalStream, localLiveStream, liveStream, createViewerTransport,
         linkStream
     }
     return (
