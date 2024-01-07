@@ -363,7 +363,7 @@ const SocketProvider = (props: any) => {
                 rtpParameters: params.rtpParameters
             })
             const { _track } = viewer;
-            console.log(viewer);
+            console.log("viewer", viewer);
             setLiveStream(_track[0])
             socket.emit('consumerResume')
         })
