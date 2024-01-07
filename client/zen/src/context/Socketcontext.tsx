@@ -337,9 +337,9 @@ const SocketProvider = (props: any) => {
                         errback(error)
                     }
                 })
+                connectViewerTransport()
             }
         })
-        connectViewerTransport()
     }
 
     const connectViewerTransport = async () => {
@@ -358,7 +358,7 @@ const SocketProvider = (props: any) => {
 
             viewer = await viewerTransport.consume({
                 id: params.id,
-                producererId: params.producererId,
+                producerId: params.producerId,
                 kind: params.kind,
                 rtpParameters: params.rtpParameters
             })
