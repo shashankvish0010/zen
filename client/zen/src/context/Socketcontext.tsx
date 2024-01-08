@@ -361,7 +361,8 @@ const SocketProvider = (props: any) => {
             // console.log("viewer", viewer.track);
             // setLiveStream(viewer.track);
             const tracks = viewer.track;
-            setLiveStream(tracks)
+            viewer.track ?
+                setLiveStream(tracks) : console.log("Invalid track from streamer");
             socket.emit('consumerResume')
         })
     }, [])
