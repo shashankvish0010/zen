@@ -7,7 +7,7 @@ const LiveStream: React.FC = () => {
 
     useEffect(() => {
         console.log("media", livestreamContext?.viewer?.track);
-    }, [livestreamContext?.viewer?.track]);
+    }, [livestreamContext]);
 
     return (
         <div className='h-screen w-screen flex items-center justify-center'>
