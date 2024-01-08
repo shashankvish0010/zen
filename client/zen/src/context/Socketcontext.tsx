@@ -254,7 +254,7 @@ const SocketProvider = (props: any) => {
     const createStreamerTransport = async () => {
         socket.emit('createWebRTCTransport', { sender: true }, async ({ params }: any) => {
             params ? streamerTransport = await device.createSendTransport(params) : console.log("Params not available");
-            console.log("entered in createStreamerTransport", params);
+            console.log("entered in createStreamerTransport", params.dtlsParameters);
             if (streamerTransport && params.dtlsParameters) {
                 streamerTransport.on('connect', async ({ dtlsParameters }: any, callback: () => void, errback: any) => {
                     try {
@@ -310,7 +310,7 @@ const SocketProvider = (props: any) => {
         createDevice(RTPCapabilities, key)
     }
 
-    const createViewerTransport = () => {
+    const createViewerTransport = useCallback(() => {
         socket.emit('createWebRTCTransport', { sender: false }, ({ params }: any) => {
             if (params.error) {
                 console.log(params.error);
@@ -337,7 +337,7 @@ const SocketProvider = (props: any) => {
                 connectViewerTransport()
             }
         })
-    }
+    },[])
 
     const connectViewerTransport = useCallback(async () => {
         console.log('connectViewerTransport device', device.rtpCapabilities);
