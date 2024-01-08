@@ -21,7 +21,7 @@ const LiveStream: React.FC = () => {
                     />
                 )}
             </div>
-            <button onClick={() => {livestreamContext?.linkStream()}}>Click</button>
+            <button onClick={livestreamContext?.linkStream}>Click</button>
         </div>
     );
 };
