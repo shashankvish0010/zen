@@ -158,7 +158,7 @@ io.on('connection', (socket) => {
             const WebRTCOptions = {
                 listenIps: [
                     {
-                        ip: '76.76.21.142' || '0.0.0.0',
+                        ip: '0.0.0.0',
                         // announcedIp: '76.76.21.142'
                     }
                 ],
