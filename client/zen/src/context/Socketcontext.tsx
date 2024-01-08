@@ -361,31 +361,7 @@ const SocketProvider = (props: any) => {
             // console.log("viewer", viewer.track);
             // setLiveStream(viewer.track);
             const tracks = viewer.track;
-            const mediaStream = new MediaStream(tracks);
-            const mediaRecorder = new MediaRecorder(mediaStream);
-            const chunks: Blob[] = [];
-
-            mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    chunks.push(event.data);
-                }
-            };
-
-            mediaRecorder.onstop = () => {
-                // Combine the recorded chunks into a single Blob
-                const mediaBlob = new Blob(chunks, { type: 'video/webm' }); // Adjust the type according to your media format
-
-                // Create URL from Blob
-                const streamUrl = URL.createObjectURL(mediaBlob);
-
-                setLiveStream(streamUrl);
-            };
-
-            // Start recording
-            mediaRecorder.start();
-            setTimeout(() => {
-                mediaRecorder.stop();
-            }, 5000);
+            setLiveStream(tracks)
             socket.emit('consumerResume')
         })
     }, [])
