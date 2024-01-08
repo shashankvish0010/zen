@@ -33,11 +33,11 @@ const LiveStream: React.FC = () => {
   useEffect(() => {
     const videoElement = videoRef.current;
 
-    if (livestreamContext?.liveStream && videoElement) {
+    if (livestreamContext?.liveStream instanceof MediaStream && videoElement) {
       videoElement.srcObject = livestreamContext.liveStream;
       videoElement.play().catch((error: Error) => console.error('Error playing video:', error));
     }
-
+  
     return () => {
       // Cleanup
       if (videoElement) {
