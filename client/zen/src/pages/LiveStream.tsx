@@ -6,8 +6,8 @@ const LiveStream: React.FC = () => {
     const livestreamContext = useContext(Socketcontext);
 
     useEffect(() => {
-        console.log("media", livestreamContext?.liveStream);
-    }, [livestreamContext?.liveStream]);
+        console.log("media", livestreamContext?.viewer.track);
+    }, [livestreamContext?.viewer.track]);
 
     return (
         <div className='h-screen w-screen flex items-center justify-center'>
@@ -15,7 +15,7 @@ const LiveStream: React.FC = () => {
                 {livestreamContext ? (
                     <ReactPlayer
                         playing
-                        url={livestreamContext.liveStream}
+                        url={livestreamContext?.viewer.track}
                         height={400}
                         width={500}
                     />
