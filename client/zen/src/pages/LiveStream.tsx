@@ -28,14 +28,14 @@ import { Socketcontext } from '../context/Socketcontext'
 
 const LiveStream: React.FC = () => {
   const livestreamContext = useContext(Socketcontext);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const videoRef = useRef<any | null>(null);
 
   useEffect(() => {
     const videoElement = videoRef.current;
 
     if (livestreamContext?.liveStream && videoElement) {
       videoElement.srcObject = livestreamContext.liveStream;
-      videoElement.play().catch((error) => console.error('Error playing video:', error));
+      videoElement.play().catch((error: Error) => console.error('Error playing video:', error));
     }
 
     return () => {
