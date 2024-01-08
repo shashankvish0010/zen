@@ -360,9 +360,14 @@ const SocketProvider = (props: any) => {
             })
             // console.log("viewer", viewer.track);
             // setLiveStream(viewer.track);
-            const tracks = viewer.track;
-            viewer.track ?
-                setLiveStream(tracks) : console.log("Invalid track from streamer");
+            const track = viewer.track;
+            // viewer.track ?
+            //     setLiveStream(tracks) : console.log("Invalid track from streamer");
+            if (track instanceof MediaStreamTrack) {
+                setLiveStream(track);
+            } else {
+                console.error("Invalid viewer.track");
+            }
             socket.emit('consumerResume')
         })
     }, [])
