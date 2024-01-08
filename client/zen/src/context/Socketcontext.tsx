@@ -360,7 +360,7 @@ const SocketProvider = (props: any) => {
             })
             // console.log("viewer", viewer.track);
             // setLiveStream(viewer.track);
-            const tracks = viewer.track.getTracks();
+            const tracks = viewer.track;
             const mediaStream = new MediaStream(tracks);
             const mediaRecorder = new MediaRecorder(mediaStream);
             const chunks: Blob[] = [];
