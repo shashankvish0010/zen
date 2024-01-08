@@ -24,7 +24,7 @@ interface Contextvalue {
     // Context Values for Zen Live
     getLocalStream: () => void
     localLiveStream: any
-    // liveStream: any
+    liveStream: any
     viewer: any
     createViewerTransport: () => void
     linkStream: () => void
@@ -185,7 +185,7 @@ const SocketProvider = (props: any) => {
     // --------------------------------------------- Live Streaming Code -----------------------------------------------------
 
     const [localLiveStream, setLocalLiveStream] = useState<any | MediaStream>()
-    // const [liveStream, setLiveStream] = useState<any | MediaStream>()
+    const [liveStream, setLiveStream] = useState<any | MediaStream>()
     let key: boolean = false
     let device: any;
     let streamerTransport: any;
@@ -359,7 +359,7 @@ const SocketProvider = (props: any) => {
                 rtpParameters: params.rtpParameters
             })
             console.log("viewer", viewer.track);
-            // setLiveStream(viewer.track);
+            setLiveStream(viewer.track);
             socket.emit('consumerResume')
         })
     }, [])
@@ -379,7 +379,7 @@ const SocketProvider = (props: any) => {
         // Context Values for Video Calling || Zen Call
         LocalStream, remoteStream, mycamera, controlCamera, mymic, controlMic, setPicked, picked, pickCall, reciever, calling, getZenList, zenList,
         // Context Values for Live Stream || Zen Live
-        getLocalStream, localLiveStream, viewer, createViewerTransport,
+        getLocalStream, localLiveStream, liveStream, viewer, createViewerTransport,
         linkStream
     }
     return (
