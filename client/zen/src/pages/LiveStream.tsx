@@ -6,9 +6,8 @@ const LiveStream: React.FC = () => {
     const livestreamContext = useContext(Socketcontext);
 
     useEffect(() => {
-        livestreamContext?.linkStream()
         console.log("media", livestreamContext?.liveStream);
-    }, []);
+    }, [livestreamContext?.liveStream]);
 
     return (
         <div className='h-screen w-screen flex items-center justify-center'>
@@ -22,7 +21,7 @@ const LiveStream: React.FC = () => {
                     />
                 )}
             </div>
-            {/* <button onClick={() => {livestreamContext?.linkStream()}}>Click</button> */}
+            <button onClick={() => {livestreamContext?.linkStream()}}>Click</button>
         </div>
     );
 };
