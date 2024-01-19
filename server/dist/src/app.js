@@ -165,10 +165,10 @@ io.on('connection', (socket) => {
                 enableUdp: true,
                 enableTcp: true,
                 preferUdp: true,
+                MaxIncomeBitrate: 1500000,
                 initialAvailableOutgoinBitrate: 1000000,
             };
             let transport = yield mediasoupRouter.createWebRtcTransport(WebRTCOptions);
-            yield transport.setMaxIncomeBitrate(1500000);
             transport.on('dtlsstatechnage', (dtlsState) => {
                 if (dtlsState === 'closed') {
                     transport.close();
