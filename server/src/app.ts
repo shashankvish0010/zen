@@ -142,8 +142,6 @@ io.on('connection', (socket) => {
                 enableUdp: true,
                 enableTcp: true,
                 preferUdp: true,
-                MaxIncomeBitrate: 1500000,
-                initialAvailableOutgoinBitrate: 1000000,
             }
 
             let transport = await mediasoupRouter.createWebRtcTransport(WebRTCOptions)
