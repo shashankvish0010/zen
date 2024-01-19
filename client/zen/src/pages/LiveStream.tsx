@@ -32,6 +32,8 @@ const LiveStream: React.FC = () => {
 
   useEffect(() => {
     livestreamContext?.liveStream ? setKey(true) : null
+    console.log(livestreamContext?.liveStream);
+    
   }, [livestreamContext?.liveStream]);
 
   return (
