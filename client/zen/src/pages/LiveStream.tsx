@@ -6,7 +6,7 @@ const LiveStream: React.FC = () => {
     const livestreamContext = useContext(Socketcontext);
 
     useEffect(() => {
-        console.log("media", livestreamContext?.liveStream);
+        console.log( livestreamContext?.liveStream);
     }, [livestreamContext?.liveStream]);
 
     return (
