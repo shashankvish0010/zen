@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useRef } from 'react'
-// import ReactPlayer from 'react-player'
+import React, { useContext, useEffect, useState } from 'react'
+import ReactPlayer from 'react-player'
 import { Socketcontext } from '../context/Socketcontext'
 
 // const LiveStream: React.FC = () => {
@@ -28,28 +28,20 @@ import { Socketcontext } from '../context/Socketcontext'
 
 const LiveStream: React.FC = () => {
   const livestreamContext = useContext(Socketcontext);
-  const videoRef = useRef<any | null>(null);
+  const [key, setKey] = useState<boolean>(false)
 
   useEffect(() => {
-    const videoElement = videoRef.current;
-
-    if (livestreamContext?.liveStream instanceof MediaStream && videoElement) {
-      videoElement.srcObject = livestreamContext.liveStream;
-      videoElement.play().catch((error: Error) => console.error('Error playing video:', error));
-    }
-  
-    return () => {
-      // Cleanup
-      if (videoElement) {
-        videoElement.srcObject = null;
-      }
-    };
+    livestreamContext?.liveStream ? setKey(true) : null
   }, [livestreamContext?.liveStream]);
 
   return (
     <div className='h-screen w-screen flex items-center justify-center'>
       <div>
-        <video ref={videoRef} height={400} width={500} autoPlay playsInline muted={false}></video>
+        {
+          livestreamContext?.localLiveStream && key == true ?
+          <ReactPlayer playing url={livestreamContext?.localLiveStream} height={400} width={500} />
+          : null
+        }
       </div>
       <button onClick={livestreamContext?.linkStream}>Click</button>
     </div>
