@@ -358,7 +358,7 @@ const SocketProvider = (props: any) => {
                 kind: params.kind,
                 rtpParameters: params.rtpParameters
             })
-            // console.log("viewer", viewer.track);
+            console.log("viewer", viewer.track);
             // setLiveStream(viewer.track);
             viewer.track ?
                 setLiveStream(viewer.track) : console.log("Invalid track from streamer");
