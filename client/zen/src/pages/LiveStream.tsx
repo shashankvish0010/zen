@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import ReactPlayer from 'react-player'
 import { Socketcontext } from '../context/Socketcontext'
 
