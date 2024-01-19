@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import ReactPlayer from 'react-player'
 import { Socketcontext } from '../context/Socketcontext'
 
@@ -30,11 +30,9 @@ const LiveStream: React.FC = () => {
   const livestreamContext = useContext(Socketcontext);
   const [key, setKey] = useState<boolean>(false)
 
-  useEffect(() => {
+  useMemo(()=> {
     livestreamContext?.liveStream ? setKey(true) : null
-    console.log(livestreamContext?.liveStream);
-    
-  }, [livestreamContext?.liveStream]);
+  }, [])
 
   return (
     <div className='h-screen w-screen flex items-center justify-center'>
