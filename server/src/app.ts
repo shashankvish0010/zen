@@ -136,12 +136,14 @@ io.on('connection', (socket) => {
                 listenIps: [
                     {
                         ip: '0.0.0.0',
-                        // announcedIp: '49.43.1.157'
+                        announcedIp: '49.43.1.157'
                     }
                 ],
                 enableUdp: true,
                 enableTcp: true,
                 preferUdp: true,
+                MaxIncomeBitrate: 1500000,
+                initialAvailableOutgoinBitrate: 1000000,
             }
 
             let transport = await mediasoupRouter.createWebRtcTransport(WebRTCOptions)

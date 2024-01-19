@@ -280,12 +280,12 @@ const SocketProvider = (props: any) => {
                         }, ({ id }: any) => {
                             callback({ id })
                             console.log({ id });
-                            connectStreamerTransport(transparams);
                         })
                     } catch (error) {
                         errback(error);
                     }
                 })
+                connectStreamerTransport(transparams);
             }
         })
     }
