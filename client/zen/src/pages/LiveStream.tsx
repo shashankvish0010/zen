@@ -14,7 +14,7 @@ const LiveStream: React.FC = () => {
             <div>
                 {livestreamContext?.liveStream && (
                     <ReactPlayer
-                        playing
+                        playing={true}
                         url={livestreamContext?.liveStream}
                         height={400}
                         width={500}
