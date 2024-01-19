@@ -201,18 +201,7 @@ io.on('connection', (socket) => {
         callback({
             id: producer.id
         })
-        broadCast(WebSocket, 'newProducer', "new user")
-        console.log("transportProduced");
     })
-
-    const broadCast = (ws: any, type: string, msg: any) => {
-        ws.server.clients.forEach((client: any)=>{
-            client.send(JSON.stringify({
-                type,
-                data: msg
-            }))
-        })
-    }
 
     socket.on('getRtp', () => {
         socket.emit('consumerRTP', RTPCapabilities)
