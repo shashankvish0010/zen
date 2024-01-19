@@ -88,7 +88,7 @@ const mediaCodecs = [
         parameters: {
             'x-google-start-bitrate': 1000
         }
-    }
+    },
 ];
 io.on('connection', (socket) => {
     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
@@ -159,14 +159,16 @@ io.on('connection', (socket) => {
                 listenIps: [
                     {
                         ip: '0.0.0.0',
-                        // announcedIp: '76.76.21.142'
+                        announcedIp: '49.43.1.157'
                     }
                 ],
                 enableUdp: true,
                 enableTcp: true,
-                preferUdp: true
+                preferUdp: true,
+                initialAvailableOutgoinBitrate: 1000000,
             };
             let transport = yield mediasoupRouter.createWebRtcTransport(WebRTCOptions);
+            yield transport.setMaxIncomeBitrate(1500000);
             transport.on('dtlsstatechnage', (dtlsState) => {
                 if (dtlsState === 'closed') {
                     transport.close();
@@ -216,8 +218,17 @@ io.on('connection', (socket) => {
         callback({
             id: producer.id
         });
+        broadCast(WebSocket, 'newProducer', "new user");
         console.log("transportProduced");
     }));
+    const broadCast = (ws, type, msg) => {
+        ws.server.clients.forEach((client) => {
+            client.send(JSON.stringify({
+                type,
+                data: msg
+            }));
+        });
+    };
     socket.on('getRtp', () => {
         socket.emit('consumerRTP', RTPCapabilities);
     });
