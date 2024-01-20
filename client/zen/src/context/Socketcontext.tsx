@@ -3,13 +3,13 @@ import { io } from 'socket.io-client'
 import peer from '../services/peer'
 import { Device } from 'mediasoup-client';
 import { RtpCapabilities } from 'mediasoup-client/lib/RtpParameters'
-const socket = io('http://localhost:8080/')
+const socket = io('https://zen-backend-6acy.onrender.com')
 
 interface Contextvalue {
     // Context Values for Zen Call
     remoteStream: any
     LocalStream: any
-    mycamera: boolean
+    mycamera: boolean 
     mymic: boolean
     calling: (zenNo: number | undefined) => void
     getZenList: (id: string | undefined) => void
