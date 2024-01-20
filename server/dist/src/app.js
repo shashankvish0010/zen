@@ -51,13 +51,13 @@ const mediasoup = __importStar(require("mediasoup"));
 //     cert: fs.readFileSync(certfile, 'utf-8')
 // }
 app.use((0, cors_1.default)({
-    origin: 'https://zen-gamma.vercel.app',
+    origin: '*',
     methods: ['GET', 'POST', 'PUT'],
 }));
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, {
     cors: {
-        origin: 'https://zen-gamma.vercel.app',
+        origin: '*',
         methods: ['GET', 'POST', 'PUT'],
     }
 });
@@ -159,14 +159,12 @@ io.on('connection', (socket) => {
                 listenIps: [
                     {
                         ip: '0.0.0.0',
-                        announcedIp: '127.0.0.1'
+                        announcedIp: '127.0.0.0'
                     }
                 ],
                 enableUdp: true,
                 enableTcp: true,
                 preferUdp: true,
-                MaxIncomeBitrate: 1500000,
-                initialAvailableOutgoinBitrate: 1000000,
             };
             let transport = yield mediasoupRouter.createWebRtcTransport(WebRTCOptions);
             transport.on('dtlsstatechnage', (dtlsState) => {

@@ -95,7 +95,6 @@ io.on('connection', (socket) => {
     socket.on('done', () => { io.emit('videocall') })
 
     // --------------------------------------- WebSocket connection for Zen Live || Live Streaming --------------------------------- 
-
     socket.on('livestream', async (key) => {
         try {
             mediasoup.createWorker({
@@ -133,17 +132,27 @@ io.on('connection', (socket) => {
     const createTransport = async (callback: any) => {
         try {
             const WebRTCOptions = {
+                    listenInfos: [
+                        {
+                            protocol: "udp",
+                            ip: '127.0.0.0', // IPv4,
+                            announcedIp: '0.0.0.0', // this is my domain.site // I assign the port to be random
+                        },
+                        {
+                            protocol: "tcp",
+                            ip: '127.0.0.0', // IPv4,
+                            announcedIp: '0.0.0.0', // this is my domain.site
+                        },
+                    ],
                 listenIps: [
                     {
                         ip: '0.0.0.0',
-                        announcedIp: '127.0.0.1'
+                        announcedIp: '127.0.0.0'
                     }
                 ],
                 enableUdp: true,
                 enableTcp: true,
                 preferUdp: true,
-                MaxIncomeBitrate: 1500000,
-                initialAvailableOutgoinBitrate: 1000000,
             }
 
             let transport = await mediasoupRouter.createWebRtcTransport(WebRTCOptions)
