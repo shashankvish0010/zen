@@ -359,10 +359,10 @@ const SocketProvider = (props: any) => {
                 rtpParameters: params.rtpParameters
             }).then((data: any)=>{
                 setLiveStream(data.track) 
+                socket.emit('consumerResume')
                 // : console.log("Invalid track from streamer");
             }).catch((err: Error)=> console.log(err))
             // setLiveStream(viewer.track);
-            socket.emit('consumerResume')
         })
     }, [])
 
