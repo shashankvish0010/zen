@@ -352,17 +352,14 @@ const SocketProvider = (props: any) => {
             }
             console.log("params", params);
 
-            viewerTransport.consume({
+            const data = await viewerTransport.consume({
                 id: params.id,
                 producerId: params.producerId,
                 kind: params.kind,
                 rtpParameters: params.rtpParameters
-            }).then((data: any)=>{
-                setLiveStream(data.track) 
-                socket.emit('consumerResume')
-                // : console.log("Invalid track from streamer");
-            }).catch((err: Error)=> console.log(err))
-            // setLiveStream(viewer.track);
+            })
+            data.track ? setLiveStream(data.track) : console.log("track is invalid")
+            socket.emit("consumerResume")
         })
     }, [])
 
