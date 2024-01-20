@@ -1,9 +1,9 @@
 import { createContext, useCallback, useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 import peer from '../services/peer'
-import mediasoupClient from 'mediasoup-client'
+import { Device } from 'mediasoup-client';
 import { RtpCapabilities } from 'mediasoup-client/lib/RtpParameters'
-const socket = io('https://zen-backend-6acy.onrender.com')
+const socket = io('http://localhost:8080/')
 
 interface Contextvalue {
     // Context Values for Zen Call
@@ -197,7 +197,7 @@ const SocketProvider = (props: any) => {
     const getLocalStream = useCallback(() => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((myLocalStream) => {
             const track = myLocalStream.getTracks()[1]
-            console.log("tracks", track);
+            console.log("tracks", typeof(track));
             key = true
             setLocalLiveStream(myLocalStream)
             transparams = {
@@ -231,7 +231,7 @@ const SocketProvider = (props: any) => {
 
     const createDevice = useCallback((RTPCapabilities: RtpCapabilities, key: boolean) => {
         try {
-            device = new mediasoupClient.Device()
+            device = new Device()
             device.load({
                 routerRtpCapabilities: RTPCapabilities
             }).then(() => {
@@ -296,7 +296,7 @@ const SocketProvider = (props: any) => {
         if (!params || !params.track || params.track.length === 0) {
             console.log("Local Tracks are Missing");
         } else {
-            streamer = await streamerTransport.produce(params)
+            streamer = await streamerTransport.produce({track: params.track})
             streamer.on('trackended', () => console.log("track ended"));
             streamer.on('transportclose', () => console.log("trasport ended"));
         }
@@ -358,8 +358,8 @@ const SocketProvider = (props: any) => {
                 kind: params.kind,
                 rtpParameters: params.rtpParameters
             }).then((data: any)=>{
-                data.track ?
-                setLiveStream(data.track) : console.log("Invalid track from streamer");
+                setLiveStream(data.track) 
+                // : console.log("Invalid track from streamer");
             }).catch((err: Error)=> console.log(err))
             // setLiveStream(viewer.track);
             socket.emit('consumerResume')
