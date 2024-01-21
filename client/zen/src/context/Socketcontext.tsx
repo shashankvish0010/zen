@@ -78,12 +78,9 @@ const SocketProvider = (props: any) => {
     const streaming = () => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((UsersStream) => {
             setLocalStream(UsersStream)
-            // UsersStream.getTracks().forEach((track: any) => {
-            //     peer.peer.addTrack(track, UsersStream)
-            // })
-            for (const track of UsersStream.getTracks()) {
+            UsersStream.getTracks().forEach((track: any) => {
                 peer.peer.addTrack(track, UsersStream)
-            }
+            })
         })
     }
 
