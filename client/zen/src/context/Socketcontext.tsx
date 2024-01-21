@@ -146,6 +146,8 @@ const SocketProvider = (props: any) => {
     useEffect(() => {
         if (startStream == true) {
             peer.peer.addEventListener('track', async (event: any) => {
+                console.log(event.streams);
+                
                 const [remoteStream] = event.streams;
                 setRemoteStream(remoteStream)
             });
