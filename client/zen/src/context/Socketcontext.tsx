@@ -144,14 +144,16 @@ const SocketProvider = (props: any) => {
     }, [handleNegotiation])
 
     useEffect(() => {
-        if (startStream == true) {
-            peer.peer.addEventListener('track', async (event: any) => {
-                console.log(event.streams);
-                
-                const [remoteStream] = event.streams;
-                setRemoteStream(remoteStream)
-            });
-        }
+        setTimeout(() => {
+            if (startStream == true) {
+                peer.peer.addEventListener('track', async (event: any) => {
+                    console.log(event.streams);
+                    
+                    const [remoteStream] = event.streams;
+                    setRemoteStream(remoteStream)
+                });
+            }
+        }, 5000);
     }, [startStream])
 
 
