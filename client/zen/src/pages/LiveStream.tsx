@@ -7,11 +7,14 @@ const LiveStream: React.FC = () => {
 
   useEffect(() => {
      console.log(livestreamContext?.liveStream); 
+     if (livestreamContext?.liveStream && videoRef.current) {
+
      videoRef.current.srcObject = livestreamContext?.liveStream;
 
      videoRef.current.play().catch((error: any) => {
        console.error('Error playing the video:', error);
-     });  }, [livestreamContext?.liveStream]);
+     }); }
+     }, [livestreamContext?.liveStream]);
 
   return (
     <div className='h-screen w-screen flex items-center justify-center'>
