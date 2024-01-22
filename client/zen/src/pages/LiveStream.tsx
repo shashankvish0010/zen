@@ -5,6 +5,7 @@ const LiveStream: React.FC = () => {
   const livestreamContext = useContext(Socketcontext);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
+  useEffect(()=>{
   setInterval(() => {
     const playStream = async () => {
       if (livestreamContext?.liveStream && videoRef.current) {
@@ -33,6 +34,7 @@ const LiveStream: React.FC = () => {
 
     playStream();
   }, 1000);
+}, [livestreamContext?.liveStream])
 
   return (
     <div className='h-screen w-screen flex items-center justify-center'>
