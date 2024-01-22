@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react'
+import React, { isValidElement, useContext, useEffect, useRef } from 'react'
 import { Socketcontext } from '../context/Socketcontext'
 
 const LiveStream: React.FC = () => {
@@ -11,10 +11,10 @@ const LiveStream: React.FC = () => {
       if (livestreamContext?.liveStream && videoRef.current) {
         try {
           // Check if liveStream is a valid MediaStream
-          if (livestreamContext.liveStream) {
+          if (livestreamContext.liveStream instanceof MediaStream) {
             // Set the video source object
-            const mediaStream = new MediaStream();
-            mediaStream.addTrack(livestreamContext.liveStream);
+            const mediaStream = new MediaStream(livestreamContext.liveStream);
+
             videoRef.current.srcObject = mediaStream;
 
             // Play the video
