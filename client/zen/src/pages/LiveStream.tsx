@@ -11,9 +11,11 @@ const LiveStream: React.FC = () => {
       if (livestreamContext?.liveStream && videoRef.current) {
         try {
           // Check if liveStream is a valid MediaStream
-          if (livestreamContext.liveStream instanceof MediaStream) {
+          if (livestreamContext.liveStream) {
             // Set the video source object
-            videoRef.current.srcObject = livestreamContext.liveStream;
+            const mediaStream = new MediaStream();
+            mediaStream.addTrack(livestreamContext.liveStream);
+            videoRef.current.srcObject = mediaStream;
 
             // Play the video
             await videoRef.current.play();
