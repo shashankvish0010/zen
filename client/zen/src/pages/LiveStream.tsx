@@ -33,7 +33,7 @@ const LiveStream: React.FC = () => {
     };
 
     playStream();
-  }, 1000);
+  }, 5000);
 }, [livestreamContext?.liveStream])
 
   return (
