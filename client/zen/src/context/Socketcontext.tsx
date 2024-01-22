@@ -351,7 +351,7 @@ const SocketProvider = (props: any) => {
                 return
             }
             console.log("params", params);
-
+            setInterval(async ()=>{
             const data = await viewerTransport.consume({
                 id: params.id,
                 producerId: params.producerId,
@@ -360,6 +360,7 @@ const SocketProvider = (props: any) => {
             })
             data.track ? setLiveStream(data.track) : console.log("track is invalid")
             socket.emit("consumerResume")
+        }, 2000)
         })
     }, [])
 
