@@ -3,7 +3,7 @@ import { Socketcontext } from '../context/Socketcontext'
 
 const LiveStream: React.FC = () => {
   const livestreamContext = useContext(Socketcontext);
-  var videoRef = useRef<HTMLVideoElement | any>();
+  var videoRef = useRef<HTMLVideoElement | any>(null);
 
   useEffect(() => {
      console.log(livestreamContext?.liveStream); 
