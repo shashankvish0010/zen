@@ -6,7 +6,6 @@ const LiveStream: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(()=>{
-  setInterval(() => {
     const playStream = async () => {
       if (livestreamContext?.liveStream && videoRef.current) {
         try {
@@ -33,7 +32,6 @@ const LiveStream: React.FC = () => {
     };
 
     playStream();
-  }, 5000);
 }, [livestreamContext?.liveStream])
 
   return (
