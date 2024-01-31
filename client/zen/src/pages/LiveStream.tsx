@@ -11,7 +11,7 @@ const LiveStream: React.FC = () => {
           if (livestreamContext.liveStream instanceof MediaStreamTrack) {
             // Create a new MediaStream with the track
             var stream = new MediaStream([livestreamContext.liveStream]);
-            console.log(stream);
+            console.log("stream",stream);
             // Set the video source object
             var videoElement = document.getElementById('video') as HTMLVideoElement;
             videoElement.srcObject=stream
