@@ -36,7 +36,7 @@ const LiveStream: React.FC = () => {
         {livestreamContext?.liveStream ? (
           <video
           id='video'
-            autoPlay = {false}
+            autoPlay
             height={400}
             width={500}
           ></video>
