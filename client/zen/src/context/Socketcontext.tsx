@@ -184,7 +184,7 @@ const SocketProvider = (props: any) => {
     // --------------------------------------------- Live Streaming Code -----------------------------------------------------
 
     const [localLiveStream, setLocalLiveStream] = useState<any | MediaStream>()
-    const [liveStream, setLiveStream] = useState<any | MediaStream>()
+    var liveStream : any
     let key: boolean = false
     let device: any;
     let streamerTransport: any;
@@ -358,8 +358,8 @@ const SocketProvider = (props: any) => {
                 rtpParameters: params.rtpParameters
             })
             if (data.track) {
-                setLiveStream(data.track);
-                // socket.emit("consumerResume")
+                liveStream=data.track;
+                socket.emit("consumerResume")
             }
             else {
                 console.log("track is invalid")
