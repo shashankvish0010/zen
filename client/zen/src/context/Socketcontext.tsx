@@ -359,7 +359,7 @@ const SocketProvider = (props: any) => {
             })
             if (data.track) {
                 setLiveStream(data.track);
-                socket.emit("consumerResume")
+                // socket.emit("consumerResume")
             }
             else {
                 console.log("track is invalid")
