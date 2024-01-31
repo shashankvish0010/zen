@@ -358,7 +358,7 @@ const SocketProvider = (props: any) => {
                 rtpParameters: params.rtpParameters
             })
             if (data.track) {
-                liveStream=data.track;                
+                liveStream=(data.track);                
                 socket.emit("consumerResume")
             }
             else {
