@@ -9,7 +9,7 @@ interface Contextvalue {
     // Context Values for Zen Call
     remoteStream: any
     LocalStream: any
-    mycamera: boolean 
+    mycamera: boolean
     mymic: boolean
     calling: (zenNo: number | undefined) => void
     getZenList: (id: string | undefined) => void
@@ -76,7 +76,7 @@ const SocketProvider = (props: any) => {
     }
 
     const streaming = () => {
-        setInterval(()=>         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((UsersStream) => {
+        setInterval(() => navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((UsersStream) => {
             setLocalStream(UsersStream)
             UsersStream.getTracks().forEach((track: any) => {
                 peer.peer.addTrack(track, UsersStream)
@@ -146,7 +146,7 @@ const SocketProvider = (props: any) => {
     useEffect(() => {
         setInterval(() => {
             if (startStream == true) {
-                peer.peer.addEventListener('track', async (event: any) => {                    
+                peer.peer.addEventListener('track', async (event: any) => {
                     const [remoteStream] = event.streams;
                     setRemoteStream(remoteStream)
                 });
@@ -197,7 +197,7 @@ const SocketProvider = (props: any) => {
         navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((myLocalStream) => {
             const track = myLocalStream.getVideoTracks()[0];
             console.log(track);
-            
+
             key = true
             setLocalLiveStream(myLocalStream)
             transparams = {
@@ -296,7 +296,7 @@ const SocketProvider = (props: any) => {
         if (!params || !params.track || params.track.length === 0) {
             console.log("Local Tracks are Missing");
         } else {
-            streamer = await streamerTransport.produce({track: params.track})
+            streamer = await streamerTransport.produce({ track: params.track })
             streamer.on('trackended', () => console.log("track ended"));
             streamer.on('transportclose', () => console.log("trasport ended"));
         }
@@ -357,8 +357,13 @@ const SocketProvider = (props: any) => {
                 kind: params.kind,
                 rtpParameters: params.rtpParameters
             })
-            data.track ? setLiveStream(data.track) : console.log("track is invalid")
-            socket.emit("consumerResume")
+            if (data.track) {
+                setLiveStream(data.track);
+                socket.emit("consumerResume")
+            }
+            else {
+                console.log("track is invalid")
+            }
         })
     }, [])
 
