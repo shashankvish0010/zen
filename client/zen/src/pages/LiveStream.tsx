@@ -8,7 +8,7 @@ const LiveStream: React.FC = () => {
       if (livestreamContext?.liveStream) {
         try {
           // Check if liveStream is a valid MediaStreamTrack
-          if (livestreamContext.liveStream instanceof MediaStreamTrack) {
+          if (livestreamContext.liveStream ) {
             // Create a new MediaStream with the track
             var stream = new MediaStream([livestreamContext.liveStream]);
             console.log("stream",stream);
