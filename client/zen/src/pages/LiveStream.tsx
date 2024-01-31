@@ -1,26 +1,22 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Socketcontext } from '../context/Socketcontext';
 
 const LiveStream: React.FC = () => {
   const livestreamContext = useContext(Socketcontext);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-
   useEffect(()=>{
     const playStream = async () => {
-      if (livestreamContext?.liveStream && videoRef.current) {
+      if (livestreamContext?.liveStream) {
         try {
           // Check if liveStream is a valid MediaStreamTrack
           if (livestreamContext.liveStream instanceof MediaStreamTrack) {
             // Create a new MediaStream with the track
-            const mediaStream = new MediaStream([livestreamContext.liveStream]);
-            console.log(mediaStream);
-
+            var stream = new MediaStream([livestreamContext.liveStream]);
+            console.log(stream);
             // Set the video source object
-            videoRef.current.srcObject = mediaStream;
-
+            var videoElement = document.getElementById('video') as HTMLVideoElement;
+            videoElement.srcObject=stream
+            videoElement.play()
             // Play the video
-            await videoRef.current.play();
-
             console.log('Video is playing');
           } else {
             console.error('Invalid MediaStreamTrack:', livestreamContext.liveStream);
@@ -39,8 +35,8 @@ const LiveStream: React.FC = () => {
       <div>
         {livestreamContext?.liveStream ? (
           <video
-            ref={videoRef}
-            autoPlay
+          id='video'
+            autoPlay = {false}
             height={400}
             width={500}
           ></video>
