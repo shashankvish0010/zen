@@ -359,6 +359,8 @@ const SocketProvider = (props: any) => {
             })
             if (data.track) {
                 liveStream=data.track;
+                console.log("data",data);
+                
                 socket.emit("consumerResume")
             }
             else {
