@@ -44,7 +44,7 @@ const VideoCall: React.FC = () => {
           socketcontext?.mymic == true ? <Icon color='red' onClick={() => { socketcontext?.controlMic() }} icon="bi:mic-mute-fill" height='5vh' />
             : <Icon color='green' onClick={() => { socketcontext?.controlMic() }} icon="eva:mic-fill" height='5vh' />
         } */}
-        <button onClick={()=>{socketcontext?.handleNegotiation}} className='h-max w-max p-2 bg-gradient-r from-indigo-600 to-blue-600 font-semibold text-base'>Start Call</button>
+        <button onClick={()=>{socketcontext?.handleNegotiation()}} className='h-max w-max p-2 bg-gradient-r from-indigo-600 to-blue-600 font-semibold text-base'>Start Call</button>
       </div>
     </div>
   );
