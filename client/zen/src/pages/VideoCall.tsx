@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { Socketcontext } from '../context/Socketcontext';
 import ReactPlayer from 'react-player';
-import { Icon } from '@iconify/react';
+// import { Icon } from '@iconify/react';
 
 const VideoCall: React.FC = () => {
   const socketcontext = useContext(Socketcontext);
@@ -36,14 +36,15 @@ const VideoCall: React.FC = () => {
         )}
       </div>
       <div className='mt-[100%] absolute flex w-screen h-[5vh] p-3 flex-row gap-5 bg-transparent'>
-        {
+        {/* {
           socketcontext?.mycamera == true ? <Icon color='red' onClick={() => { socketcontext?.controlCamera() }} icon="pepicons-pop:camera-circle-off" height='5vh' />
             : <Icon color='blue' onClick={() => { socketcontext?.controlCamera() }} icon="pepicons-pop:camera" height='5vh' />
         }
         {
           socketcontext?.mymic == true ? <Icon color='red' onClick={() => { socketcontext?.controlMic() }} icon="bi:mic-mute-fill" height='5vh' />
             : <Icon color='green' onClick={() => { socketcontext?.controlMic() }} icon="eva:mic-fill" height='5vh' />
-        }
+        } */}
+        <button onClick={()=>{socketcontext?.handleNegotiation}} className='h-max w-max p-2 bg-gradient-r from-indigo-600 to-blue-600 font-semibold text-base'>Start Call</button>
       </div>
     </div>
   );
