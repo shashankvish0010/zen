@@ -164,7 +164,7 @@ const SocketProvider = (props: any) => {
         socket.on("callercalling", callercalling)
         socket.on('recieverCall', recieverCall)
         socket.on('callaccepted', callaccepted)
-        socket.on('negotiationaccept', negotiationaccept)
+        // socket.on('negotiationaccept', negotiationaccept)
         socket.on('acceptnegotiationanswer', acceptnegotiationanswer)
         socket.on('videocall', videcall)
 
