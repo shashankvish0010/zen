@@ -9,13 +9,13 @@ interface Contextvalue {
     // Context Values for Zen Call
     remoteStream: any
     LocalStream: any
-    mycamera: boolean
-    mymic: boolean
+    // mycamera: boolean
+    // mymic: boolean
     calling: (zenNo: number | undefined) => void
     getZenList: (id: string | undefined) => void
     handleNegotiation: () => void
-    controlCamera: () => void
-    controlMic: () => void
+    // controlCamera: () => void
+    // controlMic: () => void
     zenList: any | undefined
     reciever: boolean
     pickCall: () => void
@@ -33,8 +33,8 @@ interface Contextvalue {
 
 const Socketcontext = createContext<Contextvalue | null>(null)
 const SocketProvider = (props: any) => {
-    const [mycamera, setMyCamera] = useState<boolean>(true)
-    const [mymic, setMyMic] = useState<boolean>(true)
+    // const [mycamera, setMyCamera] = useState<boolean>(true)
+    // const [mymic, setMyMic] = useState<boolean>(true)
     const [zenList, setZenList] = useState<any>()
     const [socketid, setSocketId] = useState<string>()
     const [caller, setCaller] = useState<boolean>(false)
@@ -48,15 +48,15 @@ const SocketProvider = (props: any) => {
         setSocketId(data)
     }
 
-    const controlCamera = () => {
-        setMyCamera(!mycamera)
-        console.log("cam", mycamera);
-    }
+    // const controlCamera = () => {
+    //     setMyCamera(!mycamera)
+    //     console.log("cam", mycamera);
+    // }
 
-    const controlMic = () => {
-        setMyMic(!mymic)
-        console.log("mic", mymic);
-    }
+    // const controlMic = () => {
+    //     setMyMic(!mymic)
+    //     console.log("mic", mymic);
+    // }
 
     const getZenList = async (id: string | undefined) => {
 
@@ -384,7 +384,7 @@ const SocketProvider = (props: any) => {
     // -------------------------------------------- Value Provider Object ----------------------------------------------------------
     const info: Contextvalue = {
         // Context Values for Video Calling || Zen Call
-        LocalStream, remoteStream, mycamera, handleNegotiation, controlCamera, mymic, controlMic, setPicked, picked, pickCall, reciever, calling, getZenList, zenList,
+        LocalStream, remoteStream, handleNegotiation, setPicked, picked, pickCall, reciever, calling, getZenList, zenList,
         // Context Values for Live Stream || Zen Live
         getLocalStream, localLiveStream, liveStream, viewer, createViewerTransport,
         linkStream
