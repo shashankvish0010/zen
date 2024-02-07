@@ -51,13 +51,13 @@ const mediasoup = __importStar(require("mediasoup"));
 //     cert: fs.readFileSync(certfile, 'utf-8')
 // }
 app.use((0, cors_1.default)({
-    origin: '*',
+    origin: 'https://zen-gamma.vercel.app',
     methods: ['GET', 'POST', 'PUT'],
 }));
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, {
     cors: {
-        origin: '*',
+        origin: 'https://zen-gamma.vercel.app',
         methods: ['GET', 'POST', 'PUT'],
     }
 });
@@ -111,12 +111,12 @@ io.on('connection', (socket) => {
     socket.on('callrecieved', (answer) => {
         io.to(sender).emit('callaccepted', { answer, picked: true });
     });
-    socket.on('negotiation', (offer) => {
-        io.to(receiver).emit('negotiationaccept', { sendersNegoOffer: offer });
-    });
-    socket.on('negotiationdone', (answer) => {
-        io.to(sender).emit('acceptnegotiationanswer', { receiverNegoAnswer: answer });
-    });
+    // socket.on('negotiation', (offer) => {
+    //     io.to(receiver).emit('negotiationaccept', { sendersNegoOffer: offer })
+    // })
+    // socket.on('negotiationdone', (answer) => {
+    //     io.to(sender).emit('acceptnegotiationanswer', { receiverNegoAnswer: answer })
+    // })
     socket.on('done', () => { io.emit('videocall'); });
     // --------------------------------------- WebSocket connection for Zen Live || Live Streaming --------------------------------- 
     socket.on('livestream', (key) => __awaiter(void 0, void 0, void 0, function* () {
@@ -156,6 +156,18 @@ io.on('connection', (socket) => {
     const createTransport = (callback) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const WebRTCOptions = {
+                listenInfos: [
+                    {
+                        protocol: "udp",
+                        ip: '127.0.0.0',
+                        announcedIp: '0.0.0.0', // this is my domain.site // I assign the port to be random
+                    },
+                    {
+                        protocol: "tcp",
+                        ip: '127.0.0.0',
+                        announcedIp: '0.0.0.0', // this is my domain.site
+                    },
+                ],
                 listenIps: [
                     {
                         ip: '0.0.0.0',
