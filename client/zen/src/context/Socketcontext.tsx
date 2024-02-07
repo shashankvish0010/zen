@@ -106,6 +106,8 @@ const SocketProvider = (props: any) => {
     }
 
     async function callaccepted(data: any) {
+        console.log("ener fin");
+        
         const { answer, picked } = data
         setPicked(picked)
         await peer.setRemoteDescription(answer).then(()=>{
