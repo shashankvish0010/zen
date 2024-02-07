@@ -120,6 +120,8 @@ const SocketProvider = (props: any) => {
     }
 
     async function handleNegotiation() {
+        console.log("clicked");
+        
         if (caller == true) {
             const offer = await peer.generateOffer();
             socket.emit('negotiation', offer)
