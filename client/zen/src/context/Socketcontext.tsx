@@ -100,8 +100,9 @@ const SocketProvider = (props: any) => {
     async function callaccepted(data: any) {
         const { answer, picked } = data
         setPicked(picked)
-        await peer.setRemoteDescription(answer)
-        socket.emit('done')
+        await peer.setRemoteDescription(answer).then(()=>{
+            socket.emit('done')
+        })
     }
 
     function callercalling() {
