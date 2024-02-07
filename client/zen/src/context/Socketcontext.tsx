@@ -129,6 +129,7 @@ const SocketProvider = (props: any) => {
     }
 
     async function negotiationaccept(data: any) {
+        console.log("clicked accept");
         const answer = await peer.generateAnswer(data.sendersNegoOffer)
         socket.emit('negotiationdone', answer)
     }
