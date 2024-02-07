@@ -84,13 +84,13 @@ io.on('connection', (socket) => {
         io.to(sender).emit('callaccepted', { answer, picked: true })
     })
 
-    socket.on('negotiation', (offer) => {
-        io.to(receiver).emit('negotiationaccept', { sendersNegoOffer: offer })
-    })
+    // socket.on('negotiation', (offer) => {
+    //     io.to(receiver).emit('negotiationaccept', { sendersNegoOffer: offer })
+    // })
 
-    socket.on('negotiationdone', (answer) => {
-        io.to(sender).emit('acceptnegotiationanswer', { receiverNegoAnswer: answer })
-    })
+    // socket.on('negotiationdone', (answer) => {
+    //     io.to(sender).emit('acceptnegotiationanswer', { receiverNegoAnswer: answer })
+    // })
 
     socket.on('done', () => { io.emit('videocall') })
 
