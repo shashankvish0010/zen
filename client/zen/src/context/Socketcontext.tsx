@@ -125,7 +125,9 @@ const SocketProvider = (props: any) => {
         if (caller == true) {
             const offer = await peer.generateOffer();
             socket.emit('negotiation', offer)
-        } else console.log("not a caller")
+        } else {
+            negotiationaccept
+        }
     }
 
     async function negotiationaccept(data: any) {
@@ -171,7 +173,7 @@ const SocketProvider = (props: any) => {
             socket.off("callercalling", callercalling)
             socket.off('recieverCall', recieverCall)
             socket.off('callaccepted', callaccepted)
-            socket.off('negotiationaccept', negotiationaccept)
+            // socket.off('negotiationaccept', negotiationaccept)
             socket.off('acceptnegotiationanswer', acceptnegotiationanswer)
             socket.off('videocall', videcall)
         }
