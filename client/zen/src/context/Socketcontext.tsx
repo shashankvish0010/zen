@@ -43,6 +43,7 @@ const SocketProvider = (props: any) => {
     const [LocalStream, setLocalStream] = useState<any>();
     const [startStream, setStartStream] = useState<boolean>(false);
     const [remoteStream, setRemoteStream] = useState<any>();
+    const [recvZenNo, setrecvZenNo] = useState<any>()
 
     function getSocketId(data: string) {
         setSocketId(data)
@@ -77,12 +78,12 @@ const SocketProvider = (props: any) => {
     }
 
     const streaming = () => {
-        setInterval(() => navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((UsersStream) => {
+        navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((UsersStream) => {
             setLocalStream(UsersStream)
             UsersStream.getTracks().forEach((track: any) => {
                 peer.peer.addTrack(track, UsersStream)
             })
-        }), 1000)
+    })
     }
 
     function videcall() {
@@ -93,8 +94,15 @@ const SocketProvider = (props: any) => {
 
     const calling = async (zenNo: number | undefined) => {
         const offer = await peer.generateOffer()
+        setrecvZenNo(zenNo)
         socket.emit('call', zenNo, socketid, offer)
         setCaller(true)
+    }
+
+    async function recieverCall(data: any) {
+        const { sendersOffer } = data
+        const answer = await peer.generateAnswer(sendersOffer)
+        socket.emit('callrecieved', answer)
     }
 
     async function callaccepted(data: any) {
@@ -114,34 +122,27 @@ const SocketProvider = (props: any) => {
         socket.emit('recieved')
     }
 
-    async function recieverCall(data: any) {
-        const { sendersOffer } = data
-        const answer = await peer.generateAnswer(sendersOffer)
-        socket.emit('callrecieved', answer)
-    }
-
     async function handleNegotiation() {
         console.log("clicked");
-        
         if (caller == true) {
             const offer = await peer.generateOffer();
-            socket.emit('negotiation', offer)
+            socket.emit('call', recvZenNo, socketid, offer)
         } else {
-            negotiationaccept
+            pickCall()
         }
     }
 
-    async function negotiationaccept(data: any) {
-        console.log("clicked accept");
-        const answer = await peer.generateAnswer(data.sendersNegoOffer)
-        socket.emit('negotiationdone', answer)
-    }
+    // async function negotiationaccept(data: any) {
+    //     console.log("clicked accept");
+    //     const answer = await peer.generateAnswer(data.sendersNegoOffer)
+    //     socket.emit('negotiationdone', answer)
+    // }
 
-    async function acceptnegotiationanswer(data: any) {
-        await peer.setRemoteDescription(data.receiverNegoAnswer).then(() => {
-            socket.emit('done')
-        })
-    }
+    // async function acceptnegotiationanswer(data: any) {
+    //     await peer.setRemoteDescription(data.receiverNegoAnswer).then(() => {
+    //         socket.emit('done')
+    //     })
+    // }
 
     // useEffect(() => {
     //     peer.peer.addEventListener('negotiationneeded', handleNegotiation);
@@ -166,7 +167,7 @@ const SocketProvider = (props: any) => {
         socket.on('recieverCall', recieverCall)
         socket.on('callaccepted', callaccepted)
         // socket.on('negotiationaccept', negotiationaccept)
-        socket.on('acceptnegotiationanswer', acceptnegotiationanswer)
+        // socket.on('acceptnegotiationanswer', acceptnegotiationanswer)
         socket.on('videocall', videcall)
 
         return () => {
@@ -175,14 +176,14 @@ const SocketProvider = (props: any) => {
             socket.off('recieverCall', recieverCall)
             socket.off('callaccepted', callaccepted)
             // socket.off('negotiationaccept', negotiationaccept)
-            socket.off('acceptnegotiationanswer', acceptnegotiationanswer)
+            // socket.off('acceptnegotiationanswer', acceptnegotiationanswer)
             socket.off('videocall', videcall)
         }
     }
         , [socket, getSocketId, callercalling,
             callaccepted,
-            negotiationaccept,
-            acceptnegotiationanswer,
+            // negotiationaccept,
+            // acceptnegotiationanswer,
             videcall
         ])
 
