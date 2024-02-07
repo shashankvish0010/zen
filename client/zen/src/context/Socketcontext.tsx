@@ -13,6 +13,7 @@ interface Contextvalue {
     mymic: boolean
     calling: (zenNo: number | undefined) => void
     getZenList: (id: string | undefined) => void
+    handleNegotiation: () => void
     controlCamera: () => void
     controlMic: () => void
     zenList: any | undefined
@@ -136,22 +137,20 @@ const SocketProvider = (props: any) => {
         })
     }
 
-    useEffect(() => {
-        peer.peer.addEventListener('negotiationneeded', handleNegotiation);
-        return () => {
-            peer.peer.removeEventListener('negotiationneeded', handleNegotiation)
-        }
-    }, [handleNegotiation])
+    // useEffect(() => {
+    //     peer.peer.addEventListener('negotiationneeded', handleNegotiation);
+    //     return () => {
+    //         peer.peer.removeEventListener('negotiationneeded', handleNegotiation)
+    //     }
+    // }, [handleNegotiation])
 
     useEffect(() => {
-        setInterval(() => {
             if (startStream == true) {
                 peer.peer.addEventListener('track', async (event: any) => {
                     const [remoteStream] = event.streams;
                     setRemoteStream(remoteStream)
                 });
             }
-        }, 1000);
     }, [startStream])
 
 
@@ -380,7 +379,7 @@ const SocketProvider = (props: any) => {
     // -------------------------------------------- Value Provider Object ----------------------------------------------------------
     const info: Contextvalue = {
         // Context Values for Video Calling || Zen Call
-        LocalStream, remoteStream, mycamera, controlCamera, mymic, controlMic, setPicked, picked, pickCall, reciever, calling, getZenList, zenList,
+        LocalStream, remoteStream, mycamera, handleNegotiation, controlCamera, mymic, controlMic, setPicked, picked, pickCall, reciever, calling, getZenList, zenList,
         // Context Values for Live Stream || Zen Live
         getLocalStream, localLiveStream, liveStream, viewer, createViewerTransport,
         linkStream
