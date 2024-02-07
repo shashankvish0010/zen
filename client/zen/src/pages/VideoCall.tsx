@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Socketcontext } from '../context/Socketcontext';
 import ReactPlayer from 'react-player';
 // import { Icon } from '@iconify/react';
@@ -6,14 +6,13 @@ import ReactPlayer from 'react-player';
 const VideoCall: React.FC = () => {
   const socketcontext = useContext(Socketcontext);
 
-  useEffect(() => {
-    console.log(socketcontext?.mycamera, socketcontext?.mymic);
-  }, [socketcontext]);
+  // useEffect(() => {
+  //   console.log(socketcontext?.mycamera, socketcontext?.mymic);
+  // }, [socketcontext]);
 
   return (
     <div className='h-screen bg-purple-600 w-screen relative flex flex-col justify-center items-center gap-5 p-3'>
-      {socketcontext?.mycamera == true ?
-        (<div className='h-max w-max p-2 ml-[80%] mb-[70%] absolute'>
+        <div className='h-max w-max p-2 ml-[80%] mb-[70%] absolute'>
           {socketcontext?.LocalStream &&
             <ReactPlayer className='rounded-md'
               playing
@@ -23,7 +22,7 @@ const VideoCall: React.FC = () => {
               width={'20vw'}
             />}
         </div>
-        ) : null}
+      
       <div className='h-max w-max p-2'>
         {socketcontext?.remoteStream && (
           <ReactPlayer className='rounded-md shadow-slate-300'
