@@ -14,7 +14,7 @@ interface Contextvalue {
     calling: (zenNo: number | undefined) => void
     getZenList: (id: string | undefined) => void
     handleNegotiation: () => void
-    // controlCamera: () => void
+    endCall: () => void
     // controlMic: () => void
     zenList: any | undefined
     reciever: boolean
@@ -132,6 +132,13 @@ const SocketProvider = (props: any) => {
         } else {
             pickCall()
         }
+    }
+
+    const endCall = () => {
+        setLocalLiveStream(null)
+        setRemoteStream(null)
+        peer.peer.close()
+        window.location.href = '/'
     }
 
     // async function negotiationaccept(data: any) {
@@ -388,7 +395,7 @@ const SocketProvider = (props: any) => {
     // -------------------------------------------- Value Provider Object ----------------------------------------------------------
     const info: Contextvalue = {
         // Context Values for Video Calling || Zen Call
-        LocalStream, remoteStream, handleNegotiation, setPicked, picked, pickCall, reciever, calling, getZenList, zenList,
+        LocalStream, remoteStream, handleNegotiation, endCall, setPicked, picked, pickCall, reciever, calling, getZenList, zenList,
         // Context Values for Live Stream || Zen Live
         getLocalStream, localLiveStream, liveStream, viewer, createViewerTransport,
         linkStream
