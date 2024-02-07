@@ -7,7 +7,7 @@ const VideoCall: React.FC = () => {
   const socketcontext = useContext(Socketcontext);
   return (
     <div className='h-screen w-screen relative flex flex-col justify-center items-center gap-5 p-3'>
-      <div className='h-max w-max p-2 ml-[80%] mb-[70%] absolute'>
+      <div className='h-max w-max ml-[40%] mb-[70%] absolute'>
         {socketcontext?.LocalStream &&
           <ReactPlayer className='rounded-md'
             playing
@@ -18,7 +18,7 @@ const VideoCall: React.FC = () => {
           />}
       </div>
 
-      <div className='h-max w-max p-2'>
+      <div className='h-max w-max'>
         {socketcontext?.remoteStream && (
           <ReactPlayer className='rounded-md shadow-slate-300'
             playing
@@ -30,8 +30,8 @@ const VideoCall: React.FC = () => {
 
         )}
       </div>
-      <div className='mt-[100%] flex w-screen h-max p-3 items-center justify-center gap-5 bg-transparent'>
-        <button onClick={() => { socketcontext?.handleNegotiation() }} className='h-max w-max p-2 bg-gradient-r from-indigo-500 to-blue-500 font-semibold text-base'>Start Call</button>
+      <div className='mt-[100%] flex flex-col md:flex-row  w-screen h-max p-3 items-center justify-center md:gap-5 bg-transparent'>
+        <button onClick={() => { socketcontext?.handleNegotiation() }} className='h-max w-max p-2 bg-indigo-600 text-white font-semibold text-base'>Start Call</button>
         <Icon onClick={() => { socketcontext?.endCall() }} className='bg-red-500 rounded-full p-2' icon="ic:round-call-end" color='white' height={'6vh'} />
       </div>
     </div>
