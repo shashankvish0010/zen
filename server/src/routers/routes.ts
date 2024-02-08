@@ -138,7 +138,7 @@ router.post('/user/login', async (req,res) => {
     }else{
         const user = await pool.query('SELECT * FROM Users WHERE email=$1', [email])
         if(user.rows.length > 0){
-            if(email === user.rows[0].email){
+            if(email == user.rows[0].email){
                 const isMatch = await bcrypt.compare(password, user.rows[0].user_password)
                 if(isMatch){
                     if(user.rows[0].account_verified === false){
