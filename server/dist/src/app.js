@@ -44,12 +44,6 @@ const dbconnect_1 = __importDefault(require("../dbconnect"));
 const socket_io_1 = require("socket.io");
 const uuid_1 = require("uuid");
 const mediasoup = __importStar(require("mediasoup"));
-// const keyfile = './routers/key.pem'
-// const certfile = './routers/cert.pem'
-// const options: any = {
-//     key: fs.readFileSync(keyfile, 'utf-8'),
-//     cert: fs.readFileSync(certfile, 'utf-8')
-// }
 app.use((0, cors_1.default)({
     origin: 'https://zen-gamma.vercel.app',
     methods: ['GET', 'POST', 'PUT'],
@@ -111,12 +105,6 @@ io.on('connection', (socket) => {
     socket.on('callrecieved', (answer) => {
         io.to(sender).emit('callaccepted', { answer, picked: true });
     });
-    // socket.on('negotiation', (offer) => {
-    //     io.to(receiver).emit('negotiationaccept', { sendersNegoOffer: offer })
-    // })
-    // socket.on('negotiationdone', (answer) => {
-    //     io.to(sender).emit('acceptnegotiationanswer', { receiverNegoAnswer: answer })
-    // })
     socket.on('done', () => { io.emit('videocall'); });
     // --------------------------------------- WebSocket connection for Zen Live || Live Streaming --------------------------------- 
     socket.on('livestream', (key) => __awaiter(void 0, void 0, void 0, function* () {

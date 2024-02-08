@@ -10,12 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import * as mediasoup from "mediasoup";
 import { AppData, RtpCapabilities } from "mediasoup-client/lib/types"
 import { RouterOptions } from "mediasoup/node/lib/types"
-// const keyfile = './routers/key.pem'
-// const certfile = './routers/cert.pem'
-// const options: any = {
-//     key: fs.readFileSync(keyfile, 'utf-8'),
-//     cert: fs.readFileSync(certfile, 'utf-8')
-// }
+
 app.use(cors({
     origin: 'https://zen-gamma.vercel.app',
     methods: ['GET', 'POST', 'PUT'],
@@ -83,14 +78,6 @@ io.on('connection', (socket) => {
     socket.on('callrecieved', (answer) => {
         io.to(sender).emit('callaccepted', { answer, picked: true })
     })
-
-    // socket.on('negotiation', (offer) => {
-    //     io.to(receiver).emit('negotiationaccept', { sendersNegoOffer: offer })
-    // })
-
-    // socket.on('negotiationdone', (answer) => {
-    //     io.to(sender).emit('acceptnegotiationanswer', { receiverNegoAnswer: answer })
-    // })
 
     socket.on('done', () => { io.emit('videocall') })
 
