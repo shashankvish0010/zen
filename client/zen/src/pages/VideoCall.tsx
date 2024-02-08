@@ -30,7 +30,7 @@ const VideoCall: React.FC = () => {
 
         )}
       </div>
-      <div className='mt-[100%] flex flex-col md:flex-row  w-screen h-max p-3 items-center justify-center md:gap-5 bg-transparent'>
+      <div className='flex flex-col md:flex-row w-screen h-max p-3 items-center justify-center md:gap-5'>
         <button onClick={() => { socketcontext?.handleNegotiation() }} className='h-max w-max p-2 bg-indigo-600 text-white font-semibold text-base'>Start Call</button>
         <Icon onClick={() => { socketcontext?.endCall() }} className='bg-red-500 rounded-full p-2' icon="ic:round-call-end" color='white' height={'6vh'} />
       </div>
