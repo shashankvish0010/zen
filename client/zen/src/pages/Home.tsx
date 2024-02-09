@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { Icon } from '@iconify/react';
 import Footer from '../components/Footer';
 import { UserContext } from '../context/Userauth';
@@ -12,9 +12,11 @@ import image3 from '../assets/man-with-headset-video-call.jpg'
 import image4 from '../assets/young-happy-entrepreneur-having-video-call-computer-home.jpg'
 import image5 from '../assets/medium-shot-man-waving-laptop.jpg'
 
-const imageArr: any[] = [image1, image2, image3, image4, image5]
-
 const Home: React.FC = () => {
+  let imageArr: any[] = []
+  useMemo(() => {
+    imageArr = [image1, image2, image3, image4, image5]
+  }, [image1, image2, image3, image4, image5])
   const user = useContext(UserContext)
   const navigate = useNavigate()
   return (
@@ -29,7 +31,7 @@ const Home: React.FC = () => {
             <p className='text-base md:text-gray-600 text-white font-medium'>The easiest way to video call & incoming feature of live stream on single platform</p>
           </span>
           <span className='flex flex-row items-center gap-3 p-3'>
-            <button className='bg-white border-2 border-gray-200 p-2 rounded-full text-purple-600 font-semibold title md:w-[20vw]'>Lets Start</button>
+            <button onClick={() => navigate('/signup')} className='bg-white border-2 border-gray-200 p-2 rounded-full text-purple-600 font-semibold title md:w-[20vw]'>Lets Start</button>
             <Icon className='bg-orange-500 rounded-full p-2 rotate-90' icon="ph:arrow-up-bold" color='white' height='6vh' />
           </span>
           <span className='md:flex hidden flex-row items-center w-[150%] justify-evenly'>
