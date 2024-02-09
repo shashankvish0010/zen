@@ -13,6 +13,7 @@
     "mediasoup-client": "^3.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-lazy-load-image-component": "^1.6.0",
     "react-player": "^2.13.0",
     "react-router-dom": "^6.16.0",
     "simple-peer": "^9.11.1",
@@ -21,6 +22,7 @@
   "devDependencies": {
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "@types/react-lazy-load-image-component": "^1.6.3",
     "@types/simple-peer": "^9.11.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
