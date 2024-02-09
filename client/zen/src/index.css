@@ -1,17 +1,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,700&family=Poppins:ital,wght@1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto+Condensed:wght@400;500&family=Roboto:ital,wght@0,400;0,500;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bebas+Neue&family=Protest+Riot&family=Roboto+Condensed:wght@400;500&family=Roboto:ital,wght@0,400;0,500;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bebas+Neue&family=Lobster&family=Protest+Riot&family=Roboto+Condensed:wght@400;500&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
   margin: 0;
   outline: none;
   padding: 0;
 }
 
-.logo{
+.logo {
   font-family: 'Poppins', sans-serif;
 }
-.title{
+
+.title {
   font-family: 'Nunito Sans', sans-serif;
+}
+
+.main_head {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 100;
+  text-shadow: 200px;
+}
+
+.main_head_para{
+  font-family: 'Lobster', sans-serif;
+}
+
+.heading {
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+.content {
+  font-family: 'Roboto', sans-serif;
+  /* font-family: 'Roboto Condensed', sans-serif; */
 }
