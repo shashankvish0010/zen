@@ -3,12 +3,17 @@ import { Icon } from '@iconify/react';
 import Footer from '../components/Footer';
 import { UserContext } from '../context/Userauth';
 import { useNavigate } from 'react-router-dom';
+import { LazyLoadImage } from 'react-lazy-load-image-component'
+
 import banner from '../assets/Video call.gif'
-import image1 from '../assets/woman-with-headphones-waving.jpg'
-import image2 from '../assets/old-woman-communicates-with-her-son-via-video-link-through-laptop.jpg'
-import image3 from '../assets/young-happy-entrepreneur-having-video-call-computer-home.jpg'
-import image4 from '../assets/man-with-headset-video-call.jpg'
-import image5 from '../assets/woman-having-videocall.jpg'
+import image1 from '../assets/old-woman-communicates-with-her-son-via-video-link-through-laptop.jpg'
+import image2 from '../assets/woman-with-headphones-waving.jpg'
+import image3 from '../assets/man-with-headset-video-call.jpg'
+import image4 from '../assets/young-happy-entrepreneur-having-video-call-computer-home.jpg'
+import image5 from '../assets/medium-shot-man-waving-laptop.jpg'
+
+const imageArr: any[] = [image1, image2, image3, image4, image5]
+
 const Home: React.FC = () => {
   const user = useContext(UserContext)
   const navigate = useNavigate()
@@ -16,24 +21,26 @@ const Home: React.FC = () => {
     <div className='h-max w-screen flex flex-col items-center gap-5 overflow-hidden'>
       <div className='mt-5 bg-gradient-to-b shadow-md md:overflow-y-hidden from-white via-purple-300 to-purple-400 rounded-b-[300%] h-max md:h-[70vh] flex flex-col items-center w-[150%] '>
         <span className='p-3 flex flex-col justify-center items-center gap-3 h-max w-[85vw]'>
-        <p className='h-max  main_head font-bold md:text-3xl text-xl text-center'>Your Professional And Go To Video Calling Platform.</p>
-        <p className='h-max main_head font-bold md:text-3xl text-xl text-center flex md:flex-row flex-col items-center gap-2'>
-          Now In <span className='font-bold text-2xl md:text-4xl text-orange-500'>Your Browser.</span>
-        </p>
-        <span>
-          <p className='text-base md:text-gray-600 text-white font-medium'>The easiest way to video call & incoming feature of live stream on single platform</p>
-        </span>
-        <span className='flex flex-row items-center gap-3 p-3'>
-          <button className='bg-white border-2 border-gray-200 p-2 rounded-full text-purple-600 font-semibold title md:w-[20vw]'>Lets Start</button>
-          <Icon className='bg-orange-500 rounded-full p-2 rotate-90' icon="ph:arrow-up-bold" color='white' height='6vh'/>
-        </span>
-        <span className='md:flex hidden flex-row items-center w-[150%] justify-evenly'>
-          <img className='hover:translate-y-[-10px] hover:shadow-2xl rounded-xl shadow-xl cursor-pointer' width={'250px'} src={image2} alt="" />
-          <img className='hover:translate-y-[-10px] hover:shadow-2xl rounded-xl shadow-xl cursor-pointer' width={'250px'} src={image4} alt="" />
-          <img className='hover:translate-y-[-10px] hover:shadow-2xl rounded-xl shadow-xl cursor-pointer' width={'250px'} src={image1} alt="" />
-          <img className='hover:translate-y-[-10px] hover:shadow-2xl rounded-xl shadow-xl cursor-pointer' width={'250px'} src={image3} alt="" />
-          <img className='hover:translate-y-[-10px] hover:shadow-2xl rounded-xl shadow-xl cursor-pointer' width={'250px'} src={image5} alt="" />
-        </span>
+          <p className='h-max  main_head font-bold md:text-3xl text-xl text-center'>Your Professional And Go To Video Calling Platform.</p>
+          <p className='h-max main_head font-bold md:text-3xl text-xl text-center flex md:flex-row flex-col items-center gap-2'>
+            Now In <span className='font-bold text-2xl md:text-4xl text-orange-500'>Your Browser.</span>
+          </p>
+          <span>
+            <p className='text-base md:text-gray-600 text-white font-medium'>The easiest way to video call & incoming feature of live stream on single platform</p>
+          </span>
+          <span className='flex flex-row items-center gap-3 p-3'>
+            <button className='bg-white border-2 border-gray-200 p-2 rounded-full text-purple-600 font-semibold title md:w-[20vw]'>Lets Start</button>
+            <Icon className='bg-orange-500 rounded-full p-2 rotate-90' icon="ph:arrow-up-bold" color='white' height='6vh' />
+          </span>
+          <span className='md:flex hidden flex-row items-center w-[150%] justify-evenly'>
+            {imageArr.map((image) =>
+              <LazyLoadImage
+                className='hover:translate-y-[-10px] hover:shadow-2xl rounded-xl shadow-xl cursor-pointer'
+                width={'250px'}
+                src={image}
+              />
+            )}
+          </span>
         </span>
       </div>
       <div className='h-max w-[90%] flex md:flex-row flex-col-reverse items-center justify-evenly'>
@@ -47,7 +54,7 @@ const Home: React.FC = () => {
         <div className='p-5 h-max md:w-[40%] w-[95vw] overflow-clip'>
           <img className='rounded-xl shadow-xl' src={banner} width={'500px'} alt="" />
         </div>
-        </div>
+      </div>
       <div className='md:h-[30vh] h-max w-screen gap-5 flex md:flex-row flex-col p-5 items-center justify-evenly'>
         <div className='flex flex-col items-center gap-5'>
           <div className='bg-amber-500 rounded-md shadow object-fit p-3 w-max'>
