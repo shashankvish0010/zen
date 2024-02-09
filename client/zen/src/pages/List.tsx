@@ -72,11 +72,11 @@ const List: React.FC = () => {
       </div>
       <div className='h-max w-max flex flex-wrap items-center justify-evenly gap-7'>
         {socketcontext?.zenList ? socketcontext.zenList.data.map((list: userType) =>
-          <div key={list.id} className='border-2 border-gray-300 p-5 rounded-xl h-[max] w-[85vw] flex flex-row gap-3'>
+          <div key={list.id} className='border-2 border-gray-200 p-5 rounded-xl h-[10vh] w-[85vw] flex flex-row justify-evenly items-center gap-3'>
             <Icon icon="material-symbols:person" height='4vh' />
             <span className='text-base font-semibold'>{list.firstname}</span>
             <span className='text-md font-semibold'>{list.zen_no}</span>
-            <span onClick={() => { socketcontext?.calling(list.zen_no); navigate('/calling/' + list.zen_no) }} className='flex justify-center items-center gap-3 shadow-md cursor-pointer h-max w-max p-1 bg-blue-600 font-semibold text-xl text-white rounded-md'> <Icon icon="ri:live-fill" /><p>Call</p></span>
+            <span onClick={() => { socketcontext?.calling(list.zen_no); navigate('/calling/' + list.zen_no) }} className='flex justify-center items-center gap-2 shadow-md cursor-pointer h-max w-max p-2 bg-blue-600 font-semibold text-base text-white rounded'> <Icon icon="ri:live-fill" /><p>Call</p></span>
           </div>
         ) : null
         }
