@@ -51,7 +51,7 @@ const Home: React.FC = () => {
             <h2 className='md:text-4xl text-3xl font-semibold'>Seamless <span className='text-blue-600'>Video Calling</span> Experience</h2>
             <p className='text-base font-medium'>Effortless, high-quality video calls at your fingertips. Zen Call offers a superior video calling experience, making professional communication effortless and effective, Elevate your video communication experience today</p>
           </span>
-          <span className='flex justify-center items-center gap-3 shadow-md cursor-pointer md:w-[20vw] w-[65vw] p-4 bg-blue-600 font-semibold text-2xl text-white rounded-md'> <Icon icon="icon-park-outline:phone-video-call" /><p>ZEN Call</p></span>
+          <span onClick={() => navigate('/zenlist/' + user?.curruser?.id)} className='flex justify-center items-center gap-3 shadow-md cursor-pointer md:w-[20vw] w-[65vw] p-4 bg-blue-600 font-semibold text-2xl text-white rounded-md'> <Icon icon="icon-park-outline:phone-video-call" /><p>ZEN Call</p></span>
         </div>
         <div className='p-5 h-max md:w-[40%] w-[95vw] overflow-clip'>
           <img className='rounded-xl shadow-xl' src={banner} width={'500px'} alt="" />
@@ -60,7 +60,7 @@ const Home: React.FC = () => {
       <div className='md:h-[30vh] h-max w-[95vw] gap-5 flex md:flex-row flex-col p-5 items-center justify-evenly'>
         <div className='flex flex-col items-center gap-5'>
           <div className='bg-amber-500 rounded-md shadow object-fit p-3 w-max'>
-            <Icon className='shadow-xl' onClick={() => navigate('/zenlist/' + user?.curruser?.id)} icon="healthicons:ui-folder-family" color='white' height='4vh' />
+            <Icon className='shadow-xl' icon="healthicons:ui-folder-family" color='white' height='4vh' />
           </div>
           <p className='text-center text-xl font-semibold'>Add anyone in your list with the ZEN No.</p>
         </div>
