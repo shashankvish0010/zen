@@ -57,26 +57,40 @@ const Home: React.FC = () => {
           <img className='rounded-xl shadow-xl' src={banner} width={'500px'} alt="" />
         </div>
       </div>
-      <div className='md:h-[30vh] h-max w-screen gap-5 flex md:flex-row flex-col p-5 items-center justify-evenly'>
+      <div className='md:h-[30vh] h-max w-[95vw] gap-5 flex md:flex-row flex-col p-5 items-center justify-evenly'>
         <div className='flex flex-col items-center gap-5'>
           <div className='bg-amber-500 rounded-md shadow object-fit p-3 w-max'>
-            <Icon onClick={() => navigate('/zenlist/' + user?.curruser?.id)} icon="healthicons:ui-folder-family" color='white' height='4vh' />
+            <Icon className='shadow-xl' onClick={() => navigate('/zenlist/' + user?.curruser?.id)} icon="healthicons:ui-folder-family" color='white' height='4vh' />
           </div>
           <p className='text-center text-xl font-semibold'>Add anyone in your list with the ZEN No.</p>
         </div>
         <span className='md:h-[100%] md:w-[0.20rem]  h-[0.20rem] w-[100%] rounded bg-purple-600'></span>
         <div className='flex flex-col items-center gap-5'>
           <div className='bg-blue-600 rounded-md shadow object-fit p-3 w-max'>
-            <Icon icon="icon-park-outline:phone-video-call" color='white' height='4vh' />
+            <Icon className='shadow-xl' icon="icon-park-outline:phone-video-call" color='white' height='4vh' />
           </div>
           <p className='text-center text-xl font-semibold'>Just call your friends, family in one click.</p>
         </div>
         <span className='md:h-[100%] md:w-[0.20rem]  h-[0.20rem] w-[100%] rounded bg-purple-600'></span>
         <div className='flex flex-col items-center gap-5'>
           <div className='bg-green-500 rounded-md shadow object-fit p-3 w-max'>
-            <Icon icon="gg:phone" color='white' height='4vh' />
+            <Icon className='shadow-xl' icon="gg:phone" color='white' height='4vh' />
           </div>
           <p className='text-center text-xl font-semibold'>ZEN No is just your contact number.</p>
+        </div>
+      </div>
+      <div className='bg-gradient-to-r from-blue-500 via-pink-600 to-purple-600 shadow-xl flex flex-col h-max w-[90vw] p-8 gap-5 rounded-xl text-white title'>
+        <div className='flex md:flex-row flex-col items-center justify-between w-[100%]'>
+          <p className='md:text-3xl text-xl'>Just Start Your Journey in 3 Steps.</p>
+          <span className='flex flex-row items-center gap-3 p-3'>
+            <button onClick={() => navigate('/signup')} className='bg-white border-2 border-gray-200 p-2 rounded-full text-purple-600 font-semibold title md:w-[20vw]'>Lets Start</button>
+            <Icon className='bg-green-400 rounded-full p-2 rotate-90' icon="ph:arrow-up-bold" color='white' height='6vh' />
+          </span>
+        </div>
+        <div className='flex flex-col md:text-2xl text-lg gap-3 w-[100%]'>
+          <p>1. Register with your valid details</p>
+          <p>2. Your ZEN No. is in your profile.</p>
+          <p>3. Save contacts using ZEN No. from Contacts.</p>
         </div>
       </div>
       <Footer />
