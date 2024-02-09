@@ -72,7 +72,7 @@ const List: React.FC = () => {
       </div>
       <div className='h-max w-max flex flex-wrap items-center justify-evenly gap-7'>
         {socketcontext?.zenList ? socketcontext.zenList.data.map((list: userType) =>
-          <div key={list.id} className='bg-amber-500 p-5 rounded shadow text-white h-max w-max flex flex-col gap-3 justify-center items-center'>
+          <div key={list.id} className='border-2 border-gray-300 p-5 rounded-xl h-[max] w-[85vw] flex flex-row gap-3'>
             <Icon icon="material-symbols:person" height='4vh' />
             <span className='text-base font-semibold'>{list.firstname}</span>
             <span className='text-md font-semibold'>{list.zen_no}</span>
