@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useMemo } from 'react'
 import { Icon } from '@iconify/react';
 import Footer from '../components/Footer';
 import { UserContext } from '../context/Userauth';
@@ -14,9 +14,9 @@ import image5 from '../assets/medium-shot-man-waving-laptop.jpg'
 
 const Home: React.FC = () => {
   let imageArr: any[] = []
-  useEffect(() => {
+  useMemo(() => {
     imageArr = [image1, image2, image3, image4, image5]
-  }, [image1, image2, image3, image4, image5])
+  }, [])
   const user = useContext(UserContext)
   const navigate = useNavigate()
   return (
