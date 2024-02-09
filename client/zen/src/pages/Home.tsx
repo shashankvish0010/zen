@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { Icon } from '@iconify/react';
 import Footer from '../components/Footer';
 import { UserContext } from '../context/Userauth';
