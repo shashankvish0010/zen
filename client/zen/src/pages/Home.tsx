@@ -21,7 +21,7 @@ const Home: React.FC = () => {
   const navigate = useNavigate()
   return (
     <div className='h-max w-screen flex flex-col items-center gap-5 overflow-hidden'>
-      <div className='mt-5 bg-gradient-to-b shadow-md md:overflow-y-hidden from-white via-purple-300 to-purple-400 rounded-b-[300%] h-max md:h-[70vh] flex flex-col items-center w-[150%] '>
+      <div className='mt-5 bg-gradient-to-b shadow-md md:overflow-y-hidden overflow-x-hidden from-white via-purple-300 to-purple-400 rounded-b-[300%] h-max md:h-[70vh] flex flex-col items-center w-[150%] '>
         <span className='p-3 flex flex-col justify-center items-center gap-3 h-max w-[85vw]'>
           <p className='h-max  main_head font-bold md:text-3xl text-xl text-center'>Your Professional And Go To Video Calling Platform.</p>
           <p className='h-max main_head font-bold md:text-3xl text-xl text-center flex md:flex-row flex-col items-center gap-2'>
@@ -34,7 +34,7 @@ const Home: React.FC = () => {
             <button onClick={() => navigate('/signup')} className='bg-white border-2 border-gray-200 p-2 rounded-full text-purple-600 font-semibold title md:w-[20vw]'>Lets Start</button>
             <Icon className='bg-orange-500 rounded-full p-2 rotate-90' icon="ph:arrow-up-bold" color='white' height='6vh' />
           </span>
-          <span className='md:flex hidden flex-row items-center w-[150%] justify-evenly'>
+          <span className='md:flex hidden flex-row items-center md:w-[150%] justify-evenly sm:gap-5'>
             {imageArr.map((image) =>
               <LazyLoadImage
                 className='hover:translate-y-[-10px] hover:shadow-2xl rounded-xl shadow-xl cursor-pointer'
