@@ -28,7 +28,7 @@ const Home: React.FC = () => {
             Now In <span className='font-bold text-2xl md:text-4xl text-orange-500'>Your Browser.</span>
           </p>
           <span>
-            <p className='text-base md:text-gray-600 text-white font-medium'>The easiest way to video call & incoming feature of live stream on single platform</p>
+            <p className='text-base text-center md:text-gray-600 text-white font-medium'>The easiest way to video call & incoming feature of live stream on single platform</p>
           </span>
           <span className='flex flex-row items-center gap-3 p-3'>
             <button onClick={() => navigate('/signup')} className='bg-white border-2 border-gray-200 p-2 rounded-full text-purple-600 font-semibold title md:w-[20vw]'>Lets Start</button>
