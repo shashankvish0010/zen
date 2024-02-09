@@ -3,43 +3,52 @@ import { Icon } from '@iconify/react';
 import Footer from '../components/Footer';
 import { UserContext } from '../context/Userauth';
 import { useNavigate } from 'react-router-dom';
+import banner from '../assets/Video call.gif'
+import image1 from '../assets/woman-with-headphones-waving.jpg'
+import image2 from '../assets/old-woman-communicates-with-her-son-via-video-link-through-laptop.jpg'
+import image3 from '../assets/young-happy-entrepreneur-having-video-call-computer-home.jpg'
+import image4 from '../assets/man-with-headset-video-call.jpg'
+import image5 from '../assets/woman-having-videocall.jpg'
 const Home: React.FC = () => {
   const user = useContext(UserContext)
   const navigate = useNavigate()
   return (
-    <div className='h-[100vh] w-[100vw] flex flex-col items-center gap-5'>
-      <div className='h-max w-[100%] p-5 mt-5 flex flex-col gap-5 items-center'>
-        <p className='title text-3xl text-center'>
-          The easiest way to <span className='text-purple-600'>live stream</span> and <span className='text-purple-600'>video call</span>
+    <div className='h-max w-screen flex flex-col items-center gap-5 overflow-hidden'>
+      <div className='mt-5 bg-gradient-to-b shadow-md md:overflow-y-hidden from-white via-purple-300 to-purple-400 rounded-b-[300%] h-max md:h-[70vh] flex flex-col items-center w-[150%] '>
+        <span className='p-3 flex flex-col justify-center items-center gap-3 h-max w-[85vw]'>
+        <p className='h-max  main_head font-bold md:text-3xl text-xl text-center'>Your Professional And Go To Video Calling Platform.</p>
+        <p className='h-max main_head font-bold md:text-3xl text-xl text-center flex md:flex-row flex-col items-center gap-2'>
+          Now In <span className='font-bold text-2xl md:text-4xl text-orange-500'>Your Browser.</span>
         </p>
-        <p className='text-base text-gray-700 font-semibold text-center'>A professional live streaming and video calling platform in your browser.</p>
+        <span>
+          <p className='text-base md:text-gray-600 text-white font-medium'>The easiest way to video call & incoming feature of live stream on single platform</p>
+        </span>
+        <span className='flex flex-row items-center gap-3 p-3'>
+          <button className='bg-white border-2 border-gray-200 p-2 rounded-full text-purple-600 font-semibold title md:w-[20vw]'>Lets Start</button>
+          <Icon className='bg-orange-500 rounded-full p-2 rotate-90' icon="ph:arrow-up-bold" color='white' height='6vh'/>
+        </span>
+        <span className='md:flex hidden flex-row items-center w-[150%] justify-evenly'>
+          <img className='hover:translate-y-[-10px] hover:shadow-2xl rounded-xl shadow-xl cursor-pointer' width={'250px'} src={image2} alt="" />
+          <img className='hover:translate-y-[-10px] hover:shadow-2xl rounded-xl shadow-xl cursor-pointer' width={'250px'} src={image4} alt="" />
+          <img className='hover:translate-y-[-10px] hover:shadow-2xl rounded-xl shadow-xl cursor-pointer' width={'250px'} src={image1} alt="" />
+          <img className='hover:translate-y-[-10px] hover:shadow-2xl rounded-xl shadow-xl cursor-pointer' width={'250px'} src={image3} alt="" />
+          <img className='hover:translate-y-[-10px] hover:shadow-2xl rounded-xl shadow-xl cursor-pointer' width={'250px'} src={image5} alt="" />
+        </span>
+        </span>
       </div>
-      <div className='h-max w-[100%] px-10 flex md:flex-row flex-col-reverse justify-evenly items-center'>
-        <div className='flex flex-col gap-5 items-center'>
-          <span className='flex flex-col gap-5'>
-            <h2 className='md:text-4xl text-3xl font-semibold'>Elevate Your <span className='text-orange-600'>Live Streaming</span> Experience</h2>
-            <p className='text-base text-gray-700 font-medium'>Discover Zen Live, Our cutting-edge technology combined with a seamless user experience ensures your live broadcasts are smooth and stress-free. Share your moments, inspire your audience, and reach new heights with Zen Live</p>
-          </span>
-          <span onClick={()=>{navigate('/livestream')}} className='flex justify-center items-center gap-3 shadow-md cursor-pointer md:w-[20vw] w-[65vw] p-4 bg-orange-600 font-semibold text-2xl text-white rounded-md'> <Icon icon="ri:live-fill" /><p>ZEN Live</p></span>
-          <span onClick={()=>{navigate('/livecall')}} className='flex justify-center items-center gap-3 shadow-md cursor-pointer md:w-[20vw] w-[65vw] p-4 bg-orange-600 font-semibold text-2xl text-white rounded-md'> <Icon icon="ri:live-fill" /><p>Live</p></span>
-        </div>
-        <div>
-          {/* <img src="https://img.freepik.com/premium-vector/concept-live-streaming-with-people-scene-flat-cartoon-design-presenter-conducts-live-broadcast-which-she-tells-important-information-vector-illustration_198565-2333.jpg?w=996" width='1300px' alt="" /> */}
-        </div>
-      </div>
-      <div className='h-max w-[100%] px-10 flex md:flex-row flex-col justify-evenly items-center'>
-        <div>
-          {/* <img src="https://img.freepik.com/premium-vector/concept-live-streaming-with-people-scene-flat-cartoon-design-presenter-conducts-live-broadcast-which-she-tells-important-information-vector-illustration_198565-2333.jpg?w=996" width='1300px' alt="" /> */}
-        </div>
-        <div className='flex flex-col gap-5 items-center'>
+      <div className='h-max w-[90%] flex md:flex-row flex-col-reverse items-center justify-evenly'>
+        <div className='md:w-[50%] w-[95vw] flex flex-col p-5 gap-5 items-center'>
           <span className='flex flex-col gap-5'>
             <h2 className='md:text-4xl text-3xl font-semibold'>Seamless <span className='text-blue-600'>Video Calling</span> Experience</h2>
-            <p className='text-base text-gray-700 font-medium'>Effortless, high-quality video calls at your fingertips. Zen Call offers a superior video calling experience, making professional communication effortless and effective, Elevate your video communication experience today</p>
+            <p className='text-base font-medium'>Effortless, high-quality video calls at your fingertips. Zen Call offers a superior video calling experience, making professional communication effortless and effective, Elevate your video communication experience today</p>
           </span>
           <span className='flex justify-center items-center gap-3 shadow-md cursor-pointer md:w-[20vw] w-[65vw] p-4 bg-blue-600 font-semibold text-2xl text-white rounded-md'> <Icon icon="icon-park-outline:phone-video-call" /><p>ZEN Call</p></span>
         </div>
-      </div>
-      <div className='h-max w-[100%] gap-5 flex md:flex-row flex-col p-5 items-center justify-evenly'>
+        <div className='p-5 h-max md:w-[40%] w-[95vw] overflow-clip'>
+          <img className='rounded-xl shadow-xl' src={banner} width={'500px'} alt="" />
+        </div>
+        </div>
+      <div className='md:h-[30vh] h-max w-screen gap-5 flex md:flex-row flex-col p-5 items-center justify-evenly'>
         <div className='flex flex-col items-center gap-5'>
           <div className='bg-amber-500 rounded-md shadow object-fit p-3 w-max'>
             <Icon onClick={() => navigate('/zenlist/' + user?.curruser?.id)} icon="healthicons:ui-folder-family" color='white' height='4vh' />
