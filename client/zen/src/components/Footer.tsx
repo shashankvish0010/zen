@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react'
 
 const Footer: React.FC = () => {
   return (
-    <div className='mt-[max] shadow-md border p-5 flex flex-col justify-evenly items-center h-max w-[100vw]'>
+    <div className='mt-[max] shadow-md border p-5 flex flex-col justify-evenly items-center h-max w-screen'>
       <div className='flex md:flex-row flex-col gap-3 items-center justify-between w-[100vw] px-8'>
         <Link to='/'>
           <div className='text-xl flex gap-1'>
