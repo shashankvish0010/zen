@@ -16,10 +16,10 @@ const Header: React.FC = () => {
       <div className='w-[30vw]'>
         <ul className='hidden md:flex justify-between gap-2 items-center font-semibold'>
           <Link to='/'>Home</Link>
-          <Link to='/'>About</Link>
-          <Link to='/'>Contact</Link>
+          <Link to='/about'>About</Link>
+          <Link to='/contact'>Contact</Link>
           {usercontext?.login == false ?
-            <Link to='/signup'><button className='bg-purple-600 p-1.5 text-white rounded-sm'>Login/Signup</button></Link>
+            <Link to='/signup'><button className='text-white p-1.5 bg-purple-600 rounded-sm'>Login/Signup</button></Link>
             :
             <button onClick={() => { usercontext?.dispatch({ type: "LOGOUT" }) }} className='bg-purple-600 p-1.5 text-white rounded-sm'>Logout</button>
           }
