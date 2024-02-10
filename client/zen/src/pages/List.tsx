@@ -8,6 +8,7 @@ interface userType {
   id: string
   firstname: string | undefined,
   zen_no: number
+  active: boolean;
 }
 
 const List: React.FC = () => {
@@ -41,11 +42,7 @@ const List: React.FC = () => {
   }, [])
   useEffect(() => {
     socketcontext?.getZenList(id)
-  }, [])
-  useEffect(() => {
-    console.log
-      (socketcontext?.reciever)
-  }, [])
+  }, [id])
 
   return (
     <div className='h-[100vh], w-[100vw] flex flex-col justify-center items-center gap-5'>
@@ -131,7 +128,7 @@ const List: React.FC = () => {
             </tbody>
           </table>
         </div>
-        <div className='md:hidden w-[90vw] h-max shadow-md flex flex-col gap-1'>
+        <div className='md:hidden w-[90vw] h-max shadow-md flex flex-col gap-2'>
           <p className='text-base font-semibold'>Contact Directory</p>
           <span className='h-[.25rem] w-[100%] bg-purple-600 rounded-md'></span>
           {
@@ -140,15 +137,20 @@ const List: React.FC = () => {
                 <span>
                   <Icon icon="material-symbols:person" height='4vh' />
                 </span>
-                <span className=' w-[45%] flex flex-col gap-1'>
+                <span className=' w-[35%] flex flex-col gap-1'>
                   <p className='font-medium text-base'>Shashank</p>
                   <p className='text-sm font-normal text-gray-500'>987654</p>
                 </span>
+                {
+                  list?.active == true ?
+                    <span className='bg-green-300 rounded-full h-2 w-2'></span> :
+                    <span className='bg-red-300 rounded-full h-2 w-2'></span>
+                }
                 <span onClick={() => { socketcontext?.calling(list.zen_no); navigate('/calling/' + list.zen_no) }} className='flex justify-center items-center gap-2 shadow-md cursor-pointer h-max w-max p-1 bg-blue-600 font-semibold text-base text-white rounded'> <Icon icon="ri:live-fill" /><p>Call</p></span>
               </div>
 
             ))
-            : null
+              : null
           }
         </div>
       </div>
