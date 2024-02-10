@@ -102,102 +102,26 @@ const List: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              <tr>
-                <td className="px-6 py-4 text-sm font-medium text-gray-800 whitespace-nowrap">
-                  1
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">Jone Doe</td>
-                <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                  jonne62@gmail.com
-                </td>
-                <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                  <a className="text-green-500 hover:text-green-700" href="#">
-                    Edit
-                  </a>
-                </td>
-                <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                  <a className="text-red-500 hover:text-red-700" href="#">
-                    Delete
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 text-sm font-medium text-gray-800 whitespace-nowrap">
-                  2
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">Jone Doe</td>
-                <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                  jonne62@gmail.com
-                </td>
-                <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                  <a className="text-green-300 hover:text-green-700" href="#">
-                    Edit
-                  </a>
-                </td>
-                <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                  <a className="text-red-500 hover:text-red-700" href="#">
-                    Delete
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 text-sm font-medium text-gray-800 whitespace-nowrap">
-                  3
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">Jone Doe</td>
-                <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                  jonne62@gmail.com
-                </td>
-                <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                  <a className="text-green-500 hover:text-green-700" href="#">
-                    Edit
-                  </a>
-                </td>
-                <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                  <a className="text-red-500 hover:text-red-700" href="#">
-                    Delete
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 text-sm font-medium text-gray-800 whitespace-nowrap">
-                  4
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                  Mary Poppins
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                  marypoppins@gmail.com
-                </td>
-                <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                  <a className="text-green-300 hover:text-green-700" href="#">
-                    Edit
-                  </a>
-                </td>
-                <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                  <a className="text-red-500 hover:text-red-700" href="#">
-                    Delete
-                  </a>
-                </td>
-              </tr>
+              {socketcontext?.zenList ? socketcontext.zenList.data.map((list: userType) =>
+                <tr>
+                  <td>
+                    <Icon icon="material-symbols:person" height='4vh' />
+                  </td>
+                  <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
+                    {list.firstname}
+                  </td>
+                  <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
+                    {list.zen_no}
+                  </td>
+                  <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
+                    <span onClick={() => { socketcontext?.calling(list.zen_no); navigate('/calling/' + list.zen_no) }} className='flex justify-center items-center gap-2 shadow-md cursor-pointer h-max w-max p-2 bg-blue-600 font-semibold text-base text-white rounded'> <Icon icon="ri:live-fill" /><p>Call</p></span>
+                  </td>
+                </tr>
+              ) : null
+              }
             </tbody>
           </table>
         </div>
-        {socketcontext?.zenList ? socketcontext.zenList.data.map((list: userType) =>
-          <div key={list.id} className='border-2 border-gray-200 p-5 rounded-xl h-[10vh] w-[85vw] flex flex-row justify-evenly items-center gap-3'>
-            <Icon icon="material-symbols:person" height='4vh' />
-            <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-              {list.firstname}
-            </td>
-            <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-              {list.zen_no}
-            </td>
-            <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-              <span onClick={() => { socketcontext?.calling(list.zen_no); navigate('/calling/' + list.zen_no) }} className='flex justify-center items-center gap-2 shadow-md cursor-pointer h-max w-max p-2 bg-blue-600 font-semibold text-base text-white rounded'> <Icon icon="ri:live-fill" /><p>Call</p></span>
-            </td>
-          </div>
-        ) : null
-        }
       </div>
     </div>
   )
