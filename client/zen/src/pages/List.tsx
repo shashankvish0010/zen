@@ -45,7 +45,7 @@ const List: React.FC = () => {
   }, [id])
 
   return (
-    <div className='h-[100vh], w-[100vw] flex flex-col justify-center items-center gap-5'>
+    <div className='h-max, w-[100vw] flex flex-col justify-center items-center gap-5'>
       {socketcontext?.reciever == true ?
         <div className='bg-purple-600 flex flex-col p-3 mt-3 md:w-[30vw] w-[80vw] gap-5 rounded shadow items-center'>
           <div>
