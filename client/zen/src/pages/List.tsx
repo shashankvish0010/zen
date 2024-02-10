@@ -74,7 +74,13 @@ const List: React.FC = () => {
         <div className="overflow-hidden border rounded-lg">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
-              <tr>
+              <tr className='h-max w-max'>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
+                >
+                  No.
+                </th>
                 <th
                   scope="col"
                   className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
@@ -103,7 +109,7 @@ const List: React.FC = () => {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {socketcontext?.zenList ? socketcontext.zenList.data.map((list: userType) =>
-                <tr>
+                <tr className='h-max w-max'>
                   <td className="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
                     <Icon icon="material-symbols:person" height='4vh' />
                   </td>
@@ -114,7 +120,10 @@ const List: React.FC = () => {
                     {list.zen_no}
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
-                    <span onClick={() => { socketcontext?.calling(list.zen_no); navigate('/calling/' + list.zen_no) }} className='flex justify-center items-center gap-2 shadow-md cursor-pointer h-max w-max p-2 bg-blue-600 font-semibold text-base text-white rounded'> <Icon icon="ri:live-fill" /><p>Call</p></span>
+                    <p className='bg-red-200 text-red-600 p-1 rounded-md'>In Active</p>
+                  </td>
+                  <td className="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
+                    <span onClick={() => { socketcontext?.calling(list.zen_no); navigate('/calling/' + list.zen_no) }} className='flex justify-center items-center gap-2 shadow-md cursor-pointer h-max w-max p-1 bg-blue-600 font-semibold text-base text-white rounded'> <Icon icon="ri:live-fill" /><p>Call</p></span>
                   </td>
                 </tr>
               ) : null
