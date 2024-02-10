@@ -140,7 +140,7 @@ const List: React.FC = () => {
                 <span>
                   <Icon icon="material-symbols:person" height='4vh' />
                 </span>
-                <span className='flex flex-col gap-1'>
+                <span className=' w-[45%] flex flex-col gap-1'>
                   <p className='font-medium text-base'>Shashank</p>
                   <p className='text-sm font-normal text-gray-500'>987654</p>
                 </span>
