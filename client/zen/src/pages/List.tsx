@@ -61,13 +61,13 @@ const List: React.FC = () => {
         </div>
         : null
       }
-      <div className='w-max h-max p-2 flex flex-col items-center gap-5'>
+      <div className='w-[90vw] h-max p-2 flex flex-col items-center gap-5'>
         <span className='text-gray-800 font-semibold text-xl'>Enter <span className='text-purple-600 font-bold'>ZEN No</span>. and save directly to your list</span>
         {message ?
           <span className='shadow p-1 font-medium bg-purple-600 text-white'>{message}</span>
           : null
         }
-        <input className='px-2 h-[2.25rem] w-[65vw] md:w-[35vw] border rounded' placeholder='Enter ZEN No.' type="text" name='email' value={zenNo} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setZenNo(Number(e.target.value))} />
+        <input className='bg-slate-100 px-2 h-[2.25rem] placeholder:font-medium w-[65vw] md:w-[35vw] border rounded' placeholder='Enter ZEN No.' type="text" name='email' value={zenNo} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setZenNo(Number(e.target.value))} />
         <span onClick={() => saveList(id)} className='bg-blue-600 flex flex-row items-center gap-2 text-white font-medium rounded shadow p-2'><Icon icon="gridicons:add" color='white' /> Add Contact </span>
       </div>
       <div className='h-max w-max flex flex-wrap items-center justify-evenly gap-7'>
