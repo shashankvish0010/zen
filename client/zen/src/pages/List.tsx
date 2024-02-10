@@ -104,16 +104,16 @@ const List: React.FC = () => {
             <tbody className="divide-y divide-gray-200">
               {socketcontext?.zenList ? socketcontext.zenList.data.map((list: userType) =>
                 <tr>
-                  <td>
+                  <td className="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
                     <Icon icon="material-symbols:person" height='4vh' />
                   </td>
-                  <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
+                  <td className="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
                     {list.firstname}
                   </td>
-                  <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
+                  <td className="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
                     {list.zen_no}
                   </td>
-                  <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
+                  <td className="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
                     <span onClick={() => { socketcontext?.calling(list.zen_no); navigate('/calling/' + list.zen_no) }} className='flex justify-center items-center gap-2 shadow-md cursor-pointer h-max w-max p-2 bg-blue-600 font-semibold text-base text-white rounded'> <Icon icon="ri:live-fill" /><p>Call</p></span>
                   </td>
                 </tr>
