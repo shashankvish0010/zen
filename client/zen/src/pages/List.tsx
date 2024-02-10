@@ -71,7 +71,7 @@ const List: React.FC = () => {
         <span onClick={() => saveList(id)} className='bg-blue-600 flex flex-row items-center gap-2 text-white font-medium rounded shadow p-2'><Icon icon="gridicons:add" color='white' /> Add Contact </span>
       </div>
       <div className='h-max w-max flex flex-wrap items-center justify-evenly gap-7'>
-        <div className="overflow-hidden border rounded-lg">
+        <div className="md:block hidden overflow-hidden border rounded-lg">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr className='h-max w-max'>
@@ -130,6 +130,24 @@ const List: React.FC = () => {
               }
             </tbody>
           </table>
+        </div>
+        <div className='md:hidden flex flex-col'>
+          {
+            socketcontext?.zenList ? socketcontext.zenList.data.map((list: userType) => (
+              <div className='h-max w-[90vw] p-3 flex flex-row justify-evenly items-center'>
+                <span>
+                  <Icon icon="material-symbols:person" height='4vh' />
+                </span>
+                <span>
+                  <p></p>
+                  <p></p>
+                </span>
+                <span onClick={() => { socketcontext?.calling(list.zen_no); navigate('/calling/' + list.zen_no) }} className='flex justify-center items-center gap-2 shadow-md cursor-pointer h-max w-max p-1 bg-blue-600 font-semibold text-base text-white rounded'> <Icon icon="ri:live-fill" /><p>Call</p></span>
+              </div>
+
+            ))
+            : null
+          }
         </div>
       </div>
     </div>
