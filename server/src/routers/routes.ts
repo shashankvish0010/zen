@@ -186,10 +186,8 @@ router.get('/get/zenlist/:id', async (req, res) => {
     try {
         if (id) {
             const userContactList = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
-            console.log(userContactList);
         } else {
             res.json({ success: false, message: "Cant get the User ID" })
-
         }
     } catch (error) {
         console.log(error)
@@ -209,6 +207,8 @@ router.post('/add/tozenlist/:id', async (req, res) => {
                 const result = await pool.query('SELECT ARRAY_APPEND($1, $2)', [listArray, `{"${zenNo}"}`]) 
                 if (result) {
                     res.json({ success: true, message: 'Added Successfully' })
+                }else{
+                    res.json({ success: false, message: 'Not Added' })
                 }
             }
         }
