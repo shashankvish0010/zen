@@ -63,7 +63,7 @@ const SocketProvider = (props: any) => {
     const getZenList = async (id: string | undefined) => {
 
         try {
-            const response = await fetch('https://zen-backend-6acy.onrender.com/' + 'get/zenlist/' + id + '/' + socketid, {
+            const response = await fetch('https://zen-backend-6acy.onrender.com/' + 'get/zenlist/' + id, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
