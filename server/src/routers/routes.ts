@@ -165,7 +165,7 @@ router.post('/user/login/:socketId', async (req, res) => {
     }
 })
 
-router.get('/get/zenlist/:id/:socketid', async (req, res) => {
+router.get('/get/zenlist/:id', async (req, res) => {
     // const {id, socketid} = req.params;   
     // try {
     //     if(socketid){
@@ -187,8 +187,6 @@ router.get('/get/zenlist/:id/:socketid', async (req, res) => {
         if (id) {
             const userContactList = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
             console.log(userContactList);
-
-            // if(userContactList)
         } else {
             res.json({ success: false, message: "Cant get the User ID" })
 
