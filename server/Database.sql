@@ -9,7 +9,7 @@ CREATE TABLE Users(
     zen_no VARCHAR,
     account_verified BOOLEAN,
     socketid VARCHAR,
-    zen_list CHAR[]
+    zen_list VARCHAR[]
 )
 
 CREATE TABLE Livestream(
