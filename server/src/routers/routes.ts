@@ -137,9 +137,7 @@ router.post('/user/login/:socketId', async (req, res) => {
     if (!email || !password) {
         res.json({ success: false, message: "Fill both fields" })
     } else {
-        const user = await pool.query('SELECT * FROM Users WHERE email=$1', [email])
-        console.log(user);
-        
+        const user = await pool.query('SELECT * FROM Users WHERE email=$1', [email])        
         if (user.rows.length > 0) {
             if (email == user.rows[0].email) {
                 if (socketId) {
@@ -204,7 +202,7 @@ router.post('/add/tozenlist/:id', async (req, res) => {
             if (IszenNoValid.rows.length > 0 && userData.rows.length) {
                 // const listArray: string[] = userData.rows[0].zen_list
                 // const users = await pool.query('UPDATE Users SET zen_list=$2 WHERE id=$1', [id, `{"${zenNo}"}`])
-                const result = await pool.query('UPDATE Users SET zen_list=ARRAY_APPEND(zen_list, $1) WHERE id=$2', [`{"${zenNo}"}`, id]) 
+                const result = await pool.query('UPDATE Users SET zen_list=zen_list || $1 WHERE id=$2', [`{"${zenNo}"}`, id]) 
                 if (result) {
                     res.json({ success: true, message: 'Added Successfully' })
                 }else{
