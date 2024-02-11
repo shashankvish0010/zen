@@ -198,7 +198,7 @@ router.post('/add/tozenlist/:id', async (req, res) => {
     try {
         if (zenNo) {
             const IszenNoValid = await pool.query('SELECT zen_no from Users WHERE zen_no=$1', [zenNo]);
-            const userData = await pool.query('SELECT zen_list from Users WHERE id=$!', [id])            
+            const userData = await pool.query('SELECT zen_list from Users WHERE id=$1', [id])            
             if (IszenNoValid.rows.length > 0 && userData.rows.length) {
                 // const listArray: string[] = userData.rows[0].zen_list
                 // const users = await pool.query('UPDATE Users SET zen_list=$2 WHERE id=$1', [id, `{"${zenNo}"}`])
