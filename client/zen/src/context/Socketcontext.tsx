@@ -21,6 +21,7 @@ interface Contextvalue {
     pickCall: () => void
     picked: boolean
     setPicked: any
+    socketid: string | undefined
 
     // Context Values for Zen Live
     getLocalStream: () => void
@@ -395,7 +396,7 @@ const SocketProvider = (props: any) => {
     // -------------------------------------------- Value Provider Object ----------------------------------------------------------
     const info: Contextvalue = {
         // Context Values for Video Calling || Zen Call
-        LocalStream, remoteStream, handleNegotiation, endCall, setPicked, picked, pickCall, reciever, calling, getZenList, zenList,
+        socketid, LocalStream, remoteStream, handleNegotiation, endCall, setPicked, picked, pickCall, reciever, calling, getZenList, zenList,
         // Context Values for Live Stream || Zen Live
         getLocalStream, localLiveStream, liveStream, viewer, createViewerTransport,
         linkStream
