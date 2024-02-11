@@ -68,7 +68,7 @@ router.post('/user/register', async (req, res) => {
 
                         }
                     }
-                    else{
+                    else {
                         res.json({ success: false, message: "Password does not match" })
                     }
                 }
@@ -87,13 +87,13 @@ router.post('/otp/verification/:id', async (req, res) => {
     if (id) {
         const user = await pool.query('SELECT * FROM Users WHERE id=$1', [id])
         console.log(user);
-        
+
         if (user.rows.length > 0) {
             if (actualotp === otp) {
                 const accountVerified = await pool.query('UPDATE Users SET account_verified=$1 WHERE id=$2', [true, id])
                 if (accountVerified) {
                     res.json({ success: true, message: "OTP Verified Successfully." })
-                }else{
+                } else {
                     res.json({ success: false, message: "OTP Verification failed." })
                 }
             } else {
@@ -131,61 +131,83 @@ router.get('/resend/otp/:id', async (req, res) => {
     }
 })
 
-router.post('/user/login', async (req,res) => {
-    const {email,password} = req.body
-    if(!email || !password){
+router.post('/user/login/:socketId', async (req, res) => {
+    const { email, password } = req.body
+    const { socketId } = req.params
+    if (!email || !password) {
         res.json({ success: false, message: "Fill both fields" })
-    }else{
+    } else {
         const user = await pool.query('SELECT * FROM Users WHERE email=$1', [email])
-        if(user.rows.length > 0){
-            if(email == user.rows[0].email){
-                const isMatch = await bcrypt.compare(password, user.rows[0].user_password)
-                if(isMatch){
-                    if(user.rows[0].account_verified === false){
-                        res.json({ success: true, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Login Successfully" })
-                    }else{
-                    const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`)
-                    res.json({ success: true,userdata : user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })  
+        console.log(user);
+        
+        if (user.rows.length > 0) {
+            if (email == user.rows[0].email) {
+                if (socketId) {
+                    const result = await pool.query('UPDATE Users SET socketid=$1 WHERE email=$2', [socketId, email])
+                    if (result) {
+                        const isMatch = await bcrypt.compare(password, user.rows[0].user_password)
+                        if (isMatch) {
+                            if (user.rows[0].account_verified === false) {
+                                res.json({ success: true, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Login Successfully" })
+                            } else {
+                                const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`)
+                                res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
+                            }
+                        } else {
+                            res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" })
+                        }
+                    }
                 }
-                }else{
-                    res.json({ success: false,id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" })
-                }
-            }else{
-                res.json({ success: false,id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Email does not exists" })
+            } else {
+                res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Email does not exists" })
             }
         }
     }
 })
 
-router.get('/get/zenlist/:id/:socketid', async (req,res)=>{
-    const {id, socketid} = req.params;   
+router.get('/get/zenlist/:id/:socketid', async (req, res) => {
+    // const {id, socketid} = req.params;   
+    // try {
+    //     if(socketid){
+    //         const user = await pool.query('UPDATE Users SET socketid = $2 WHERE id=$1', [id, socketid])
+    //     }else{
+    //         res.json({success: false, message : "Cant get the User ID"})
+    //     }
+    //     const allUsers = await pool.query('SELECT * FROM Users WHERE id <> $1', [id]);        
+    //     if(allUsers){
+    //         res.json({success: true, data: allUsers.rows.map(i => i)})
+    //     }else{
+    //         res.json({success: false, message: 'No User Found'})
+    //     }        
+    // } catch (error) {
+    //     console.log(error);
+    // }
+    const { id } = req.params;
     try {
-        if(socketid){
-            const user = await pool.query('UPDATE Users SET socketid = $2 WHERE id=$1', [id, socketid])
-        }else{
-            res.json({success: false, message : "Cant get the User ID"})
+        if (id) {
+            const userContactList = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
+            console.log(userContactList);
+
+            // if(userContactList)
+        } else {
+            res.json({ success: false, message: "Cant get the User ID" })
+
         }
-        const allUsers = await pool.query('SELECT * FROM Users WHERE id <> $1', [id]);        
-        if(allUsers){
-            res.json({success: true, data: allUsers.rows.map(i => i)})
-        }else{
-            res.json({success: false, message: 'No User Found'})
-        }        
     } catch (error) {
-        console.log(error);
+        console.log(error)
     }
 })
 
-router.post('/add/tozenlist/:id', async (req,res) => {
-    const {id} = req.params;
-    const {zenNo} = req.body;
+router.post('/add/tozenlist/:id', async (req, res) => {
+    const { id } = req.params;
+    const { zenNo } = req.body;
     try {
-        if(zenNo){
+        if (zenNo) {
             const IszenNoValid = await pool.query('SELECT zen_no from Users WHERE zen_no=$1', [zenNo]);
-            if(IszenNoValid.rows.length > 0){
+            if (IszenNoValid.rows.length > 0) {
                 const users = await pool.query('UPDATE Users SET zen_list=$2 WHERE id=$1', [id, `{"${zenNo}"}`])
-                if(users){
-                    res.json({success: true, message: 'Added Successfully'})
+                if (users) {
+                    res.json({ success: true, message: 'Added Successfully' })
                 }
             }
         }
