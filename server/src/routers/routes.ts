@@ -202,12 +202,16 @@ router.post('/add/tozenlist/:id', async (req, res) => {
     try {
         if (zenNo) {
             const IszenNoValid = await pool.query('SELECT zen_no from Users WHERE zen_no=$1', [zenNo]);
-            if (IszenNoValid.rows.length > 0) {
-                const users = await pool.query('UPDATE Users SET zen_list=$2 WHERE id=$1', [id, `{"${zenNo}"}`])
-                if (users) {
-                    res.json({ success: true, message: 'Added Successfully' })
-                }
-            }
+            const userData = await pool.query('SELECT zen_list from Users WHERE id=$!', [id])
+            console.log(userData);
+            
+            // if (IszenNoValid.rows.length > 0 && userData.rows.length) {
+            //     const listArray = userData.rows[0]
+            //     const users = await pool.query('UPDATE Users SET zen_list=$2 WHERE id=$1', [id, `{"${zenNo}"}`])
+            //     if (users) {
+            //         res.json({ success: true, message: 'Added Successfully' })
+            //     }
+            // }
         }
     } catch (error) {
         console.log(error);
