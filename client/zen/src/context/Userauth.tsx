@@ -1,4 +1,5 @@
-import {createContext, useReducer, useState, useEffect} from 'react'
+import {createContext, useReducer, useState, useContext, useEffect} from 'react'
+import { Socketcontext } from './Socketcontext'
 
 interface Contextvalue{
  state : any 
@@ -18,7 +19,7 @@ interface userType {
 export const UserContext = createContext<Contextvalue | null>(null)
 
 export const UserauthProvider = (props: any) => {
-
+    const socketcontext = useContext(Socketcontext)
     const storedUser = localStorage.getItem("current_user");
     const initialUser = storedUser ? JSON.parse(storedUser) : null
     const [curruser, setCurrUser] = useState(initialUser || null)
@@ -45,7 +46,7 @@ export const UserauthProvider = (props: any) => {
             case "LOGIN" : {
                 const { email, password } = user
                 try {
-                    const response = await fetch('https://zen-backend-6acy.onrender.com'+'/user/login', {
+                    const response = await fetch('https://zen-backend-6acy.onrender.com'+'/user/login/'+socketcontext?.socketid, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
