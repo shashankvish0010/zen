@@ -199,7 +199,7 @@ router.post('/add/tozenlist/:id', async (req, res) => {
         if (zenNo) {
             const IszenNoValid = await pool.query('SELECT zen_no from Users WHERE zen_no=$1', [zenNo]);
             if (IszenNoValid.rows.length > 0) {
-                const result = await pool.query('UPDATE Users SET zen_list=$2 WHERE id=$1', [id, `{"${zenNo}"}`])
+                const result = await pool.query('UPDATE Users SET zen_list=$2 WHERE id=$1', [id, {zenNo}])
                 // const result = await pool.query('UPDATE Users SET zen_list=ARRAY_APPEND(zen_list, $1) WHERE id=$2', [`{"${zenNo}"}`, id]) 
                 console.log(result);
                 
