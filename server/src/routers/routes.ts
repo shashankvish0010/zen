@@ -198,19 +198,16 @@ router.post('/add/tozenlist/:id', async (req, res) => {
     try {
         if (zenNo) {
             console.log(zenNo);
-            
             const IszenNoValid = await pool.query('SELECT zen_no from Users WHERE zen_no=$1', [zenNo]);
-            if (IszenNoValid.rows.length > 0) {
-                const result = await pool.query('UPDATE Users SET zen_list=$2 WHERE id=$1', [id, `{"${zenNo}"}`])
-                // const result = await pool.query('UPDATE Users SET zen_list=ARRAY_APPEND(zen_list, $1) WHERE id=$2', [`{"${zenNo}"}`, id]) 
-                console.log(result);
-                
+            // if (IszenNoValid.rows.length > 0) {
+                // const result = await pool.query('UPDATE Users SET zen_list=zen_list || $2 WHERE id=$1', [id, `{"${zenNo}"}`])
+                const result = await pool.query('UPDATE Users SET zen_list=ARRAY_APPEND(zen_list, $1) WHERE id=$2', [`{"${zenNo}"}`, id])                 
                 if (result) {
                     res.json({ success: true, message: 'Added Successfully' })
                 }else{
                     res.json({ success: false, message: 'Not Added' })
                 }
-            }
+            // }
         }
     } catch (error) {
         console.log(error);
