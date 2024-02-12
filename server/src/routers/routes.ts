@@ -137,7 +137,7 @@ router.post('/user/login/:socketId', async (req, res) => {
     if (!email || !password) {
         res.json({ success: false, message: "Fill both fields" })
     } else {
-        const user = await pool.query('SELECT * FROM Users WHERE email=$1', [email])        
+        const user = await pool.query('SELECT * FROM Users WHERE email=$1', [email])
         if (user.rows.length > 0) {
             if (email == user.rows[0].email) {
                 if (socketId) {
@@ -155,10 +155,14 @@ router.post('/user/login/:socketId', async (req, res) => {
                             res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" })
                         }
                     }
+                } else {
+                    res.json({ success: false, message: "Socket Id does not exists" })
                 }
             } else {
-                res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Email does not exists" })
+                res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Email already exists" })
             }
+        } else {
+            res.json({ success: false, message: "Email does not exists" })
         }
     }
 })
@@ -184,6 +188,11 @@ router.get('/get/zenlist/:id', async (req, res) => {
     try {
         if (id) {
             const userContactList = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
+            if(userContactList.rows.length > 0){
+                console.log(userContactList.rows)
+            }else{
+                console.log("No user found in zen list")
+            }
         } else {
             res.json({ success: false, message: "Cant get the User ID" })
         }
@@ -202,21 +211,22 @@ router.post('/add/tozenlist/:id', async (req, res) => {
             if (IszenNoValid.rows.length > 0) {
                 const userData = await pool.query('SELECT firstname from Users WHERE zen_no=$1', [zenNo])
                 const user = {
-                    firstname : userData.rows[0].firstname,
-                    zen_no : zenNo
+                    firstname: userData.rows[0].firstname,
+                    zen_no: zenNo
                 }
-                const result = await pool.query('UPDATE Users SET zen_list=ARRAY_APPEND(zen_list, $1) WHERE id=$2', [{user}, id])                 
+                const result = await pool.query('UPDATE Users SET zen_list=ARRAY_APPEND(zen_list, $1) WHERE id=$2', [{ user }, id])
                 if (result) {
                     res.json({ success: true, message: 'Added Successfully' })
-                }else{
+                } else {
                     res.json({ success: false, message: 'Not Added' })
                 }
+            } else {
+                res.json({ success: false, message: 'Invalid Zen No.' })
             }
         }
     } catch (error) {
         console.log(error);
     }
 })
-
 
 module.exports = router
