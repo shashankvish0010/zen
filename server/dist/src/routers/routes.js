@@ -137,8 +137,9 @@ router.get('/resend/otp/:id', (req, res) => __awaiter(void 0, void 0, void 0, fu
         })).catch((err) => console.log(err));
     }
 }));
-router.post('/user/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/user/login/:socketId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
+    const { socketId } = req.params;
     if (!email || !password) {
         res.json({ success: false, message: "Fill both fields" });
     }
@@ -146,41 +147,67 @@ router.post('/user/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
         const user = yield dbconnect_1.default.query('SELECT * FROM Users WHERE email=$1', [email]);
         if (user.rows.length > 0) {
             if (email == user.rows[0].email) {
-                const isMatch = yield bcrypt_1.default.compare(password, user.rows[0].user_password);
-                if (isMatch) {
-                    if (user.rows[0].account_verified === false) {
-                        res.json({ success: true, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Login Successfully" });
-                    }
-                    else {
-                        const token = jsonwebtoken_1.default.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
-                        res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
+                if (socketId) {
+                    const result = yield dbconnect_1.default.query('UPDATE Users SET socketid=$1 WHERE email=$2', [socketId, email]);
+                    if (result) {
+                        const isMatch = yield bcrypt_1.default.compare(password, user.rows[0].user_password);
+                        if (isMatch) {
+                            if (user.rows[0].account_verified === false) {
+                                res.json({ success: true, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Login Successfully" });
+                            }
+                            else {
+                                const token = jsonwebtoken_1.default.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
+                                res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
+                            }
+                        }
+                        else {
+                            res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" });
+                        }
                     }
                 }
                 else {
-                    res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" });
+                    res.json({ success: false, message: "Socket Id does not exists" });
                 }
             }
             else {
-                res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Email does not exists" });
+                res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Email already exists" });
             }
+        }
+        else {
+            res.json({ success: false, message: "Email does not exists" });
         }
     }
 }));
-router.get('/get/zenlist/:id/:socketid', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id, socketid } = req.params;
+router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // const {id, socketid} = req.params;   
+    // try {
+    //     if(socketid){
+    //         const user = await pool.query('UPDATE Users SET socketid = $2 WHERE id=$1', [id, socketid])
+    //     }else{
+    //         res.json({success: false, message : "Cant get the User ID"})
+    //     }
+    //     const allUsers = await pool.query('SELECT * FROM Users WHERE id <> $1', [id]);        
+    //     if(allUsers){
+    //         res.json({success: true, data: allUsers.rows.map(i => i)})
+    //     }else{
+    //         res.json({success: false, message: 'No User Found'})
+    //     }        
+    // } catch (error) {
+    //     console.log(error);
+    // }
+    const { id } = req.params;
     try {
-        if (socketid) {
-            const user = yield dbconnect_1.default.query('UPDATE Users SET socketid = $2 WHERE id=$1', [id, socketid]);
+        if (id) {
+            const userContactList = yield dbconnect_1.default.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
+            if (userContactList.rows.length > 0) {
+                console.log(userContactList.rows);
+            }
+            else {
+                console.log("No user found in zen list");
+            }
         }
         else {
             res.json({ success: false, message: "Cant get the User ID" });
-        }
-        const allUsers = yield dbconnect_1.default.query('SELECT * FROM Users WHERE id <> $1', [id]);
-        if (allUsers) {
-            res.json({ success: true, data: allUsers.rows.map(i => i) });
-        }
-        else {
-            res.json({ success: false, message: 'No User Found' });
         }
     }
     catch (error) {
@@ -192,12 +219,24 @@ router.post('/add/tozenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0
     const { zenNo } = req.body;
     try {
         if (zenNo) {
+            console.log(zenNo);
             const IszenNoValid = yield dbconnect_1.default.query('SELECT zen_no from Users WHERE zen_no=$1', [zenNo]);
             if (IszenNoValid.rows.length > 0) {
-                const users = yield dbconnect_1.default.query('UPDATE Users SET zen_list=$2 WHERE id=$1', [id, `{"${zenNo}"}`]);
-                if (users) {
+                const userData = yield dbconnect_1.default.query('SELECT firstname from Users WHERE zen_no=$1', [zenNo]);
+                const user = {
+                    firstname: userData.rows[0].firstname,
+                    zen_no: zenNo
+                };
+                const result = yield dbconnect_1.default.query('UPDATE Users SET zen_list=ARRAY_APPEND(zen_list, $1) WHERE id=$2', [{ user }, id]);
+                if (result) {
                     res.json({ success: true, message: 'Added Successfully' });
                 }
+                else {
+                    res.json({ success: false, message: 'Not Added' });
+                }
+            }
+            else {
+                res.json({ success: false, message: 'Invalid Zen No.' });
             }
         }
     }
