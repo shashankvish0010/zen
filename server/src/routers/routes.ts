@@ -189,7 +189,7 @@ router.get('/get/zenlist/:id', async (req, res) => {
     try {
         if (id) {
             const userContactList = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
-            if (userContactList.rows.length > 0) {
+            if (userContactList.rowCount > 0) {
                 console.log(userContactList.rows)
             } else {
                 console.log("No user found in zen list")
