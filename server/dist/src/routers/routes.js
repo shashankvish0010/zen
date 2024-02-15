@@ -199,7 +199,7 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
     try {
         if (id) {
             const userContactList = yield dbconnect_1.default.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
-            if (userContactList.rows.length > 0) {
+            if (userContactList.rowCount > 0) {
                 console.log(userContactList.rows);
             }
             else {
