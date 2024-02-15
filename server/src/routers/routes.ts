@@ -138,7 +138,10 @@ router.post('/user/login/:socketId', async (req, res) => {
         res.json({ success: false, message: "Fill both fields" })
     } else {
         const user = await pool.query('SELECT * FROM Users WHERE email=$1', [email])
-        if (user.rows.length > 0) {
+        if (user.rowCount === 0) {
+            res.json({ success: false, message: "Email does not exists" })
+        }
+        else {
             if (email == user.rows[0].email) {
                 if (socketId) {
                     const result = await pool.query('UPDATE Users SET socketid=$1 WHERE email=$2', [socketId, email])
@@ -161,8 +164,6 @@ router.post('/user/login/:socketId', async (req, res) => {
             } else {
                 res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Email already exists" })
             }
-        } else {
-            res.json({ success: false, message: "Email does not exists" })
         }
     }
 })
@@ -188,9 +189,9 @@ router.get('/get/zenlist/:id', async (req, res) => {
     try {
         if (id) {
             const userContactList = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
-            if(userContactList.rows.length > 0){
+            if (userContactList.rows.length > 0) {
                 console.log(userContactList.rows)
-            }else{
+            } else {
                 console.log("No user found in zen list")
             }
         } else {
