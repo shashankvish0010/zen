@@ -35,7 +35,7 @@ router.post('/user/register', (req, res) => __awaiter(void 0, void 0, void 0, fu
             if (emailPattern.test(email)) {
                 const emailExists = yield dbconnect_1.default.query('SELECT email from Users WHERE email=$1', [email]);
                 if (emailExists.rows.length > 0) {
-                    res.json({ success: false, message: "Email already regsitered" });
+                    res.json({ success: false, message: "Email already registered" });
                 }
                 else {
                     if (password === confirm_password) {
