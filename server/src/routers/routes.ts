@@ -22,7 +22,7 @@ router.post('/user/register', async (req, res) => {
             if (emailPattern.test(email)) {
                 const emailExists = await pool.query('SELECT email from Users WHERE email=$1', [email])
                 if (emailExists.rows.length > 0) {
-                    res.json({ success: false, message: "Email already regsitered" })
+                    res.json({ success: false, message: "Email already registered" })
                 } else {
                     if (password === confirm_password) {
                         const salt = Number(bcrypt.genSalt(10))
