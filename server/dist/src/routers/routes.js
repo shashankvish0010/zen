@@ -145,7 +145,10 @@ router.post('/user/login/:socketId', (req, res) => __awaiter(void 0, void 0, voi
     }
     else {
         const user = yield dbconnect_1.default.query('SELECT * FROM Users WHERE email=$1', [email]);
-        if (user.rows.length > 0) {
+        if (user.rowCount === 0) {
+            res.json({ success: false, message: "Email does not exists" });
+        }
+        else {
             if (email == user.rows[0].email) {
                 if (socketId) {
                     const result = yield dbconnect_1.default.query('UPDATE Users SET socketid=$1 WHERE email=$2', [socketId, email]);
@@ -172,9 +175,6 @@ router.post('/user/login/:socketId', (req, res) => __awaiter(void 0, void 0, voi
             else {
                 res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Email already exists" });
             }
-        }
-        else {
-            res.json({ success: false, message: "Email does not exists" });
         }
     }
 }));
