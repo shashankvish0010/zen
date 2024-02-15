@@ -19,6 +19,8 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const uuid_1 = require("uuid");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const ioredis_1 = require("ioredis");
+const redisClient = new ioredis_1.Redis();
 const router = express_1.default.Router();
 router.use(body_parser_1.default.json());
 router.get('/', (req, res) => res.send('hello from BE'));
@@ -160,6 +162,7 @@ router.post('/user/login/:socketId', (req, res) => __awaiter(void 0, void 0, voi
                             }
                             else {
                                 const token = jsonwebtoken_1.default.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
+                                redisClient.rpush('ActiveUsers', user.rows[0]);
                                 res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
                             }
                         }
@@ -201,6 +204,8 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
             const userContactList = yield dbconnect_1.default.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
             if (userContactList.rowCount > 0) {
                 console.log(userContactList.rows);
+                userContactList.rows.filter((user) => {
+                });
             }
             else {
                 console.log("No user found in zen list");

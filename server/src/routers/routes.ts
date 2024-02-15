@@ -5,7 +5,8 @@ import bcrypt from "bcrypt"
 import nodemailer from "nodemailer"
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken"
-import { log } from "console"
+import { Redis } from "ioredis"
+const redisClient = new Redis()
 const router = express.Router()
 
 router.use(bodyParser.json())
@@ -152,6 +153,7 @@ router.post('/user/login/:socketId', async (req, res) => {
                                 res.json({ success: true, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Login Successfully" })
                             } else {
                                 const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`)
+                                redisClient.rpush('ActiveUsers', user.rows[0])
                                 res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
                             }
                         } else {
@@ -191,6 +193,9 @@ router.get('/get/zenlist/:id', async (req, res) => {
             const userContactList = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
             if (userContactList.rowCount > 0) {
                 console.log(userContactList.rows)
+                userContactList.rows.filter((user) => {
+
+                })
             } else {
                 console.log("No user found in zen list")
             }
