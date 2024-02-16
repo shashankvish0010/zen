@@ -162,8 +162,9 @@ router.post('/user/login/:socketId', (req, res) => __awaiter(void 0, void 0, voi
                             }
                             else {
                                 const token = jsonwebtoken_1.default.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
-                                yield redisClient.rpush('ActiveUsers', JSON.stringify(user.rows[0]));
-                                console.log(redisClient.get('ActiveUsers'));
+                                redisClient.rpush('ActiveUsers', JSON.stringify(user.rows[0])).then(() => {
+                                    console.log(redisClient.get('ActiveUsers'));
+                                }).catch((error) => console.log(error));
                                 res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
                             }
                         }
