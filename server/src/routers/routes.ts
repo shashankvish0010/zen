@@ -153,7 +153,7 @@ router.post('/user/login/:socketId', async (req, res) => {
                                 res.json({ success: true, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Login Successfully" })
                             } else {
                                 const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`)
-                                redisClient.rpush('ActiveUsers', user.rows[0])
+                                redisClient.rpush('ActiveUsers', JSON.stringify(user.rows[0]))
                                 console.log(redisClient.get('ActiveUsers'));
                                 
                                 res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
