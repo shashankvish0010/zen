@@ -20,7 +20,7 @@ const nodemailer_1 = __importDefault(require("nodemailer"));
 const uuid_1 = require("uuid");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const ioredis_1 = require("ioredis");
-const redisClient = new ioredis_1.Redis();
+const redisClient = new ioredis_1.Redis('rediss://red-cn74mricn0vc738smbl0:NkKo1Cj90zuRDn7KgQb6FB2faBtc7GER@oregon-redis.render.com:6379');
 const router = express_1.default.Router();
 router.use(body_parser_1.default.json());
 router.get('/', (req, res) => res.send('hello from BE'));
