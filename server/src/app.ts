@@ -12,7 +12,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT'],
 }));
 const server = http.createServer(app)
-export const io = new Server(server, {
+const io = new Server(server, {
     cors: {
         origin: 'https://zen-gamma.vercel.app',
         methods: ['GET', 'POST', 'PUT'],

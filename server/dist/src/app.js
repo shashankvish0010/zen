@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.io = void 0;
 const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
 const http_1 = __importDefault(require("http"));
@@ -25,7 +24,7 @@ app.use((0, cors_1.default)({
     methods: ['GET', 'POST', 'PUT'],
 }));
 const server = http_1.default.createServer(app);
-exports.io = new socket_io_1.Server(server, {
+const io = new socket_io_1.Server(server, {
     cors: {
         origin: 'https://zen-gamma.vercel.app',
         methods: ['GET', 'POST', 'PUT'],
@@ -60,7 +59,7 @@ let sendersOffer;
 //         }
 //     },
 // ];
-exports.io.on('connection', (socket) => {
+io.on('connection', (socket) => {
     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
     socket.emit('hello', socket.id);
     socket.on('call', (zenno, from, offer) => __awaiter(void 0, void 0, void 0, function* () {
@@ -69,19 +68,19 @@ exports.io.on('connection', (socket) => {
             receiver = reciverSocketId.rows[0].socketid;
             sender = from;
             sendersOffer = offer;
-            exports.io.to(receiver).emit('callercalling');
+            io.to(receiver).emit('callercalling');
         }
         catch (error) {
             console.log(error);
         }
     }));
     socket.on('recieved', () => {
-        exports.io.to(receiver).emit('recieverCall', { sendersOffer, sender });
+        io.to(receiver).emit('recieverCall', { sendersOffer, sender });
     });
     socket.on('callrecieved', (answer) => {
-        exports.io.to(sender).emit('callaccepted', { answer, picked: true });
+        io.to(sender).emit('callaccepted', { answer, picked: true });
     });
-    socket.on('done', () => { exports.io.emit('videocall'); });
+    socket.on('done', () => { io.emit('videocall'); });
 });
 //     // --------------------------------------- WebSocket connection for Zen Live || Live Streaming --------------------------------- 
 //     socket.on('livestream', async (key) => {
