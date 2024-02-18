@@ -45,6 +45,8 @@ export const UserauthProvider = (props: any) => {
         switch(action.type){
             case "LOGIN" : {
                 const { email, password } = user
+                console.log(socketcontext?.socketid);
+                
                 try {
                     const response = await fetch('https://zen-backend-6acy.onrender.com'+'/user/login/'+socketcontext?.socketid, {
                         method: "POST",
