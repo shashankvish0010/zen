@@ -154,6 +154,7 @@ router.post('/user/login/:socketId', async (req, res) => {
                                     res.json({ success: true, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Login Successfully" })
                                 } else {
                                     const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`)
+                                    console.log(user.rows[0]);
                                     redisClient.rpush('ActiveUsers', JSON.stringify(user.rows[0])).then(() => {
                                         console.log("Data set in redis")
                                     }).catch((error) => console.log(error))

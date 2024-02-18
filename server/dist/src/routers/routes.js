@@ -163,6 +163,7 @@ router.post('/user/login/:socketId', (req, res) => __awaiter(void 0, void 0, voi
                                 }
                                 else {
                                     const token = jsonwebtoken_1.default.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
+                                    console.log(user.rows[0]);
                                     redisClient.rpush('ActiveUsers', JSON.stringify(user.rows[0])).then(() => {
                                         console.log("Data set in redis");
                                     }).catch((error) => console.log(error));
