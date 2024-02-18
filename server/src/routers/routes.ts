@@ -205,7 +205,7 @@ router.get('/get/zenlist/:id', async (req, res) => {
             // } else {
             //     console.log("No user found in zen list")
             // }
-            const data = await redisClient.get('ActiveUsers')
+            const data = await redisClient.get('ActiveUsers:1')
             console.log(data);
             
         } else {
