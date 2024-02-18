@@ -135,40 +135,45 @@ router.get('/resend/otp/:id', async (req, res) => {
 router.post('/user/login/:socketId', async (req, res) => {
     const { email, password } = req.body
     const { socketId } = req.params
-    if (!email || !password) {
-        res.json({ success: false, message: "Fill both fields" })
-    } else {
-        const user = await pool.query('SELECT * FROM Users WHERE email=$1', [email])
-        if (user.rowCount === 0) {
-            res.json({ success: false, message: "Email does not exists" })
-        }
-        else {
-            if (email == user.rows[0].email) {
-                if (socketId) {
-                    const result = await pool.query('UPDATE Users SET socketid=$1 WHERE email=$2', [socketId, email])
-                    if (result) {
-                        const isMatch = await bcrypt.compare(password, user.rows[0].user_password)
-                        if (isMatch) {
-                            if (user.rows[0].account_verified === false) {
-                                res.json({ success: true, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Login Successfully" })
+    try {
+        if (!email || !password) {
+            res.json({ success: false, message: "Fill both fields" })
+        } else {
+            const user = await pool.query('SELECT * FROM Users WHERE email=$1', [email])
+            if (user.rowCount === 0) {
+                res.json({ success: false, message: "Email does not exists" })
+            }
+            else {
+                if (email == user.rows[0].email) {
+                    if (socketId) {
+                        const result = await pool.query('UPDATE Users SET socketid=$1 WHERE email=$2', [socketId, email])
+                        if (result) {
+                            const isMatch = await bcrypt.compare(password, user.rows[0].user_password)
+                            if (isMatch) {
+                                if (user.rows[0].account_verified === false) {
+                                    res.json({ success: true, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Login Successfully" })
+                                } else {
+                                    const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`)
+                                    redisClient.rpush('ActiveUsers', JSON.stringify(user.rows[0])).then(() => {
+                                        console.log(redisClient.get('ActiveUsers'))
+                                    }).catch((error) => console.log(error))
+                                    res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
+                                }
                             } else {
-                                const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`)
-                                redisClient.rpush('ActiveUsers', JSON.stringify(user.rows[0])).then(() => {
-                                    console.log(redisClient.get('ActiveUsers'))
-                                }).catch((error) => console.log(error))
-                                res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
+                                res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" })
                             }
-                        } else {
-                            res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" })
                         }
+                    } else {
+                        res.json({ success: false, message: "Socket Id does not exists" })
                     }
                 } else {
-                    res.json({ success: false, message: "Socket Id does not exists" })
+                    res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Email already exists" })
                 }
-            } else {
-                res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Email already exists" })
             }
         }
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Internal server error" })
     }
 })
 

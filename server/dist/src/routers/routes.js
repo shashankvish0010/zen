@@ -142,45 +142,50 @@ router.get('/resend/otp/:id', (req, res) => __awaiter(void 0, void 0, void 0, fu
 router.post('/user/login/:socketId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     const { socketId } = req.params;
-    if (!email || !password) {
-        res.json({ success: false, message: "Fill both fields" });
-    }
-    else {
-        const user = yield dbconnect_1.default.query('SELECT * FROM Users WHERE email=$1', [email]);
-        if (user.rowCount === 0) {
-            res.json({ success: false, message: "Email does not exists" });
+    try {
+        if (!email || !password) {
+            res.json({ success: false, message: "Fill both fields" });
         }
         else {
-            if (email == user.rows[0].email) {
-                if (socketId) {
-                    const result = yield dbconnect_1.default.query('UPDATE Users SET socketid=$1 WHERE email=$2', [socketId, email]);
-                    if (result) {
-                        const isMatch = yield bcrypt_1.default.compare(password, user.rows[0].user_password);
-                        if (isMatch) {
-                            if (user.rows[0].account_verified === false) {
-                                res.json({ success: true, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Login Successfully" });
+            const user = yield dbconnect_1.default.query('SELECT * FROM Users WHERE email=$1', [email]);
+            if (user.rowCount === 0) {
+                res.json({ success: false, message: "Email does not exists" });
+            }
+            else {
+                if (email == user.rows[0].email) {
+                    if (socketId) {
+                        const result = yield dbconnect_1.default.query('UPDATE Users SET socketid=$1 WHERE email=$2', [socketId, email]);
+                        if (result) {
+                            const isMatch = yield bcrypt_1.default.compare(password, user.rows[0].user_password);
+                            if (isMatch) {
+                                if (user.rows[0].account_verified === false) {
+                                    res.json({ success: true, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Login Successfully" });
+                                }
+                                else {
+                                    const token = jsonwebtoken_1.default.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
+                                    redisClient.rpush('ActiveUsers', JSON.stringify(user.rows[0])).then(() => {
+                                        console.log(redisClient.get('ActiveUsers'));
+                                    }).catch((error) => console.log(error));
+                                    res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
+                                }
                             }
                             else {
-                                const token = jsonwebtoken_1.default.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
-                                redisClient.rpush('ActiveUsers', JSON.stringify(user.rows[0])).then(() => {
-                                    console.log(redisClient.get('ActiveUsers'));
-                                }).catch((error) => console.log(error));
-                                res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
+                                res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" });
                             }
                         }
-                        else {
-                            res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" });
-                        }
+                    }
+                    else {
+                        res.json({ success: false, message: "Socket Id does not exists" });
                     }
                 }
                 else {
-                    res.json({ success: false, message: "Socket Id does not exists" });
+                    res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Email already exists" });
                 }
             }
-            else {
-                res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Email already exists" });
-            }
         }
+    }
+    catch (error) {
+        res.status(500).json({ success: false, message: "Internal server error" });
     }
 }));
 router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
