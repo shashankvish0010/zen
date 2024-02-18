@@ -197,15 +197,18 @@ router.get('/get/zenlist/:id', async (req, res) => {
     const { id } = req.params;
     try {
         if (id) {
-            const userContactList = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
-            if (userContactList.rowCount > 0) {
-                console.log(userContactList.rows)
-                userContactList.rows.filter((user) => {
+            // const userContactList = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
+            // if (userContactList.rowCount > 0) {
+            //     console.log(userContactList.rows)
+            //     userContactList.rows.filter((user) => {
 
-                })
-            } else {
-                console.log("No user found in zen list")
-            }
+            //     })
+            // } else {
+            //     console.log("No user found in zen list")
+            // }
+            const data = await redisClient.get('ActiveUsers')
+            console.log(data);
+            
         } else {
             res.json({ success: false, message: "Cant get the User ID" })
         }

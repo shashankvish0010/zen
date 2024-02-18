@@ -208,15 +208,16 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
     const { id } = req.params;
     try {
         if (id) {
-            const userContactList = yield dbconnect_1.default.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
-            if (userContactList.rowCount > 0) {
-                console.log(userContactList.rows);
-                userContactList.rows.filter((user) => {
-                });
-            }
-            else {
-                console.log("No user found in zen list");
-            }
+            // const userContactList = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
+            // if (userContactList.rowCount > 0) {
+            //     console.log(userContactList.rows)
+            //     userContactList.rows.filter((user) => {
+            //     })
+            // } else {
+            //     console.log("No user found in zen list")
+            // }
+            const data = yield redisClient.get('ActiveUsers');
+            console.log(data);
         }
         else {
             res.json({ success: false, message: "Cant get the User ID" });
