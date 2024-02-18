@@ -155,7 +155,7 @@ router.post('/user/login/:socketId', async (req, res) => {
                                 } else {
                                     const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`)
                                     console.log(user.rows[0]);
-                                    await redisClient.mset('ActiveUsers:1', user.rows[0].zen_no)
+                                    await redisClient.rpush('ActiveUsers:1', user.rows[0].zen_no)
                                     res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
                                 }
                             } else {
