@@ -23,15 +23,15 @@ dotenv.config()
 app.use(require('./routers/routes'))
 app.use(express.json())
 // let RTPCapabilities: RtpCapabilities;
-// let producer: any;
-// let viewer: any;
-// let mediasoupWorker: any;
-// let mediasoupRouter: any;
-// let producerTransport: any;
-// let viewerTransport: any;
-// let receiver: string | string[];
-// let sender: string | string[];
-// let sendersOffer: any;
+let producer: any;
+let viewer: any;
+let mediasoupWorker: any;
+let mediasoupRouter: any;
+let producerTransport: any;
+let viewerTransport: any;
+let receiver: string | string[];
+let sender: string | string[];
+let sendersOffer: any;
 
 // const mediaCodecs: any = [
 //     {
@@ -51,31 +51,32 @@ app.use(express.json())
 // ];
 
 
-// io.on('connection', (socket) => {
-//     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
-//     socket.emit('hello', socket.id)
+io.on('connection', (socket) => {
+    // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
+    socket.emit('hello', socket.id)
 
-//     socket.on('call', async (zenno, from, offer) => {
-//         try {
-//             const reciverSocketId = await pool.query('SELECT socketid from Users WHERE zen_no=$1', [zenno])
-//             receiver = reciverSocketId.rows[0].socketid
-//             sender = from
-//             sendersOffer = offer
-//             io.to(receiver).emit('callercalling')
-//         } catch (error) {
-//             console.log(error);
-//         }
-//     })
+    socket.on('call', async (zenno, from, offer) => {
+        try {
+            const reciverSocketId = await pool.query('SELECT socketid from Users WHERE zen_no=$1', [zenno])
+            receiver = reciverSocketId.rows[0].socketid
+            sender = from
+            sendersOffer = offer
+            io.to(receiver).emit('callercalling')
+        } catch (error) {
+            console.log(error);
+        }
+    })
 
-//     socket.on('recieved', () => {
-//         io.to(receiver).emit('recieverCall', { sendersOffer, sender })
-//     })
+    socket.on('recieved', () => {
+        io.to(receiver).emit('recieverCall', { sendersOffer, sender })
+    })
 
-//     socket.on('callrecieved', (answer) => {
-//         io.to(sender).emit('callaccepted', { answer, picked: true })
-//     })
+    socket.on('callrecieved', (answer) => {
+        io.to(sender).emit('callaccepted', { answer, picked: true })
+    })
 
-//     socket.on('done', () => { io.emit('videocall') })
+    socket.on('done', () => { io.emit('videocall') })
+})
 
 //     // --------------------------------------- WebSocket connection for Zen Live || Live Streaming --------------------------------- 
 //     socket.on('livestream', async (key) => {

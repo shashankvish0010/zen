@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -9,6 +18,7 @@ const app = (0, express_1.default)();
 const http_1 = __importDefault(require("http"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
+const dbconnect_1 = __importDefault(require("../dbconnect"));
 const socket_io_1 = require("socket.io");
 app.use((0, cors_1.default)({
     origin: 'https://zen-gamma.vercel.app',
@@ -25,15 +35,15 @@ dotenv_1.default.config();
 app.use(require('./routers/routes'));
 app.use(express_1.default.json());
 // let RTPCapabilities: RtpCapabilities;
-// let producer: any;
-// let viewer: any;
-// let mediasoupWorker: any;
-// let mediasoupRouter: any;
-// let producerTransport: any;
-// let viewerTransport: any;
-// let receiver: string | string[];
-// let sender: string | string[];
-// let sendersOffer: any;
+let producer;
+let viewer;
+let mediasoupWorker;
+let mediasoupRouter;
+let producerTransport;
+let viewerTransport;
+let receiver;
+let sender;
+let sendersOffer;
 // const mediaCodecs: any = [
 //     {
 //         kind: "audio",
@@ -50,27 +60,29 @@ app.use(express_1.default.json());
 //         }
 //     },
 // ];
-// io.on('connection', (socket) => {
-//     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
-//     socket.emit('hello', socket.id)
-//     socket.on('call', async (zenno, from, offer) => {
-//         try {
-//             const reciverSocketId = await pool.query('SELECT socketid from Users WHERE zen_no=$1', [zenno])
-//             receiver = reciverSocketId.rows[0].socketid
-//             sender = from
-//             sendersOffer = offer
-//             io.to(receiver).emit('callercalling')
-//         } catch (error) {
-//             console.log(error);
-//         }
-//     })
-//     socket.on('recieved', () => {
-//         io.to(receiver).emit('recieverCall', { sendersOffer, sender })
-//     })
-//     socket.on('callrecieved', (answer) => {
-//         io.to(sender).emit('callaccepted', { answer, picked: true })
-//     })
-//     socket.on('done', () => { io.emit('videocall') })
+exports.io.on('connection', (socket) => {
+    // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
+    socket.emit('hello', socket.id);
+    socket.on('call', (zenno, from, offer) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const reciverSocketId = yield dbconnect_1.default.query('SELECT socketid from Users WHERE zen_no=$1', [zenno]);
+            receiver = reciverSocketId.rows[0].socketid;
+            sender = from;
+            sendersOffer = offer;
+            exports.io.to(receiver).emit('callercalling');
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }));
+    socket.on('recieved', () => {
+        exports.io.to(receiver).emit('recieverCall', { sendersOffer, sender });
+    });
+    socket.on('callrecieved', (answer) => {
+        exports.io.to(sender).emit('callaccepted', { answer, picked: true });
+    });
+    socket.on('done', () => { exports.io.emit('videocall'); });
+});
 //     // --------------------------------------- WebSocket connection for Zen Live || Live Streaming --------------------------------- 
 //     socket.on('livestream', async (key) => {
 //         try {
