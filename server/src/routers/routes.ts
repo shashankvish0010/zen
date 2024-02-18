@@ -135,6 +135,8 @@ router.get('/resend/otp/:id', async (req, res) => {
 router.post('/user/login/:socketId', async (req, res) => {
     const { email, password } = req.body
     const { socketId } = req.params
+    console.log(socketId);
+    
     try {
         if (!email || !password) {
             res.json({ success: false, message: "Fill both fields" })
