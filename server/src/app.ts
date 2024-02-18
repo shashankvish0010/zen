@@ -53,10 +53,7 @@ let sendersOffer: any;
 
 io.on('connection', (socket) => {
     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
-       
-    if(socket.id){
-        socket.emit('hello', socket.id)
-    }
+    socket.emit('hello', socket.id)
 
     socket.on('call', async (zenno, from, offer) => {
         try {
