@@ -164,7 +164,7 @@ router.post('/user/login/:socketId', (req, res) => __awaiter(void 0, void 0, voi
                                 else {
                                     const token = jsonwebtoken_1.default.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
                                     console.log(user.rows[0]);
-                                    yield redisClient.rpush('ActiveUsers:1', user.rows[0].zen_no);
+                                    yield redisClient.mset('ActiveUsers:1', user.rows[0].zen_no);
                                     res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
                                 }
                             }
