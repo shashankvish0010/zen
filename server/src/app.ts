@@ -54,7 +54,7 @@ let sendersOffer: any;
 io.on('connection', (socket) => {
     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
    
-    console.log(socket);
+    console.log(socket.id);
     
     socket.emit('hello', socket.id)
 

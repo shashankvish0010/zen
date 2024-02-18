@@ -61,7 +61,7 @@ let sendersOffer;
 // ];
 io.on('connection', (socket) => {
     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
-    console.log(socket);
+    console.log(socket.id);
     socket.emit('hello', socket.id);
     socket.on('call', (zenno, from, offer) => __awaiter(void 0, void 0, void 0, function* () {
         try {
