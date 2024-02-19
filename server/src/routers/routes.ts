@@ -156,8 +156,10 @@ router.post('/user/login', async (req, res) => {
                                     res.json({ success: true, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Login Successfully" })
                                 } else {
                                     const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`)
-                                    console.log(user.rows[0]);
-                                    await redisClient.mset('ActiveUsers:1', user.rows[0].zen_no)
+                                    await redisClient.mset('ActiveUsers:1', JSON.stringify({
+                                        zenNo: user.rows[0].zen_no,
+                                        socketId: socketId
+                                    }))
                                     res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
                                 }
                             } else {
@@ -209,7 +211,6 @@ router.get('/get/zenlist/:id', async (req, res) => {
             // }
             const data = await redisClient.get('ActiveUsers:1')
             console.log(data);
-
         } else {
             res.json({ success: false, message: "Cant get the User ID" })
         }
