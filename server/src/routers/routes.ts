@@ -153,11 +153,12 @@ router.post('/user/login', async (req, res) => {
                             } else {
                                 const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`)
                                 try {
-                                    const element = JSON.stringify({
+                                    const element : (string | number | Buffer) = JSON.stringify({
                                         zenNo: user.rows[0].zen_no,
                                         socketId: socketId
                                     })
-                                    await redisClient.lpush('ActiveUsers:1', element)
+                                    // const element = [1,2,3]
+                                    await redisClient.lpush('ActiveUsers:1', ...element)
                                     res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
                                 } catch (redisError) {
                                     console.error("Error pushing data to Redis:", redisError);

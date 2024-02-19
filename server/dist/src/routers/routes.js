@@ -166,7 +166,8 @@ router.post('/user/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
                                         zenNo: user.rows[0].zen_no,
                                         socketId: app_1.socketId
                                     });
-                                    yield redisClient.lpush('ActiveUsers:1', element);
+                                    // const element = [1,2,3]
+                                    yield redisClient.lpush('ActiveUsers:1', ...element);
                                     res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
                                 }
                                 catch (redisError) {
