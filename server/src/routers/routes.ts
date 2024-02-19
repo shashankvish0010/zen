@@ -6,6 +6,7 @@ import nodemailer from "nodemailer"
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken"
 import { Redis } from "ioredis"
+import { socketId } from "../app"
 const redisClient = new Redis('rediss://red-cn74mricn0vc738smbl0:NkKo1Cj90zuRDn7KgQb6FB2faBtc7GER@oregon-redis.render.com:6379')
 const router = express.Router()
 
@@ -132,11 +133,10 @@ router.get('/resend/otp/:id', async (req, res) => {
     }
 })
 
-router.post('/user/login/:socketId', async (req, res) => {
+router.post('/user/login', async (req, res) => {
     const { email, password } = req.body
-    const { socketId } = req.params
     console.log(socketId);
-    
+
     try {
         if (!email || !password) {
             res.json({ success: false, message: "Fill both fields" })
@@ -209,7 +209,7 @@ router.get('/get/zenlist/:id', async (req, res) => {
             // }
             const data = await redisClient.get('ActiveUsers:1')
             console.log(data);
-            
+
         } else {
             res.json({ success: false, message: "Cant get the User ID" })
         }

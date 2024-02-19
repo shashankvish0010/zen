@@ -32,6 +32,7 @@ let viewerTransport: any;
 let receiver: string | string[];
 let sender: string | string[];
 let sendersOffer: any;
+export let socketId: string 
 
 // const mediaCodecs: any = [
 //     {
@@ -54,6 +55,7 @@ let sendersOffer: any;
 io.on('connection', (socket) => {
     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
 
+    socketId = socket.id
     socket.emit('hello', socket.id)
 
     socket.on('call', async (zenno, from, offer) => {
