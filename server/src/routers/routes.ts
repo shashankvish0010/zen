@@ -153,7 +153,7 @@ router.post('/user/login', async (req, res) => {
                             } else {
                                 const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`)
                                 try {
-                                    await redisClient.rpush('ActiveUsers:1', JSON.stringify({
+                                    await redisClient.lpush('ActiveUsers:1', JSON.stringify({
                                         zenNo: user.rows[0].zen_no,
                                         socketId: socketId
                                     }))
