@@ -161,7 +161,7 @@ router.post('/user/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
                             }
                             else {
                                 const token = jsonwebtoken_1.default.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
-                                yield redisClient.mset('ActiveUsers:1', JSON.stringify({
+                                yield redisClient.rpush('ActiveUsers:1', JSON.stringify({
                                     zenNo: user.rows[0].zen_no,
                                     socketId: app_1.socketId
                                 }));
@@ -206,16 +206,27 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
     const { id } = req.params;
     try {
         if (id) {
-            // const userContactList = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
-            // if (userContactList.rowCount > 0) {
-            //     console.log(userContactList.rows)
-            //     userContactList.rows.filter((user) => {
-            //     })
-            // } else {
-            //     console.log("No user found in zen list")
-            // }
-            const data = yield redisClient.get('ActiveUsers:1');
-            console.log(data);
+            const userContactList = yield dbconnect_1.default.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
+            if (userContactList.rowCount > 0) {
+                const data = yield redisClient.get('ActiveUsers:1');
+                console.log(userContactList.rows);
+                if (data) {
+                    const result = yield JSON.parse(data);
+                    const updatedContactList = userContactList.rows.filter((user) => {
+                        if (result.includes(user.zen_no)) {
+                            user.active = true;
+                        }
+                        else {
+                            user.active = false;
+                        }
+                        return user;
+                    });
+                    console.log(updatedContactList);
+                }
+            }
+            else {
+                console.log("No user found in zen list");
+            }
         }
         else {
             res.json({ success: false, message: "Cant get the User ID" });
@@ -236,7 +247,8 @@ router.post('/add/tozenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0
                 const userData = yield dbconnect_1.default.query('SELECT firstname from Users WHERE zen_no=$1', [zenNo]);
                 const user = {
                     firstname: userData.rows[0].firstname,
-                    zen_no: zenNo
+                    zen_no: zenNo,
+                    active: null
                 };
                 const result = yield dbconnect_1.default.query('UPDATE Users SET zen_list=ARRAY_APPEND(zen_list, $1) WHERE id=$2', [{ user }, id]);
                 if (result) {
