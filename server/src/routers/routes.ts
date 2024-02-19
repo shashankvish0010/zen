@@ -135,8 +135,6 @@ router.get('/resend/otp/:id', async (req, res) => {
 
 router.post('/user/login', async (req, res) => {
     const { email, password } = req.body
-    console.log(socketId);
-
     try {
         if (!email || !password) {
             res.json({ success: false, message: "Fill both fields" })
@@ -148,25 +146,23 @@ router.post('/user/login', async (req, res) => {
             else {
                 if (email == user.rows[0].email) {
                     if (socketId) {
-                        const result = await pool.query('UPDATE Users SET socketid=$1 WHERE email=$2', [socketId, email])
-                        if (result) {
-                            const isMatch = await bcrypt.compare(password, user.rows[0].user_password)
-                            if (isMatch) {
-                                if (user.rows[0].account_verified === false) {
-                                    res.json({ success: true, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Login Successfully" })
-                                } else {
-                                    const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`)
-                                    await redisClient.mset('ActiveUsers:1', JSON.stringify({
-                                        zenNo: user.rows[0].zen_no,
-                                        socketId: socketId
-                                    }))
-                                    res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
-                                }
+                        const isMatch = await bcrypt.compare(password, user.rows[0].user_password)
+                        if (isMatch) {
+                            if (user.rows[0].account_verified === false) {
+                                res.json({ success: true, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Login Successfully" })
                             } else {
-                                res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" })
+                                const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`)
+                                await redisClient.mset('ActiveUsers:1', JSON.stringify({
+                                    zenNo: user.rows[0].zen_no,
+                                    socketId: socketId
+                                }))
+                                res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
                             }
+                        } else {
+                            res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" })
                         }
-                    } else {
+                    }
+                    else {
                         res.json({ success: false, message: "Socket Id does not exists" })
                     }
                 } else {
