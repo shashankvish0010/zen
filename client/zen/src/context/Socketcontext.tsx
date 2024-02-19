@@ -47,8 +47,7 @@ const SocketProvider = (props: any) => {
     const [recvZenNo, setrecvZenNo] = useState<any>()
 
     function getSocketId(data: string) {
-        console.log("called socket", data);
-        
+        console.log("called socket", data);        
         setSocketId(data)
     }
 
