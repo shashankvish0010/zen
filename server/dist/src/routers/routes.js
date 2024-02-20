@@ -157,7 +157,7 @@ router.post('/user/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
                         const isMatch = yield bcrypt_1.default.compare(password, user.rows[0].user_password);
                         if (isMatch) {
                             if (user.rows[0].account_verified === false) {
-                                res.json({ success: true, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Login Successfully" });
+                                res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Please Verify Your Account" });
                             }
                             else {
                                 const token = jsonwebtoken_1.default.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
@@ -216,21 +216,21 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
             if (result.rowCount > 0) {
                 const userContactList = result.rows;
                 const data = yield redisClient.get('ActiveUsers:1');
-                console.log(data);
-                if (data) {
-                    const result = yield JSON.parse(data);
-                    const updatedContactList = userContactList.map((user) => {
-                        console.log(user.zen_no);
-                        if (result.zenNo.includes(user.zen_no)) {
-                            user.active = true;
-                        }
-                        else {
-                            user.active = false;
-                        }
-                        return user;
-                    });
-                    console.log(updatedContactList);
-                }
+                console.log("data", data);
+                console.log("result", result);
+                // if (data) {
+                //     const result = await JSON.parse(data)
+                //     const updatedContactList = userContactList.map((user: any) => {
+                //         console.log(user);
+                //         if (result.zenNo.includes(user.zen_no)) {
+                //             user.active = true
+                //         } else {
+                //             user.active = false
+                //         }
+                //         return user
+                //     })
+                //     console.log(updatedContactList);
+                // }
             }
             else {
                 console.log("No user found in zen list");
