@@ -219,6 +219,7 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
                 if (data) {
                     const result = yield JSON.parse(data);
                     const updatedContactList = userContactList.rows.filter((user) => {
+                        console.log(user.zen_no);
                         if (result.zenNo.includes(user.zen_no)) {
                             user.active = true;
                         }
