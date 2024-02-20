@@ -208,7 +208,7 @@ router.get('/get/zenlist/:id', async (req, res) => {
                 console.log(data)
                 if (data) {
                     const result = await JSON.parse(data)
-                    const updatedContactList = userContactList.rows.filter((user: any) => {
+                    const updatedContactList = userContactList.map((user: any) => {
                         console.log(user.zen_no);
                         
                         if (result.zenNo.includes(user.zen_no)) {
