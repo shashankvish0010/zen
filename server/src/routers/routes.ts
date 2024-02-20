@@ -203,7 +203,7 @@ router.get('/get/zenlist/:id', async (req, res) => {
         if (id) {
             const result = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
             if (result.rowCount > 0) {
-                const userContactList = result.rows[0]
+                const userContactList = result.rows
                 const data = await redisClient.get('ActiveUsers:1')
                 console.log(data)
                 if (data) {
