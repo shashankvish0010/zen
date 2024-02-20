@@ -201,13 +201,14 @@ router.get('/get/zenlist/:id', async (req, res) => {
     const { id } = req.params;
     try {
         if (id) {
-            const userContactList = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
-            if (userContactList.rowCount > 0) {
+            const result = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
+            if (result.rowCount > 0) {
+                const userContactList = await JSON.parse(result.rows[0])
                 const data = await redisClient.get('ActiveUsers:1')
                 console.log(data)
                 if (data) {
                     const result = await JSON.parse(data)
-                    const updatedContactList = userContactList.rows.filter((user) => {
+                    const updatedContactList = userContactList.rows.filter((user: any) => {
                         console.log(user.zen_no);
                         
                         if (result.zenNo.includes(user.zen_no)) {
