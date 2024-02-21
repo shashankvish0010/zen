@@ -186,6 +186,24 @@ router.post('/user/login', async (req, res) => {
     }
 })
 
+router.get('/user/logout/:id', async (req,res) => {
+    const {id} = req.params
+    if(id){
+        try {
+            const updateActiveUser = await pool.query('UPDATE Users SET active=$1 WHERE id=$2', [false, id]);
+            if(updateActiveUser){
+                const allactiveUsers = await pool.query('SELECT zen_no from Users WHERE active=true');
+                const userArray: any[] = [allactiveUsers.rows];
+                await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(()=>{
+                    res.json({ success: true, message: "Logout Successfully" })
+                }).catch((error=> console.log(error)))
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+})
+
 router.get('/get/zenlist/:id', async (req, res) => {
     // const {id, socketid} = req.params;   
     // try {

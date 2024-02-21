@@ -197,6 +197,24 @@ router.post('/user/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 }));
+router.get('/user/logout/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    if (id) {
+        try {
+            const updateActiveUser = yield dbconnect_1.default.query('UPDATE Users SET active=$1 WHERE id=$2', [false, id]);
+            if (updateActiveUser) {
+                const allactiveUsers = yield dbconnect_1.default.query('SELECT zen_no from Users WHERE active=true');
+                const userArray = [allactiveUsers.rows];
+                yield redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(() => {
+                    res.json({ success: true, message: "Logout Successfully" });
+                }).catch((error => console.log(error)));
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+}));
 router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // const {id, socketid} = req.params;   
     // try {
