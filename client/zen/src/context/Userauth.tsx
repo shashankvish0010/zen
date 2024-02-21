@@ -80,7 +80,7 @@ export const UserauthProvider = (props: any) => {
                 document.cookie = cookie + ";max-age=0"
                 console.log("en");
                 try {
-                    const response = await fetch('https://zen-backend-6acy.onrender.com'+'/user/logout'+curruser?.id, {
+                    const response = await fetch('https://zen-backend-6acy.onrender.com'+'/user/logout/'+curruser?.id, {
                         method: "GET",
                         headers: {
                             'Content-Type' : 'application/json'
