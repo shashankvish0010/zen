@@ -205,7 +205,7 @@ router.get('/user/logout/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
             const updateActiveUser = yield dbconnect_1.default.query('UPDATE Users SET active=$2 WHERE id=$1', [id, false]);
             if (updateActiveUser) {
                 const allactiveUsers = yield dbconnect_1.default.query('SELECT zen_no from Users WHERE active=true');
-                const userArray = [allactiveUsers.rows];
+                const userArray = allactiveUsers.rows;
                 yield redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(() => {
                     app_1.socketinstance === null || app_1.socketinstance === void 0 ? void 0 : app_1.socketinstance.emit('contactUpdated', userArray);
                     res.json({ success: true, message: "Logout Successfully" });
@@ -243,12 +243,13 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
                 const data = yield redisClient.get("ActiveUsers");
                 console.log("data", data);
                 console.log("userContactList", userContactList);
-                if (data) {
+                if (data && userContactList) {
                     const result = yield JSON.parse(data);
                     console.log("result", result);
                     const updatedContactList = userContactList.map((user) => {
+                        var _a;
                         console.log(user);
-                        if (result === null || result === void 0 ? void 0 : result.zenNo.includes(user.zen_no)) {
+                        if ((_a = result === null || result === void 0 ? void 0 : result.zenNo) === null || _a === void 0 ? void 0 : _a.includes(user.zen_no)) {
                             user.active = true;
                         }
                         else {
@@ -257,6 +258,9 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
                         return user;
                     });
                     console.log(updatedContactList);
+                }
+                else {
+                    console.log("No user found in zen list");
                 }
             }
             else {

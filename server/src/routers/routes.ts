@@ -194,7 +194,7 @@ router.get('/user/logout/:id', async (req,res) => {
             const updateActiveUser = await pool.query('UPDATE Users SET active=$2 WHERE id=$1', [id, false]);
             if(updateActiveUser){
                 const allactiveUsers = await pool.query('SELECT zen_no from Users WHERE active=true');
-                const userArray: any[] = [allactiveUsers.rows];
+                const userArray: any[] = allactiveUsers.rows;
                 await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(()=>{
                     socketinstance?.emit('contactUpdated', userArray)
                     res.json({ success: true, message: "Logout Successfully" })
@@ -233,12 +233,12 @@ router.get('/get/zenlist/:id', async (req, res) => {
                 console.log("data", data);
                 console.log("userContactList", userContactList);
                 
-                if (data) {
+                if (data && userContactList) {
                     const result = await JSON.parse(data)
                     console.log("result", result)
                     const updatedContactList = userContactList.map((user: any) => {
                         console.log(user);
-                        if (result?.zenNo.includes(user.zen_no)) {
+                        if (result?.zenNo?.includes(user.zen_no)) {
                             user.active = true
                         } else {
                             user.active = false
@@ -246,6 +246,8 @@ router.get('/get/zenlist/:id', async (req, res) => {
                         return user
                     })
                     console.log(updatedContactList);
+                }else{
+                    console.log("No user found in zen list")   
                 }
             } else {
                 console.log("No user found in zen list")
