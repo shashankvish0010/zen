@@ -105,7 +105,7 @@ const List: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {socketcontext?.zenList ? socketcontext.zenList.data.map((list: userType) =>
+              {socketcontext?.zenList ? socketcontext.zenList.data?.map((list: userType) =>
                 <tr className='h-max w-max'>
                   <td className="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
                     <Icon icon="material-symbols:person" height='4vh' />
@@ -132,7 +132,7 @@ const List: React.FC = () => {
           <p className='text-base font-semibold'>Contact Directory</p>
           <span className='h-[.25rem] w-[100%] bg-purple-600 rounded-md'></span>
           {
-            socketcontext?.zenList ? socketcontext.zenList.data.map((list: userType) => (
+            socketcontext?.zenList ? socketcontext.zenList.data?.map((list: userType) => (
               <div className='h-max w-[90vw] p-2 rounded flex bg-slate-100 border-2 border-gray-200 flex-row justify-between items-center'>
                 <span>
                   <Icon icon="material-symbols:person" height='4vh' />
