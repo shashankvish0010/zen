@@ -58,7 +58,7 @@ router.post('/user/register', async (req, res) => {
                                 if (zenNoExists.rows.length > 0) {
                                     zenNoGen()
                                 } else {
-                                    const userReg = await pool.query('INSERT INTO Users(id,firstname,lastname,email,user_password,zen_no,account_verified) VALUES($1,$2,$3,$4,$5,$6,$7)', [id, firstname, lastname, email, hashedPassword, zenNo, false])
+                                    const userReg = await pool.query('INSERT INTO Users(id,firstname,lastname,email,user_password,zen_no,account_verified,active) VALUES($1,$2,$3,$4,$5,$6,$7,$8)', [id, firstname, lastname, email, hashedPassword, zenNo, false, false])
                                     if (userReg) {
                                         res.json({ success: true, message: "Zen account created.", id })
                                     } else {

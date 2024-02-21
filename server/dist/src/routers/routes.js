@@ -69,7 +69,7 @@ router.post('/user/register', (req, res) => __awaiter(void 0, void 0, void 0, fu
                                     zenNoGen();
                                 }
                                 else {
-                                    const userReg = yield dbconnect_1.default.query('INSERT INTO Users(id,firstname,lastname,email,user_password,zen_no,account_verified) VALUES($1,$2,$3,$4,$5,$6,$7)', [id, firstname, lastname, email, hashedPassword, zenNo, false]);
+                                    const userReg = yield dbconnect_1.default.query('INSERT INTO Users(id,firstname,lastname,email,user_password,zen_no,account_verified,active) VALUES($1,$2,$3,$4,$5,$6,$7,$8)', [id, firstname, lastname, email, hashedPassword, zenNo, false, false]);
                                     if (userReg) {
                                         res.json({ success: true, message: "Zen account created.", id });
                                     }
