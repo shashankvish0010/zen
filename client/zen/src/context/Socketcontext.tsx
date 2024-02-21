@@ -143,6 +143,10 @@ const SocketProvider = (props: any) => {
         window.location.href = '/'
     }
 
+    const contactUpdated = (userArray: any) => {
+        setZenList(userArray)
+    }
+
     // async function negotiationaccept(data: any) {
     //     console.log("clicked accept");
     //     const answer = await peer.generateAnswer(data.sendersNegoOffer)
@@ -177,7 +181,7 @@ const SocketProvider = (props: any) => {
         socket.on("callercalling", callercalling)
         socket.on('recieverCall', recieverCall)
         socket.on('callaccepted', callaccepted)
-        // socket.on('negotiationaccept', negotiationaccept)
+        socket.on('contactUpdated', contactUpdated)
         // socket.on('acceptnegotiationanswer', acceptnegotiationanswer)
         socket.on('videocall', videcall)
 
@@ -186,7 +190,7 @@ const SocketProvider = (props: any) => {
             socket.off("callercalling", callercalling)
             socket.off('recieverCall', recieverCall)
             socket.off('callaccepted', callaccepted)
-            // socket.off('negotiationaccept', negotiationaccept)
+            socket.off('contactUpdated', contactUpdated)
             // socket.off('acceptnegotiationanswer', acceptnegotiationanswer)
             socket.off('videocall', videcall)
         }
