@@ -79,11 +79,24 @@ export const UserauthProvider = (props: any) => {
                 const cookie = document.cookie
                 document.cookie = cookie + ";max-age=0"
                 console.log("en");
+                try {
+                    const response = await fetch('https://zen-backend-6acy.onrender.com'+'/user/logout'+curruser?.id, {
+                        method: "GET",
+                        headers: {
+                            'Content-Type' : 'application/json'
+                        }
+                    });
+                    if(response){
+                        const result = await response.json();
+                        console.log(result);
+                    }
+                } catch (error) {
+                    console.log(error);
+                }       
                 setCurrUser('')
-                setLogin(false)                 
+                setLogin(false)          
                 return {...state, success : false}
             }
-
             default : return state
         }
     }
