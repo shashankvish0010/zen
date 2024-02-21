@@ -151,17 +151,21 @@ router.post('/user/login', async (req, res) => {
                             if (user.rows[0].account_verified === false) {
                                 res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Please Verify Your Account" })
                             } else {
-                                const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`)
-                                try {
-                                    await redisClient.rpush("ActiveUsers", JSON.stringify({
-                                        zenNo: user.rows[0].zen_no,
-                                        socketId: socketId
-                                    })).then(()=>{
-                                        res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
-                                    }).catch((error=> console.log(error)))
-                                } catch (redisError) {
-                                    console.error("Error pushing data to Redis:", redisError);
-                                    res.status(500).json({ success: false, message: "Error pushing data to Redis" });
+                                const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
+                                const update = await pool.query('UPDATE Users SET active=$1 WHERE email=$2', [true, email]);
+                                if(update){
+                                    const allactiveUsers = await pool.query('SELECT zen_no from Users WHERE active=true');
+                                    if(allactiveUsers.rowCount > 0){
+                                        console.log(allactiveUsers.rows);
+                                        await redisClient.expire("ActiveUsers", 1000).then(async ()=>{
+                                            const userArray: any[] = [allactiveUsers.rows];
+                                            await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(()=>{
+                                                res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
+                                            }).catch((error=> console.log(error)))
+                                        }).catch((error=> console.log(error)))
+                                    }
+                                }else{
+                                    res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Active status not updated" })
                                 }
                             }
                         } else {
@@ -205,7 +209,7 @@ router.get('/get/zenlist/:id', async (req, res) => {
             const result = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
             if (result.rowCount > 0) {
                 const userContactList = result.rows
-                const data = await redisClient.get('ActiveUsers:1')
+                const data = await redisClient.get("ActiveUsers")
                 console.log("data", data);
                 console.log("result", result)
                 // if (data) {

@@ -161,17 +161,21 @@ router.post('/user/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
                             }
                             else {
                                 const token = jsonwebtoken_1.default.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
-                                try {
-                                    yield redisClient.rpush("ActiveUsers", JSON.stringify({
-                                        zenNo: user.rows[0].zen_no,
-                                        socketId: app_1.socketId
-                                    })).then(() => {
-                                        res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
-                                    }).catch((error => console.log(error)));
+                                const update = yield dbconnect_1.default.query('UPDATE Users SET active=$1 WHERE email=$2', [true, email]);
+                                if (update) {
+                                    const allactiveUsers = yield dbconnect_1.default.query('SELECT zen_no from Users WHERE active=true');
+                                    if (allactiveUsers.rowCount > 0) {
+                                        console.log(allactiveUsers.rows);
+                                        yield redisClient.expire("ActiveUsers", 1000).then(() => __awaiter(void 0, void 0, void 0, function* () {
+                                            const userArray = [allactiveUsers.rows];
+                                            yield redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(() => {
+                                                res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
+                                            }).catch((error => console.log(error)));
+                                        })).catch((error => console.log(error)));
+                                    }
                                 }
-                                catch (redisError) {
-                                    console.error("Error pushing data to Redis:", redisError);
-                                    res.status(500).json({ success: false, message: "Error pushing data to Redis" });
+                                else {
+                                    res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Active status not updated" });
                                 }
                             }
                         }
@@ -216,7 +220,7 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
             const result = yield dbconnect_1.default.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
             if (result.rowCount > 0) {
                 const userContactList = result.rows;
-                const data = yield redisClient.get('ActiveUsers:1');
+                const data = yield redisClient.get("ActiveUsers");
                 console.log("data", data);
                 console.log("result", result);
                 // if (data) {
