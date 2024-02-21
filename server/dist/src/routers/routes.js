@@ -161,7 +161,7 @@ router.post('/user/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
                             }
                             else {
                                 const token = jsonwebtoken_1.default.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
-                                const update = yield dbconnect_1.default.query('UPDATE Users SET active=$1 WHERE email=$2', [true, email]);
+                                const update = yield dbconnect_1.default.query('UPDATE Users SET active=$2 WHERE email=$1', [email, true]);
                                 if (update) {
                                     const allactiveUsers = yield dbconnect_1.default.query('SELECT zen_no from Users WHERE active=true');
                                     if (allactiveUsers.rowCount > 0) {
@@ -202,7 +202,7 @@ router.get('/user/logout/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
     const { id } = req.params;
     if (id) {
         try {
-            const updateActiveUser = yield dbconnect_1.default.query('UPDATE Users SET active=$1 WHERE id=$2', [false, id]);
+            const updateActiveUser = yield dbconnect_1.default.query('UPDATE Users SET active=$2 WHERE id=$1', [id, false]);
             if (updateActiveUser) {
                 const allactiveUsers = yield dbconnect_1.default.query('SELECT zen_no from Users WHERE active=true');
                 const userArray = [allactiveUsers.rows];
@@ -242,12 +242,13 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
                 const userContactList = result.rows;
                 const data = yield redisClient.get("ActiveUsers");
                 console.log("data", data);
-                console.log("result", result);
+                console.log("userContactList", userContactList);
                 if (data) {
                     const result = yield JSON.parse(data);
+                    console.log("result", result);
                     const updatedContactList = userContactList.map((user) => {
                         console.log(user);
-                        if (result.zenNo.includes(user.zen_no)) {
+                        if (result === null || result === void 0 ? void 0 : result.zenNo.includes(user.zen_no)) {
                             user.active = true;
                         }
                         else {

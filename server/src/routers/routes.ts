@@ -152,7 +152,7 @@ router.post('/user/login', async (req, res) => {
                                 res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Please Verify Your Account" })
                             } else {
                                 const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
-                                const update = await pool.query('UPDATE Users SET active=$1 WHERE email=$2', [true, email]);
+                                const update = await pool.query('UPDATE Users SET active=$2 WHERE email=$1', [email, true]);
                                 if(update){
                                     const allactiveUsers = await pool.query('SELECT zen_no from Users WHERE active=true');
                                     if(allactiveUsers.rowCount > 0){
@@ -191,7 +191,7 @@ router.get('/user/logout/:id', async (req,res) => {
     const {id} = req.params
     if(id){
         try {
-            const updateActiveUser = await pool.query('UPDATE Users SET active=$1 WHERE id=$2', [false, id]);
+            const updateActiveUser = await pool.query('UPDATE Users SET active=$2 WHERE id=$1', [id, false]);
             if(updateActiveUser){
                 const allactiveUsers = await pool.query('SELECT zen_no from Users WHERE active=true');
                 const userArray: any[] = [allactiveUsers.rows];
@@ -231,12 +231,14 @@ router.get('/get/zenlist/:id', async (req, res) => {
                 const userContactList = result.rows
                 const data = await redisClient.get("ActiveUsers")
                 console.log("data", data);
-                console.log("result", result)
+                console.log("userContactList", userContactList);
+                
                 if (data) {
                     const result = await JSON.parse(data)
+                    console.log("result", result)
                     const updatedContactList = userContactList.map((user: any) => {
                         console.log(user);
-                        if (result.zenNo.includes(user.zen_no)) {
+                        if (result?.zenNo.includes(user.zen_no)) {
                             user.active = true
                         } else {
                             user.active = false
