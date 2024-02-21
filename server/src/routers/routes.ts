@@ -161,7 +161,7 @@ router.post('/user/login', async (req, res) => {
                                             const userArray: any[] = [allactiveUsers.rows];
                                             await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(()=>{
                                                 res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
-                                                socketinstance?.emit('contactUpdated', userArray)
+                                                socketinstance?.broadcast.emit('contactUpdated', userArray)
                                             }).catch((error=> console.log(error)))
                                         }).catch((error=> console.log(error)))
                                     }
@@ -192,11 +192,12 @@ router.get('/user/logout/:id', async (req,res) => {
     if(id){
         try {
             const updateActiveUser = await pool.query('UPDATE Users SET active=$2 WHERE id=$1', [id, false]);
+            await redisClient.expire("ActiveUsers", 1000)
             if(updateActiveUser){
                 const allactiveUsers = await pool.query('SELECT zen_no from Users WHERE active=true');
                 const userArray: any[] = allactiveUsers.rows;
                 await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(()=>{
-                    socketinstance?.emit('contactUpdated', userArray)
+                    socketinstance?.broadcast.emit('contactUpdated', userArray)
                     res.json({ success: true, message: "Logout Successfully" })
                 }).catch((error=> console.log(error)))
             }

@@ -170,7 +170,7 @@ router.post('/user/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
                                             const userArray = [allactiveUsers.rows];
                                             yield redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(() => {
                                                 res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
-                                                app_1.socketinstance === null || app_1.socketinstance === void 0 ? void 0 : app_1.socketinstance.emit('contactUpdated', userArray);
+                                                app_1.socketinstance === null || app_1.socketinstance === void 0 ? void 0 : app_1.socketinstance.broadcast.emit('contactUpdated', userArray);
                                             }).catch((error => console.log(error)));
                                         })).catch((error => console.log(error)));
                                     }
@@ -203,11 +203,12 @@ router.get('/user/logout/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
     if (id) {
         try {
             const updateActiveUser = yield dbconnect_1.default.query('UPDATE Users SET active=$2 WHERE id=$1', [id, false]);
+            yield redisClient.expire("ActiveUsers", 1000);
             if (updateActiveUser) {
                 const allactiveUsers = yield dbconnect_1.default.query('SELECT zen_no from Users WHERE active=true');
                 const userArray = allactiveUsers.rows;
                 yield redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(() => {
-                    app_1.socketinstance === null || app_1.socketinstance === void 0 ? void 0 : app_1.socketinstance.emit('contactUpdated', userArray);
+                    app_1.socketinstance === null || app_1.socketinstance === void 0 ? void 0 : app_1.socketinstance.broadcast.emit('contactUpdated', userArray);
                     res.json({ success: true, message: "Logout Successfully" });
                 }).catch((error => console.log(error)));
             }
