@@ -34,7 +34,7 @@ let receiver: string | string[];
 let sender: string | string[];
 let sendersOffer: any;
 export let socketId: string 
-export let socket: any
+export let socketinstance: any
 
 // const mediaCodecs: any = [
 //     {
@@ -56,7 +56,7 @@ export let socket: any
 
 io.on('connection', (socket) => {
     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
-    socket = socket
+    socketinstance = socket
     socketId = socket.id
     socket.emit('hello', socket.id)
 
