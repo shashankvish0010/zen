@@ -240,10 +240,10 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
         if (id) {
             const result = yield dbconnect_1.default.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
             if (result.rowCount > 0) {
-                const userContactList = result.rows[0].zen_list;
+                const userContactList = JSON.parse(result.rows[0].zen_list);
                 const data = yield redisClient.get("ActiveUsers");
                 console.log("data", data);
-                console.log("userContactList", JSON.parse(userContactList));
+                console.log("userContactList", userContactList);
                 if (data && userContactList) {
                     const result = yield JSON.parse(data);
                     console.log("result", result);
