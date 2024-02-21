@@ -158,7 +158,7 @@ router.post('/user/login', async (req, res) => {
                                     if(allactiveUsers.rowCount > 0){
                                         console.log(allactiveUsers.rows);
                                         await redisClient.expire("ActiveUsers", 1000).then(async ()=>{
-                                            const userArray: any[] = [allactiveUsers.rows];
+                                            const userArray: any = allactiveUsers.rows;
                                             await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(()=>{
                                                 res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
                                                 socketinstance?.broadcast.emit('contactUpdated', userArray)
@@ -195,7 +195,7 @@ router.get('/user/logout/:id', async (req,res) => {
             await redisClient.expire("ActiveUsers", 1000)
             if(updateActiveUser){
                 const allactiveUsers = await pool.query('SELECT zen_no from Users WHERE active=true');
-                const userArray: any[] = allactiveUsers.rows;
+                const userArray: any = allactiveUsers.rows;
                 await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(()=>{
                     socketinstance?.broadcast.emit('contactUpdated', userArray)
                     res.json({ success: true, message: "Logout Successfully" })
@@ -229,7 +229,7 @@ router.get('/get/zenlist/:id', async (req, res) => {
         if (id) {
             const result = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
             if (result.rowCount > 0) {
-                const userContactList = result.rows
+                const userContactList = result.rows[0].zen_list
                 const data = await redisClient.get("ActiveUsers")
                 console.log("data", data);
                 console.log("userContactList", userContactList);

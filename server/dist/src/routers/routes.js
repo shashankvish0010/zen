@@ -167,7 +167,7 @@ router.post('/user/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
                                     if (allactiveUsers.rowCount > 0) {
                                         console.log(allactiveUsers.rows);
                                         yield redisClient.expire("ActiveUsers", 1000).then(() => __awaiter(void 0, void 0, void 0, function* () {
-                                            const userArray = [allactiveUsers.rows];
+                                            const userArray = allactiveUsers.rows;
                                             yield redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(() => {
                                                 res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
                                                 app_1.socketinstance === null || app_1.socketinstance === void 0 ? void 0 : app_1.socketinstance.broadcast.emit('contactUpdated', userArray);
@@ -240,7 +240,7 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
         if (id) {
             const result = yield dbconnect_1.default.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
             if (result.rowCount > 0) {
-                const userContactList = result.rows;
+                const userContactList = result.rows[0].zen_list;
                 const data = yield redisClient.get("ActiveUsers");
                 console.log("data", data);
                 console.log("userContactList", userContactList);
