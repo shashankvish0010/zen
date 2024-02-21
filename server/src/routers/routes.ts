@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken"
 import { Redis } from "ioredis"
 import { socketId } from "../app"
+import { socket } from "../app"
 const redisClient = new Redis('rediss://red-cn74mricn0vc738smbl0:NkKo1Cj90zuRDn7KgQb6FB2faBtc7GER@oregon-redis.render.com:6379')
 const router = express.Router()
 
@@ -161,6 +162,7 @@ router.post('/user/login', async (req, res) => {
                                             const userArray: any[] = [allactiveUsers.rows];
                                             await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(()=>{
                                                 res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
+                                                socket.emit('contactUpdated', userArray)
                                             }).catch((error=> console.log(error)))
                                         }).catch((error=> console.log(error)))
                                     }
@@ -195,6 +197,7 @@ router.get('/user/logout/:id', async (req,res) => {
                 const allactiveUsers = await pool.query('SELECT zen_no from Users WHERE active=true');
                 const userArray: any[] = [allactiveUsers.rows];
                 await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(()=>{
+                    socket.emit('contactUpdated', userArray)
                     res.json({ success: true, message: "Logout Successfully" })
                 }).catch((error=> console.log(error)))
             }
@@ -230,20 +233,19 @@ router.get('/get/zenlist/:id', async (req, res) => {
                 const data = await redisClient.get("ActiveUsers")
                 console.log("data", data);
                 console.log("result", result)
-                // if (data) {
-                //     const result = await JSON.parse(data)
-                //     const updatedContactList = userContactList.map((user: any) => {
-                //         console.log(user);
-
-                //         if (result.zenNo.includes(user.zen_no)) {
-                //             user.active = true
-                //         } else {
-                //             user.active = false
-                //         }
-                //         return user
-                //     })
-                //     console.log(updatedContactList);
-                // }
+                if (data) {
+                    const result = await JSON.parse(data)
+                    const updatedContactList = userContactList.map((user: any) => {
+                        console.log(user);
+                        if (result.zenNo.includes(user.zen_no)) {
+                            user.active = true
+                        } else {
+                            user.active = false
+                        }
+                        return user
+                    })
+                    console.log(updatedContactList);
+                }
             } else {
                 console.log("No user found in zen list")
             }

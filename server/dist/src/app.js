@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.socketId = void 0;
+exports.socket = exports.socketId = exports.io = void 0;
 const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
 const http_1 = __importDefault(require("http"));
@@ -25,7 +25,7 @@ app.use((0, cors_1.default)({
     methods: ['GET', 'POST', 'PUT'],
 }));
 const server = http_1.default.createServer(app);
-const io = new socket_io_1.Server(server, {
+exports.io = new socket_io_1.Server(server, {
     cors: {
         origin: 'https://zen-gamma.vercel.app',
         methods: ['GET', 'POST', 'PUT'],
@@ -60,8 +60,9 @@ let sendersOffer;
 //         }
 //     },
 // ];
-io.on('connection', (socket) => {
+exports.io.on('connection', (socket) => {
     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
+    socket = socket;
     exports.socketId = socket.id;
     socket.emit('hello', socket.id);
     socket.on('call', (zenno, from, offer) => __awaiter(void 0, void 0, void 0, function* () {
@@ -70,19 +71,19 @@ io.on('connection', (socket) => {
             receiver = reciverSocketId.rows[0].socketid;
             sender = from;
             sendersOffer = offer;
-            io.to(receiver).emit('callercalling');
+            exports.io.to(receiver).emit('callercalling');
         }
         catch (error) {
             console.log(error);
         }
     }));
     socket.on('recieved', () => {
-        io.to(receiver).emit('recieverCall', { sendersOffer, sender });
+        exports.io.to(receiver).emit('recieverCall', { sendersOffer, sender });
     });
     socket.on('callrecieved', (answer) => {
-        io.to(sender).emit('callaccepted', { answer, picked: true });
+        exports.io.to(sender).emit('callaccepted', { answer, picked: true });
     });
-    socket.on('done', () => { io.emit('videocall'); });
+    socket.on('done', () => { exports.io.emit('videocall'); });
 });
 //     // --------------------------------------- WebSocket connection for Zen Live || Live Streaming --------------------------------- 
 //     socket.on('livestream', async (key) => {
