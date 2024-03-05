@@ -105,7 +105,7 @@ const List: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {socketcontext?.zenList ? socketcontext.zenList.data?.map((list: userType) =>
+              {socketcontext?.zenList ? socketcontext.zenList.map((list: userType) =>
                 <tr className='h-max w-max'>
                   <td className="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
                     <Icon icon="material-symbols:person" height='4vh' />
@@ -117,7 +117,7 @@ const List: React.FC = () => {
                     {list.zen_no}
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
-                    <p className='bg-red-200 text-red-600 p-1 rounded'>In Active</p>
+                    <p className='bg-red-200 text-red-600 p-1 rounded'>{list.active}</p>
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
                     <span onClick={() => { socketcontext?.calling(list.zen_no); navigate('/calling/' + list.zen_no) }} className='flex justify-center items-center gap-2 shadow-md cursor-pointer h-max w-max p-1 bg-blue-600 font-semibold text-base text-white rounded'> <Icon icon="ri:live-fill" /><p>Call</p></span>
@@ -132,7 +132,7 @@ const List: React.FC = () => {
           <p className='text-base font-semibold'>Contact Directory</p>
           <span className='h-[.25rem] w-[100%] bg-purple-600 rounded-md'></span>
           {
-            socketcontext?.zenList ? socketcontext.zenList.data?.map((list: userType) => (
+            socketcontext?.zenList ? socketcontext.zenList.map((list: userType) => (
               <div className='h-max w-[90vw] p-2 rounded flex bg-slate-100 border-2 border-gray-200 flex-row justify-between items-center'>
                 <span>
                   <Icon icon="material-symbols:person" height='4vh' />
