@@ -237,14 +237,16 @@ router.get('/get/zenlist/:id', async (req, res) => {
                 if (data && userContactList) {
                     const result = await JSON.parse(data)
                     console.log("result", result)
-                    const updatedContactList = userContactList.map((user: any) => {
+                    const updatedContactList = await userContactList.map((user: any) => {
                         console.log(user);
-                        if (result?.zenNo?.includes(`'${user.zen_no}'`)) {
-                            user.active = true
-                        } else {
-                            user.active = false
+                        for(let i = 0; i<result.length; i++){
+                            if(result[i].zen_no == user.zen_no){
+                                user.active = true
+                            }else{
+                                user.active = false
+                            }
+                            return user
                         }
-                        return user
                     })
                     console.log(updatedContactList);
                 } else {

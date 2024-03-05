@@ -247,16 +247,17 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
                 if (data && userContactList) {
                     const result = yield JSON.parse(data);
                     console.log("result", result);
-                    const updatedContactList = userContactList.map((user) => {
-                        var _a;
+                    const updatedContactList = yield userContactList.map((user) => {
                         console.log(user);
-                        if ((_a = result === null || result === void 0 ? void 0 : result.zenNo) === null || _a === void 0 ? void 0 : _a.includes(`'${user.zen_no}'`)) {
-                            user.active = true;
+                        for (let i = 0; i < result.length; i++) {
+                            if (result[i].zen_no == user.zen_no) {
+                                user.active = true;
+                            }
+                            else {
+                                user.active = false;
+                            }
+                            return user;
                         }
-                        else {
-                            user.active = false;
-                        }
-                        return user;
                     });
                     console.log(updatedContactList);
                 }
