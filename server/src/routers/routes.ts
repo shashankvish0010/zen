@@ -239,7 +239,7 @@ router.get('/get/zenlist/:id', async (req, res) => {
                     console.log("result", result)
                     const updatedContactList = userContactList.map((user: any) => {
                         console.log(user);
-                        if (result?.Number(zenNo)?.includes(user.zen_no)) {
+                        if (result?.zenNo?.includes(`'${user.zen_no}'`)) {
                             user.active = true
                         } else {
                             user.active = false
