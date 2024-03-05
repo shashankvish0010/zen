@@ -9,7 +9,7 @@ CREATE TABLE Users(
     zen_no VARCHAR,
     account_verified BOOLEAN,
     active BOOLEAN,
-    zen_list JSON
+    zen_list JSON[]
 )
 
 CREATE TABLE Livestream(
