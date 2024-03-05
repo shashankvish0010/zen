@@ -218,7 +218,6 @@ router.get('/get/zenlist/:id', async (req, res) => {
                     const result = await JSON.parse(data)
                     console.log("result", result)
                     const updatedContactList = await userContactList.map((user: any) => {
-                        console.log(user);
                         user.active = false
                         for (let i = 0; i < result.length; i++) {
                             if (result[i].zen_no == user.zen_no) {

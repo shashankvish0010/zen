@@ -228,7 +228,6 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
                     const result = yield JSON.parse(data);
                     console.log("result", result);
                     const updatedContactList = yield userContactList.map((user) => {
-                        console.log(user);
                         user.active = false;
                         for (let i = 0; i < result.length; i++) {
                             if (result[i].zen_no == user.zen_no) {
