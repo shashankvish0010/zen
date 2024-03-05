@@ -217,22 +217,6 @@ router.get('/user/logout/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
     }
 }));
 router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // const {id, socketid} = req.params;   
-    // try {
-    //     if(socketid){
-    //         const user = await pool.query('UPDATE Users SET socketid = $2 WHERE id=$1', [id, socketid])
-    //     }else{
-    //         res.json({success: false, message : "Cant get the User ID"})
-    //     }
-    //     const allUsers = await pool.query('SELECT * FROM Users WHERE id <> $1', [id]);        
-    //     if(allUsers){
-    //         res.json({success: true, data: allUsers.rows.map(i => i)})
-    //     }else{
-    //         res.json({success: false, message: 'No User Found'})
-    //     }        
-    // } catch (error) {
-    //     console.log(error);
-    // }
     const { id } = req.params;
     try {
         if (id) {
@@ -240,8 +224,6 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
             if (result.rowCount > 0) {
                 const userContactList = result.rows[0].zen_list;
                 const data = yield redisClient.get("ActiveUsers");
-                console.log("data", data);
-                console.log("userContactList", userContactList);
                 if (data && userContactList) {
                     const result = yield JSON.parse(data);
                     console.log("result", result);
@@ -255,7 +237,7 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
                         }
                         return user;
                     });
-                    console.log(updatedContactList);
+                    res.json({ success: true, contactList: updatedContactList, message: "Cant get the User ID" });
                 }
                 else {
                     console.log("No user found in zen list");
@@ -278,7 +260,6 @@ router.post('/add/tozenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0
     const { zenNo } = req.body;
     try {
         if (zenNo) {
-            console.log(zenNo);
             const IszenNoValid = yield dbconnect_1.default.query('SELECT zen_no from Users WHERE zen_no=$1', [zenNo]);
             if (IszenNoValid.rows.length > 0) {
                 const userData = yield dbconnect_1.default.query('SELECT firstname from Users WHERE zen_no=$1', [zenNo]);

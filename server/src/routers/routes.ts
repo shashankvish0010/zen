@@ -206,22 +206,6 @@ router.get('/user/logout/:id', async (req, res) => {
 })
 
 router.get('/get/zenlist/:id', async (req, res) => {
-    // const {id, socketid} = req.params;   
-    // try {
-    //     if(socketid){
-    //         const user = await pool.query('UPDATE Users SET socketid = $2 WHERE id=$1', [id, socketid])
-    //     }else{
-    //         res.json({success: false, message : "Cant get the User ID"})
-    //     }
-    //     const allUsers = await pool.query('SELECT * FROM Users WHERE id <> $1', [id]);        
-    //     if(allUsers){
-    //         res.json({success: true, data: allUsers.rows.map(i => i)})
-    //     }else{
-    //         res.json({success: false, message: 'No User Found'})
-    //     }        
-    // } catch (error) {
-    //     console.log(error);
-    // }
     const { id } = req.params;
     try {
         if (id) {
@@ -229,8 +213,6 @@ router.get('/get/zenlist/:id', async (req, res) => {
             if (result.rowCount > 0) {
                 const userContactList = result.rows[0].zen_list
                 const data = await redisClient.get("ActiveUsers")
-                console.log("data", data);
-                console.log("userContactList", userContactList);
 
                 if (data && userContactList) {
                     const result = await JSON.parse(data)
@@ -238,14 +220,14 @@ router.get('/get/zenlist/:id', async (req, res) => {
                     const updatedContactList = await userContactList.map((user: any) => {
                         console.log(user);
                         user.active = false
-                        for(let i = 0; i<result.length; i++){
-                            if(result[i].zen_no == user.zen_no){
+                        for (let i = 0; i < result.length; i++) {
+                            if (result[i].zen_no == user.zen_no) {
                                 user.active = true
                             }
                         }
                         return user
                     })
-                    console.log(updatedContactList);
+                    res.json({ success: true, contactList: updatedContactList, message: "Cant get the User ID" })
                 } else {
                     console.log("No user found in zen list")
                 }
@@ -265,7 +247,6 @@ router.post('/add/tozenlist/:id', async (req, res) => {
     const { zenNo } = req.body;
     try {
         if (zenNo) {
-            console.log(zenNo);
             const IszenNoValid = await pool.query('SELECT zen_no from Users WHERE zen_no=$1', [zenNo]);
             if (IszenNoValid.rows.length > 0) {
                 const userData = await pool.query('SELECT firstname from Users WHERE zen_no=$1', [zenNo])
