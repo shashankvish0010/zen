@@ -250,7 +250,7 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
                     const updatedContactList = userContactList.map((user) => {
                         var _a;
                         console.log(user);
-                        if ((_a = result === null || result === void 0 ? void 0 : result.zenNo) === null || _a === void 0 ? void 0 : _a.includes(user.zen_no)) {
+                        if ((_a = result === null || result === void 0 ? void 0 : result.Number(zenNo)) === null || _a === void 0 ? void 0 : _a.includes(user.zen_no)) {
                             user.active = true;
                         }
                         else {
