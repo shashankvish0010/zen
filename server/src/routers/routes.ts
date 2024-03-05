@@ -6,7 +6,7 @@ import nodemailer from "nodemailer"
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken"
 import { Redis } from "ioredis"
-import { socketId, socketinstance } from "../app"
+import { socketId } from "../app"
 const redisClient = new Redis('rediss://red-cn74mricn0vc738smbl0:NkKo1Cj90zuRDn7KgQb6FB2faBtc7GER@oregon-redis.render.com:6379')
 const router = express.Router()
 
@@ -161,7 +161,6 @@ router.post('/user/login', async (req, res) => {
                                             const userArray: any = allactiveUsers.rows;
                                             await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(() => {
                                                 res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
-                                                socketinstance?.broadcast.emit('contactUpdated', userArray)
                                             }).catch((error => console.log(error)))
                                         }).catch((error => console.log(error)))
                                     }
@@ -191,13 +190,12 @@ router.get('/user/logout/:id', async (req, res) => {
     const { id } = req.params
     if (id) {
         try {
-            const updateActiveUser = await pool.query('UPDATE Users SET active=$2 WHERE id=$1', [id, false]);
+            const updateActiveUser = await pool.query('UPDATE Users SET active=false WHERE id=$1', [id]);
             await redisClient.expire("ActiveUsers", 1000)
             if (updateActiveUser) {
                 const allactiveUsers = await pool.query('SELECT zen_no from Users WHERE active=true');
                 const userArray: any = allactiveUsers.rows;
                 await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(() => {
-                    socketinstance?.broadcast.emit('contactUpdated', userArray)
                     res.json({ success: true, message: "Logout Successfully" })
                 }).catch((error => console.log(error)))
             }
@@ -239,6 +237,7 @@ router.get('/get/zenlist/:id', async (req, res) => {
                     console.log("result", result)
                     const updatedContactList = await userContactList.map((user: any) => {
                         console.log(user);
+                        user.active = false
                         for(let i = 0; i<result.length; i++){
                             if(result[i].zen_no == user.zen_no){
                                 user.active = true
