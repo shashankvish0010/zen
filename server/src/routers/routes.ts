@@ -153,19 +153,19 @@ router.post('/user/login', async (req, res) => {
                             } else {
                                 const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
                                 const update = await pool.query('UPDATE Users SET active=$2 WHERE email=$1', [email, true]);
-                                if(update){
+                                if (update) {
                                     const allactiveUsers = await pool.query('SELECT zen_no from Users WHERE active=true');
-                                    if(allactiveUsers.rowCount > 0){
+                                    if (allactiveUsers.rowCount > 0) {
                                         console.log(allactiveUsers.rows);
-                                        await redisClient.expire("ActiveUsers", 1000).then(async ()=>{
+                                        await redisClient.expire("ActiveUsers", 1000).then(async () => {
                                             const userArray: any = allactiveUsers.rows;
-                                            await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(()=>{
+                                            await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(() => {
                                                 res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
                                                 socketinstance?.broadcast.emit('contactUpdated', userArray)
-                                            }).catch((error=> console.log(error)))
-                                        }).catch((error=> console.log(error)))
+                                            }).catch((error => console.log(error)))
+                                        }).catch((error => console.log(error)))
                                     }
-                                }else{
+                                } else {
                                     res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Active status not updated" })
                                 }
                             }
@@ -187,19 +187,19 @@ router.post('/user/login', async (req, res) => {
     }
 })
 
-router.get('/user/logout/:id', async (req,res) => {
-    const {id} = req.params
-    if(id){
+router.get('/user/logout/:id', async (req, res) => {
+    const { id } = req.params
+    if (id) {
         try {
             const updateActiveUser = await pool.query('UPDATE Users SET active=$2 WHERE id=$1', [id, false]);
             await redisClient.expire("ActiveUsers", 1000)
-            if(updateActiveUser){
+            if (updateActiveUser) {
                 const allactiveUsers = await pool.query('SELECT zen_no from Users WHERE active=true');
                 const userArray: any = allactiveUsers.rows;
-                await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(()=>{
+                await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(() => {
                     socketinstance?.broadcast.emit('contactUpdated', userArray)
                     res.json({ success: true, message: "Logout Successfully" })
-                }).catch((error=> console.log(error)))
+                }).catch((error => console.log(error)))
             }
         } catch (error) {
             console.log(error);
@@ -232,8 +232,8 @@ router.get('/get/zenlist/:id', async (req, res) => {
                 const userContactList = result.rows[0].zen_list
                 const data = await redisClient.get("ActiveUsers")
                 console.log("data", data);
-                console.log("userContactList",userContactList);
-                
+                console.log("userContactList", userContactList);
+
                 if (data && userContactList) {
                     const result = await JSON.parse(data)
                     console.log("result", result)
@@ -247,8 +247,8 @@ router.get('/get/zenlist/:id', async (req, res) => {
                         return user
                     })
                     console.log(updatedContactList);
-                }else{
-                    console.log("No user found in zen list")   
+                } else {
+                    console.log("No user found in zen list")
                 }
             } else {
                 console.log("No user found in zen list")
@@ -270,12 +270,12 @@ router.post('/add/tozenlist/:id', async (req, res) => {
             const IszenNoValid = await pool.query('SELECT zen_no from Users WHERE zen_no=$1', [zenNo]);
             if (IszenNoValid.rows.length > 0) {
                 const userData = await pool.query('SELECT firstname from Users WHERE zen_no=$1', [zenNo])
-                const user = {
-                    firstname: userData.rows[0].firstname,
-                    zen_no: zenNo,
-                    active: null
-                }
-                const result = await pool.query('UPDATE Users SET zen_list=ARRAY_APPEND(zen_list, $1) WHERE id=$2', [{user}, id])
+                const result = await pool.query('UPDATE Users SET zen_list=ARRAY_APPEND(zen_list, $1) WHERE id=$2', [
+                    {
+                        firstname: userData.rows[0].firstname,
+                        zen_no: zenNo,
+                        active: null
+                    }, id])
                 if (result) {
                     res.json({ success: true, message: 'Added Successfully' })
                 } else {
