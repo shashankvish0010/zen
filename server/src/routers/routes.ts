@@ -275,7 +275,7 @@ router.post('/add/tozenlist/:id', async (req, res) => {
                     zen_no: zenNo,
                     active: null
                 }
-                const result = await pool.query('UPDATE Users SET zen_list=ARRAY_APPEND(zen_list, $1) WHERE id=$2', [user, id])
+                const result = await pool.query('UPDATE Users SET zen_list=ARRAY_APPEND(zen_list, $1) WHERE id=$2', [{user}, id])
                 if (result) {
                     res.json({ success: true, message: 'Added Successfully' })
                 } else {
