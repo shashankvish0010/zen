@@ -73,6 +73,8 @@ const SocketProvider = (props: any) => {
             if (response) {
                 const data = await response.json();
                 if(data.success == true){
+                    console.log(data);
+                    
                     setZenList(data.contactList)
                 }else{
                     console.log("List Data not fetched");                   
