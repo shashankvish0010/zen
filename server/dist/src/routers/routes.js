@@ -253,11 +253,8 @@ router.get('/get/zenlist/:id', (req, res) => __awaiter(void 0, void 0, void 0, f
                             if (result[i].zen_no == user.zen_no) {
                                 user.active = true;
                             }
-                            else {
-                                user.active = false;
-                            }
-                            return user;
                         }
+                        return user;
                     });
                     console.log(updatedContactList);
                 }

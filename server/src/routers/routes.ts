@@ -242,11 +242,9 @@ router.get('/get/zenlist/:id', async (req, res) => {
                         for(let i = 0; i<result.length; i++){
                             if(result[i].zen_no == user.zen_no){
                                 user.active = true
-                            }else{
-                                user.active = false
                             }
-                            return user
                         }
+                        return user
                     })
                     console.log(updatedContactList);
                 } else {
