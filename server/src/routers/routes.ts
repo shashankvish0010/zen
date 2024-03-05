@@ -229,7 +229,7 @@ router.get('/get/zenlist/:id', async (req, res) => {
         if (id) {
             const result = await pool.query('SELECT zen_list FROM Users WHERE id=$1', [id]);
             if (result.rowCount > 0) {
-                const userContactList = JSON.parse(result.rows[0].zen_list)
+                const userContactList = result.rows[0].zen_list
                 const data = await redisClient.get("ActiveUsers")
                 console.log("data", data);
                 console.log("userContactList",userContactList);
@@ -270,14 +270,12 @@ router.post('/add/tozenlist/:id', async (req, res) => {
             const IszenNoValid = await pool.query('SELECT zen_no from Users WHERE zen_no=$1', [zenNo]);
             if (IszenNoValid.rows.length > 0) {
                 const userData = await pool.query('SELECT firstname from Users WHERE zen_no=$1', [zenNo])
-                // const user = {
-                //     firstname: userData.rows[0].firstname,
-                //     zen_no: zenNo,
-                //     active: null
-                // } 
-                const result = await pool.query('UPDATE Users SET zen_list=ARRAY_APPEND(zen_list, $1) WHERE id=$2', [{                     firstname: userData.rows[0].firstname,
+                const user = {
+                    firstname: userData.rows[0].firstname,
                     zen_no: zenNo,
-                    active: null }, id])
+                    active: null
+                } 
+                const result = await pool.query('UPDATE Users SET zen_list=$1 WHERE id=$2', [user, id])
                 if (result) {
                     res.json({ success: true, message: 'Added Successfully' })
                 } else {
