@@ -270,12 +270,12 @@ router.post('/add/tozenlist/:id', async (req, res) => {
             const IszenNoValid = await pool.query('SELECT zen_no from Users WHERE zen_no=$1', [zenNo]);
             if (IszenNoValid.rows.length > 0) {
                 const userData = await pool.query('SELECT firstname from Users WHERE zen_no=$1', [zenNo])
-                const user = {
+                const user = [{
                     firstname: userData.rows[0].firstname,
                     zen_no: zenNo,
                     active: null
-                } 
-                const result = await pool.query('UPDATE Users SET zen_list=$1 WHERE id=$2', [user, id])
+                }]
+                const result = await pool.query('UPDATE Users SET zen_list=jsonb_set(zen_list,$3, zen_list->0 || $1::jsonb) WHERE id=$2', [user, id, '{0}'])
                 if (result) {
                     res.json({ success: true, message: 'Added Successfully' })
                 } else {
