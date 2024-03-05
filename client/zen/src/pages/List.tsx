@@ -117,7 +117,7 @@ const List: React.FC = () => {
                     {list.zen_no}
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
-                    <p className='bg-red-200 text-red-600 p-1 rounded'>tr</p>
+                    <p className='bg-red-200 text-red-600 p-1 rounded'>{list.active}</p>
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-center whitespace-nowrap">
                     <span onClick={() => { socketcontext?.calling(list.zen_no); navigate('/calling/' + list.zen_no) }} className='flex justify-center items-center gap-2 shadow-md cursor-pointer h-max w-max p-1 bg-blue-600 font-semibold text-base text-white rounded'> <Icon icon="ri:live-fill" /><p>Call</p></span>
