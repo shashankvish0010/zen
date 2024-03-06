@@ -32,7 +32,6 @@ let viewerTransport: any;
 let receiver: string | string[];
 let sender: string | string[];
 let sendersOffer: any;
-export let socket_id: string
 
 // const mediaCodecs: any = [
 //     {
@@ -54,8 +53,14 @@ export let socket_id: string
 
 io.on('connection', async (socket) => {
     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
-    socket_id = socket.id
     socket.emit('hello', socket.id)
+
+    socket.on('update:socketId', async ({ socketId, id }) => {
+        if (socketId && id) {
+            const result = await pool.query('UPDATE Users SET socketid=$1 WHERE id=$2', [socketId, id]);
+            result ? console.log("socket id updated") : console.log("socket id was updated");
+        }
+    })
 
     socket.on('call', async (zenno, from, offer) => {
         try {
