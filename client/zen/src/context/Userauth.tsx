@@ -1,4 +1,5 @@
 import {createContext, useReducer, useState, useEffect} from 'react'
+import { useNavigate } from 'react-router-dom'
 // import { Socketcontext } from './Socketcontext'
 
 interface Contextvalue{
@@ -20,6 +21,7 @@ export const UserContext = createContext<Contextvalue | null>(null)
 
 export const UserauthProvider = (props: any) => {
     // const socketcontext = useContext(Socketcontext)
+    const navigate = useNavigate()
     const storedUser = localStorage.getItem("current_user");
     const initialUser = storedUser ? JSON.parse(storedUser) : null
     const [curruser, setCurrUser] = useState(initialUser || null)
@@ -89,6 +91,7 @@ export const UserauthProvider = (props: any) => {
                     if(response){
                         const result = await response.json();
                         console.log(result);
+                        navigate('/')
                     }
                 } catch (error) {
                     console.log(error);
