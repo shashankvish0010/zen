@@ -1,9 +1,10 @@
-import { createContext, useCallback, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 import peer from '../services/peer'
 import { Device } from 'mediasoup-client';
 import { RtpCapabilities } from 'mediasoup-client/lib/RtpParameters'
 const socket = io('https://zen-backend-6acy.onrender.com')
+import { UserContext } from './Userauth';
 
 interface Contextvalue {
     // Context Values for Zen Call
@@ -34,6 +35,7 @@ interface Contextvalue {
 
 const Socketcontext = createContext<Contextvalue | null>(null)
 const SocketProvider = (props: any) => {
+    const userContext = useContext(UserContext)
     // const [mycamera, setMyCamera] = useState<boolean>(true)
     // const [mymic, setMyMic] = useState<boolean>(true)
     const [zenList, setZenList] = useState<any>()
@@ -47,8 +49,9 @@ const SocketProvider = (props: any) => {
     const [recvZenNo, setrecvZenNo] = useState<any>()
 
     function getSocketId(data: string) {
-        console.log("called socket", data);        
+        console.log("called socket", data);
         setSocketId(data)
+        socket.emit('update:socketId', { socketId: data, id: userContext?.curruser?.id })
     }
 
     // const controlCamera = () => {
@@ -62,7 +65,6 @@ const SocketProvider = (props: any) => {
     // }
 
     const getZenList = async (id: string | undefined) => {
-
         try {
             const response = await fetch('https://zen-backend-6acy.onrender.com/' + 'get/zenlist/' + id, {
                 method: "GET",
@@ -72,12 +74,12 @@ const SocketProvider = (props: any) => {
             })
             if (response) {
                 const data = await response.json();
-                if(data.success == true){
+                if (data.success == true) {
                     console.log(data);
-                    
+
                     setZenList(data.contactList)
-                }else{
-                    console.log("List Data not fetched");                   
+                } else {
+                    console.log("List Data not fetched");
                 }
             }
         } catch (error) {
@@ -91,7 +93,7 @@ const SocketProvider = (props: any) => {
             UsersStream.getTracks().forEach((track: any) => {
                 peer.peer.addTrack(track, UsersStream)
             })
-    })
+        })
     }
 
     function videcall() {
@@ -115,10 +117,10 @@ const SocketProvider = (props: any) => {
 
     async function callaccepted(data: any) {
         console.log("ener fin");
-        
+
         const { answer, picked } = data
         setPicked(picked)
-        await peer.setRemoteDescription(answer).then(()=>{
+        await peer.setRemoteDescription(answer).then(() => {
             socket.emit('done')
         })
     }
@@ -169,12 +171,12 @@ const SocketProvider = (props: any) => {
     // }, [handleNegotiation])
 
     useEffect(() => {
-            if (startStream == true) {
-                peer.peer.addEventListener('track', async (event: any) => {
-                    const [remoteStream] = event.streams;
-                    setRemoteStream(remoteStream)
-                });
-            }
+        if (startStream == true) {
+            peer.peer.addEventListener('track', async (event: any) => {
+                const [remoteStream] = event.streams;
+                setRemoteStream(remoteStream)
+            });
+        }
     }, [startStream])
 
 
@@ -379,7 +381,7 @@ const SocketProvider = (props: any) => {
                 rtpParameters: params.rtpParameters
             })
             if (data.track) {
-                setliveStream(data.track);                
+                setliveStream(data.track);
                 socket.emit("consumerResume")
             }
             else {
