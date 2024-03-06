@@ -79,7 +79,7 @@ const Home: React.FC = () => {
       </div>
       <div className='bg-gradient-to-r from-blue-500 via-pink-600 to-purple-600 shadow-xl flex flex-col h-max w-[90vw] p-8 gap-5 rounded-xl text-white title'>
         <div className='flex md:flex-row flex-col items-center justify-between w-[100%]'>
-          <p className='md:text-3xl text-xl'>Just Start Your Journey in 3 Steps.</p>
+          <p className='md:text-3xl text-xl'>Start Your Journey in just 3 Steps.</p>
           <span className='flex flex-row items-center gap-3 p-3'>
             <button onClick={() => navigate('/signup')} className='bg-white border-2 border-gray-200 p-2 rounded-full text-purple-600 font-semibold title md:w-[20vw]'>Lets Start</button>
             <Icon className='bg-green-400 rounded-full p-2 rotate-90' icon="ph:arrow-up-bold" color='white' height='6vh' />
