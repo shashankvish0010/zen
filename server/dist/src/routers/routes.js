@@ -20,7 +20,6 @@ const nodemailer_1 = __importDefault(require("nodemailer"));
 const uuid_1 = require("uuid");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const ioredis_1 = require("ioredis");
-const app_1 = require("../app");
 const redisClient = new ioredis_1.Redis('rediss://red-cn74mricn0vc738smbl0:NkKo1Cj90zuRDn7KgQb6FB2faBtc7GER@oregon-redis.render.com:6379');
 const router = express_1.default.Router();
 router.use(body_parser_1.default.json());
@@ -155,38 +154,27 @@ router.post('/user/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
                 if (email == user.rows[0].email) {
                     const isMatch = yield bcrypt_1.default.compare(password, user.rows[0].user_password);
                     if (isMatch) {
-                        if (app_1.socket_id) {
-                            const result = yield dbconnect_1.default.query('UPDATE Users SET socketid=$1 WHERE email=$2', [app_1.socket_id, email]);
-                            if (result) {
-                                if (user.rows[0].account_verified === false) {
-                                    res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Please Verify Your Account" });
-                                }
-                                else {
-                                    const token = jsonwebtoken_1.default.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
-                                    const update = yield dbconnect_1.default.query('UPDATE Users SET active=$2 WHERE email=$1', [email, true]);
-                                    if (update) {
-                                        const allactiveUsers = yield dbconnect_1.default.query('SELECT zen_no from Users WHERE active=true');
-                                        if (allactiveUsers.rowCount > 0) {
-                                            console.log(allactiveUsers.rows);
-                                            yield redisClient.expire("ActiveUsers", 1000).then(() => __awaiter(void 0, void 0, void 0, function* () {
-                                                const userArray = allactiveUsers.rows;
-                                                yield redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(() => {
-                                                    res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
-                                                }).catch((error => console.log(error)));
-                                            })).catch((error => console.log(error)));
-                                        }
-                                    }
-                                    else {
-                                        res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Active status not updated" });
-                                    }
+                        if (user.rows[0].account_verified === false) {
+                            res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Please Verify Your Account" });
+                        }
+                        else {
+                            const token = jsonwebtoken_1.default.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
+                            const update = yield dbconnect_1.default.query('UPDATE Users SET active=$2 WHERE email=$1', [email, true]);
+                            if (update) {
+                                const allactiveUsers = yield dbconnect_1.default.query('SELECT zen_no from Users WHERE active=true');
+                                if (allactiveUsers.rowCount > 0) {
+                                    console.log(allactiveUsers.rows);
+                                    yield redisClient.expire("ActiveUsers", 1000).then(() => __awaiter(void 0, void 0, void 0, function* () {
+                                        const userArray = allactiveUsers.rows;
+                                        yield redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(() => {
+                                            res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" });
+                                        }).catch((error => console.log(error)));
+                                    })).catch((error => console.log(error)));
                                 }
                             }
                             else {
-                                res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Socket id not updated tp DB" });
+                                res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Active status not updated" });
                             }
-                        }
-                        else {
-                            res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Socket id not available" });
                         }
                     }
                     else {
