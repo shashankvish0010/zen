@@ -56,6 +56,8 @@ io.on('connection', async (socket) => {
     socket.emit('hello', socket.id)
 
     socket.on('update:socketId', async ({ socketId, id }) => {
+        console.log(socketId, id);
+        
         if (socketId && id) {
             const result = await pool.query('UPDATE Users SET socketid=$1 WHERE id=$2', [socketId, id]);
             result ? console.log("socket id updated") : console.log("socket id was updated");

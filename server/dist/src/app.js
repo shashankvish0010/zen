@@ -64,6 +64,7 @@ exports.io.on('connection', (socket) => __awaiter(void 0, void 0, void 0, functi
     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
     socket.emit('hello', socket.id);
     socket.on('update:socketId', ({ socketId, id }) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log(socketId, id);
         if (socketId && id) {
             const result = yield dbconnect_1.default.query('UPDATE Users SET socketid=$1 WHERE id=$2', [socketId, id]);
             result ? console.log("socket id updated") : console.log("socket id was updated");
