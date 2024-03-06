@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.socket_id = exports.io = void 0;
+exports.io = void 0;
 const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
 const http_1 = __importDefault(require("http"));
@@ -62,8 +62,13 @@ let sendersOffer;
 // ];
 exports.io.on('connection', (socket) => __awaiter(void 0, void 0, void 0, function* () {
     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
-    exports.socket_id = socket.id;
     socket.emit('hello', socket.id);
+    socket.on('update:socketId', ({ socketId, id }) => __awaiter(void 0, void 0, void 0, function* () {
+        if (socketId && id) {
+            const result = yield dbconnect_1.default.query('UPDATE Users SET socketid=$1 WHERE id=$2', [socketId, id]);
+            result ? console.log("socket id updated") : console.log("socket id was updated");
+        }
+    }));
     socket.on('call', (zenno, from, offer) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const reciverSocketId = yield dbconnect_1.default.query('SELECT socketid from Users WHERE zen_no=$1', [zenno]);
