@@ -6,7 +6,6 @@ import nodemailer from "nodemailer"
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken"
 import { Redis } from "ioredis"
-import { socketId } from "../app"
 const redisClient = new Redis('rediss://red-cn74mricn0vc738smbl0:NkKo1Cj90zuRDn7KgQb6FB2faBtc7GER@oregon-redis.render.com:6379')
 const router = express.Router()
 
@@ -145,7 +144,6 @@ router.post('/user/login', async (req, res) => {
             }
             else {
                 if (email == user.rows[0].email) {
-                    if (socketId) {
                         const isMatch = await bcrypt.compare(password, user.rows[0].user_password)
                         if (isMatch) {
                             if (user.rows[0].account_verified === false) {
@@ -171,10 +169,6 @@ router.post('/user/login', async (req, res) => {
                         } else {
                             res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" })
                         }
-                    }
-                    else {
-                        res.json({ success: false, message: "Socket Id does not exists" })
-                    }
                 } else {
                     res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Email already exists" })
                 }

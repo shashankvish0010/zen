@@ -6,7 +6,6 @@ import dotenv from "dotenv"
 import cors from "cors"
 import pool from "../dbconnect"
 import { Server } from 'socket.io'
-import { Socket } from "dgram"
 
 app.use(cors({
     origin: 'https://zen-gamma.vercel.app',
@@ -33,8 +32,6 @@ let viewerTransport: any;
 let receiver: string | string[];
 let sender: string | string[];
 let sendersOffer: any;
-export let socketId: string 
-export let socketinstance: any
 
 // const mediaCodecs: any = [
 //     {
@@ -56,8 +53,6 @@ export let socketinstance: any
 
 io.on('connection', (socket) => {
     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
-    socketinstance = socket
-    socketId = socket.id
     socket.emit('hello', socket.id)
 
     socket.on('call', async (zenno, from, offer) => {

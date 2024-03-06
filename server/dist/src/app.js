@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.socketinstance = exports.socketId = exports.io = void 0;
+exports.io = void 0;
 const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
 const http_1 = __importDefault(require("http"));
@@ -62,8 +62,6 @@ let sendersOffer;
 // ];
 exports.io.on('connection', (socket) => {
     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
-    exports.socketinstance = socket;
-    exports.socketId = socket.id;
     socket.emit('hello', socket.id);
     socket.on('call', (zenno, from, offer) => __awaiter(void 0, void 0, void 0, function* () {
         try {
