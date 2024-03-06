@@ -52,12 +52,10 @@ export let socket_id: string
 // ];
 
 
-io.on('connection', async  (socket) => {
+io.on('connection', async (socket) => {
     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
-    if(socket.id) {
-        socket_id = socket.id
-        socket.emit('hello', socket.id)
-    }
+    socket_id = socket.id
+    socket.emit('hello', socket.id)
 
     socket.on('call', async (zenno, from, offer) => {
         try {

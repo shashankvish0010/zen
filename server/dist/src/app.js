@@ -62,10 +62,8 @@ let sendersOffer;
 // ];
 exports.io.on('connection', (socket) => __awaiter(void 0, void 0, void 0, function* () {
     // --------------------------------------- WebSocket connection for Zen Call || Video Call --------------------------------- 
-    if (socket.id) {
-        exports.socket_id = socket.id;
-        socket.emit('hello', socket.id);
-    }
+    exports.socket_id = socket.id;
+    socket.emit('hello', socket.id);
     socket.on('call', (zenno, from, offer) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const reciverSocketId = yield dbconnect_1.default.query('SELECT socketid from Users WHERE zen_no=$1', [zenno]);
