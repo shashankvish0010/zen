@@ -6,6 +6,7 @@ import nodemailer from "nodemailer"
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken"
 import { Redis } from "ioredis"
+import { socket_id } from "../app"
 const redisClient = new Redis('rediss://red-cn74mricn0vc738smbl0:NkKo1Cj90zuRDn7KgQb6FB2faBtc7GER@oregon-redis.render.com:6379')
 const router = express.Router()
 
@@ -144,31 +145,40 @@ router.post('/user/login', async (req, res) => {
             }
             else {
                 if (email == user.rows[0].email) {
-                        const isMatch = await bcrypt.compare(password, user.rows[0].user_password)
-                        if (isMatch) {
-                            if (user.rows[0].account_verified === false) {
-                                res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Please Verify Your Account" })
-                            } else {
-                                const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
-                                const update = await pool.query('UPDATE Users SET active=$2 WHERE email=$1', [email, true]);
-                                if (update) {
-                                    const allactiveUsers = await pool.query('SELECT zen_no from Users WHERE active=true');
-                                    if (allactiveUsers.rowCount > 0) {
-                                        console.log(allactiveUsers.rows);
-                                        await redisClient.expire("ActiveUsers", 1000).then(async () => {
-                                            const userArray: any = allactiveUsers.rows;
-                                            await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(() => {
-                                                res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
-                                            }).catch((error => console.log(error)))
-                                        }).catch((error => console.log(error)))
-                                    }
+                    const isMatch = await bcrypt.compare(password, user.rows[0].user_password)
+                    if (isMatch) {
+                        if (socket_id) {
+                            const result = await pool.query('UPDATE Users SET socketid=$1 WHERE email=$2', [socket_id, email])
+                            if (result) {
+                                if (user.rows[0].account_verified === false) {
+                                    res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Please Verify Your Account" })
                                 } else {
-                                    res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Active status not updated" })
+                                    const token = jwt.sign(user.rows[0].id, `${process.env.USERS_SECRET_KEY}`);
+                                    const update = await pool.query('UPDATE Users SET active=$2 WHERE email=$1', [email, true]);
+                                    if (update) {
+                                        const allactiveUsers = await pool.query('SELECT zen_no from Users WHERE active=true');
+                                        if (allactiveUsers.rowCount > 0) {
+                                            console.log(allactiveUsers.rows);
+                                            await redisClient.expire("ActiveUsers", 1000).then(async () => {
+                                                const userArray: any = allactiveUsers.rows;
+                                                await redisClient.set("ActiveUsers", JSON.stringify(userArray)).then(() => {
+                                                    res.json({ success: true, userdata: user.rows[0], id: user.rows[0].id, token, verified: user.rows[0].account_verified, message: "Login Successfully" })
+                                                }).catch((error => console.log(error)))
+                                            }).catch((error => console.log(error)))
+                                        }
+                                    } else {
+                                        res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Active status not updated" })
+                                    }
                                 }
+                            } else {
+                                res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Socket id not updated tp DB" })
                             }
                         } else {
-                            res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" })
+                            res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Socket id not available" })
                         }
+                    } else {
+                        res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Incorrect Password" })
+                    }
                 } else {
                     res.json({ success: false, id: user.rows[0].id, verified: user.rows[0].account_verified, message: "Email already exists" })
                 }
