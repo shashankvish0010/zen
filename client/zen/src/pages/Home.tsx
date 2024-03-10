@@ -1,9 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Icon } from '@iconify/react';
 import Footer from '../components/Footer';
 import { UserContext } from '../context/Userauth';
 import { useNavigate } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component'
+import { motion, useAnimation } from 'framer-motion'
+import { useInView } from 'react-intersection-observer';
 
 import banner from '../assets/Video call.gif'
 import image1 from '../assets/old-woman-communicates-with-her-son-via-video-link-through-laptop.jpg'
@@ -14,13 +16,29 @@ import image5 from '../assets/medium-shot-man-waving-laptop.jpg'
 
 const Home: React.FC = () => {
   const imageArr: any[] = [image1, image2, image3, image4, image5]
-
+  const control = useAnimation()
+  const control1 = useAnimation()
+  const { ref, inView } = useInView()
+  const { ref: ref1, inView: inView1 } = useInView()
   const user = useContext(UserContext)
   const navigate = useNavigate()
+  useEffect(() => {
+    if (inView) {
+      control.start({
+        opacity: 1, x: 0
+      })
+    }
+    if (inView1) {
+      control1.start({
+        opacity: 1, x: 0
+      })
+    }
+  }, [control, inView])
   return (
     <div className='h-max w-screen flex flex-col items-center gap-5 overflow-hidden'>
       <div className='mt-5 bg-gradient-to-b shadow-md md:overflow-y-hidden overflow-x-hidden from-white via-purple-300 to-purple-400 rounded-b-[300%] h-max md:h-[70vh] flex flex-col items-center w-[150%] '>
-        <span className='p-3 flex flex-col justify-center items-center gap-3 h-max w-[85vw]'>
+        <motion.span initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ behaviour: "smooth", duration: 0.7 }}
+          className='p-3 flex flex-col justify-center items-center gap-3 h-max w-[85vw]'>
           <p className='h-max  main_head font-bold md:text-3xl text-xl text-center'>Your Professional And Go To Video Calling Platform.</p>
           <p className='h-max main_head font-bold md:text-3xl text-xl text-center flex md:flex-row flex-col items-center gap-2'>
             Now In <span className='font-bold text-2xl md:text-4xl text-orange-500'>Your Browser.</span>
@@ -32,7 +50,8 @@ const Home: React.FC = () => {
             <button onClick={() => navigate('/signup')} className='bg-white border-2 border-gray-200 p-2 rounded-full text-purple-600 font-semibold title md:w-[20vw]'>Lets Start</button>
             <Icon className='bg-orange-500 rounded-full p-2 rotate-90' icon="ph:arrow-up-bold" color='white' height='6vh' />
           </span>
-          <span className='md:flex hidden flex-row items-center md:w-[150%] justify-evenly sm:gap-5'>
+          <motion.span initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ behaviour: "smooth", duration: 1 }}
+            className='md:flex hidden flex-row items-center md:w-[150%] justify-evenly sm:gap-5'>
             {imageArr.map((image) =>
               <LazyLoadImage
                 className='hover:translate-y-[-10px] hover:shadow-2xl rounded-xl shadow-xl cursor-pointer'
@@ -40,8 +59,8 @@ const Home: React.FC = () => {
                 src={image}
               />
             )}
-          </span>
-        </span>
+          </motion.span>
+        </motion.span>
       </div>
       <div className='h-max w-[90%] flex md:flex-row flex-col-reverse items-center justify-evenly'>
         <div className='md:w-[50%] w-[95vw] flex flex-col p-5 gap-5 items-center'>
@@ -56,28 +75,34 @@ const Home: React.FC = () => {
         </div>
       </div>
       <div className='md:h-[30vh] h-max w-[95vw] gap-5 flex md:flex-row flex-col p-5 items-center justify-evenly'>
-        <div className='flex flex-col items-center gap-5'>
+        <motion.div ref={ref} initial={{ x: -100, opacity: 0 }} animate={control} transition={{ behaviour: "smooth", duration: 0.8 }}
+          className='flex flex-col items-center gap-5'>
           <div className='bg-amber-500 rounded-md shadow object-fit p-3 w-max'>
             <Icon className='shadow-xl' icon="healthicons:ui-folder-family" color='white' height='4vh' />
           </div>
           <p className='text-center text-xl font-semibold'>Add anyone in your list with the ZEN No.</p>
-        </div>
-        <span className='md:h-[100%] md:w-[0.20rem]  h-[0.20rem] w-[100%] rounded bg-purple-600'></span>
-        <div className='flex flex-col items-center gap-5'>
+        </motion.div>
+        <motion.span ref={ref} initial={{ x: -100, opacity: 0 }} animate={control} transition={{ behaviour: "smooth", duration: 0.6 }}
+          className='md:h-[100%] md:w-[0.20rem]  h-[0.20rem] w-[100%] rounded bg-purple-600'></motion.span>
+        <motion.div ref={ref} initial={{ x: -100, opacity: 0 }} animate={control} transition={{ behaviour: "smooth", duration: 0.6 }}
+          className='flex flex-col items-center gap-5'>
           <div className='bg-blue-600 rounded-md shadow object-fit p-3 w-max'>
             <Icon className='shadow-xl' icon="icon-park-outline:phone-video-call" color='white' height='4vh' />
           </div>
           <p className='text-center text-xl font-semibold'>Just call your friends, family in one click.</p>
-        </div>
-        <span className='md:h-[100%] md:w-[0.20rem]  h-[0.20rem] w-[100%] rounded bg-purple-600'></span>
-        <div className='flex flex-col items-center gap-5'>
+        </motion.div>
+        <motion.span ref={ref} initial={{ x: -100, opacity: 0 }} animate={control} transition={{ behaviour: "smooth", duration: 0.6 }}
+          className='md:h-[100%] md:w-[0.20rem]  h-[0.20rem] w-[100%] rounded bg-purple-600'></motion.span>
+        <motion.div ref={ref} initial={{ x: -100, opacity: 0 }} animate={control} transition={{ behaviour: "smooth", duration: 0.6 }}
+          className='flex flex-col items-center gap-5'>
           <div className='bg-green-500 rounded-md shadow object-fit p-3 w-max'>
             <Icon className='shadow-xl' icon="gg:phone" color='white' height='4vh' />
           </div>
           <p className='text-center text-xl font-semibold'>ZEN No is just your contact number.</p>
-        </div>
+        </motion.div>
       </div>
-      <div className='bg-gradient-to-r from-blue-500 via-pink-600 to-purple-600 shadow-xl flex flex-col h-max w-[90vw] p-8 gap-5 rounded-xl text-white title'>
+      <motion.div ref={ref1} initial={{ x: 100, opacity: 0 }} animate={control1} transition={{ behaviour: "smooth", duration: 0.6 }}
+      className='bg-gradient-to-r from-blue-500 via-pink-600 to-purple-600 shadow-xl flex flex-col h-max w-[90vw] p-8 gap-5 rounded-xl text-white title'>
         <div className='flex md:flex-row flex-col items-center justify-between w-[100%]'>
           <p className='md:text-3xl text-xl'>Start Your Journey in just 3 Steps.</p>
           <span className='flex flex-row items-center gap-3 p-3'>
@@ -90,7 +115,7 @@ const Home: React.FC = () => {
           <p>2. Your ZEN No. is in your profile.</p>
           <p>3. Save contacts using ZEN No. from Contacts.</p>
         </div>
-      </div>
+      </motion.div>
       <Footer />
     </div>
   )
