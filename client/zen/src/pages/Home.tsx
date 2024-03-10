@@ -33,7 +33,7 @@ const Home: React.FC = () => {
         opacity: 1, x: 0
       })
     }
-  }, [control, inView])
+  }, [control, inView, control1, inView1])
   return (
     <div className='h-max w-screen flex flex-col items-center gap-5 overflow-hidden'>
       <div className='mt-5 bg-gradient-to-b shadow-md md:overflow-y-hidden overflow-x-hidden from-white via-purple-300 to-purple-400 rounded-b-[300%] h-max md:h-[70vh] flex flex-col items-center w-[150%] '>
