@@ -1,11 +1,14 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon } from '@iconify/react';
 import { UserContext } from '../context/Userauth';
+import { motion } from 'framer-motion';
 
 const Header: React.FC = () => {
+  const [open, setOpen] = useState<boolean>(false)
   const usercontext = useContext(UserContext)
   return (
+    <>
     <div className='h-[10vh] w-[100vw] flex flex-row justify-around items-center shadow'>
       <Link to='/'>
         <div className='text-2xl flex gap-1'>
@@ -25,7 +28,33 @@ const Header: React.FC = () => {
           }
         </ul>
       </div>
+      {
+          open == true ?
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1, rotate: 90 }} transition={{ behaviour: "smooth" }}
+              onClick={() => setOpen(!open)} className='md:hidden block h-max w-max'>
+              <Icon icon="oui:cross" height={'2rem'} color='indigo' />
+            </motion.div>
+            :
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ behaviour: "smooth" }}
+              onClick={() => setOpen(!open)} className='md:hidden block h-max w-max'>
+              <Icon icon="quill:hamburger" height={'2rem'} color='indigo' />
+            </motion.div>
+        }
     </div>
+    {
+            open == true ?
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ behaviour: "smooth" }}
+              className='absolute md:hidden block h-max w-screen bg-purple-600 items-center p-3'>
+              <ul className='h-[25vh] text-white uppercase header_list md:hidden flex flex-col justify-around text-sm'>
+                <Link to='/'>Home</Link>
+                <Link to='/about'>About</Link>
+                <Link to='/contact'>Contact</Link>
+                <Link to='/signup'>Login/Signup</Link>
+              </ul>
+            </motion.div>
+            : null
+        }
+        </>
   )
 }
 
