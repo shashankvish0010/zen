@@ -7,13 +7,12 @@ const VideoCall: React.FC = () => {
   const socketcontext = useContext(Socketcontext);
   return (
     <div className='h-max w-screen flex flex-col justify-evenly items-center gap-5 p-5'>
-      <div className='relative h-max w-max p-5 rounded-xl border-2'>
-        <div className='ml-[80%] absolute h-max w-max'>
+      <div className='bg-indigo-600 relative h-max w-max rounded-xl border-2'>
+        <div className='ml-[60%] absolute h-max w-max bg-white'>
           {socketcontext?.LocalStream &&
             <ReactPlayer
               playing
-              muted
-              url={socketcontext.LocalStream} // Provide the actual URL here
+              url={socketcontext.LocalStream}
               height={'20vh'}
               width={'20vw'}
             />}
@@ -23,12 +22,10 @@ const VideoCall: React.FC = () => {
           {socketcontext?.remoteStream && (
             <ReactPlayer className='rounded-md shadow-slate-300'
               playing
-              muted
-              url={socketcontext.remoteStream} // Provide the actual URL here
+              url={socketcontext.remoteStream}
               height={'50vh'}
               width={'85vw'}
             />
-
           )}
         </div>
       </div>
