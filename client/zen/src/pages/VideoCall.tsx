@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react';
 const VideoCall: React.FC = () => {
   const socketcontext = useContext(Socketcontext);
   return (
-    <div className='absoulte h-screen w-screen flex flex-col items-center gap-5'>
+    <div className='absoulte h-screen w-screen flex flex-col justify-evenly items-center gap-5 p-5'>
       <div className='h-max w-max'>
         {socketcontext?.LocalStream &&
           <ReactPlayer
