@@ -1,5 +1,3 @@
-![Vite + React + TS - Google Chrome 2024-03-12 20-28-52](https://github.com/shashankvish0010/zen/assets/140178357/312bddae-54df-4e3e-981b-6a84e6bb521f)
-
 # Welcome to Zen
 
 Welcome to Zen, your ultimate destination for seamless video calling and soon-to-be live streaming, all built on the robust PERN stack and WebRTC technology.
@@ -27,11 +25,11 @@ Quickly find and save contacts using the intuitive search box within the call di
 
 ## Building Expertise with WebRTC
 
-Zen is not just a project; it's a testament to our commitment to continuous learning and innovation. In creating Zen, we embarked on a journey to master the intricacies of WebRTC technology. Learning WebRTC was no small feat; it presented challenges that pushed us to expand our knowledge and skills in real-time communication.
+Zen is not just a project; it's a testament to my commitment to continuous learning and innovation. In creating Zen, we embarked on a journey to master the intricacies of WebRTC technology. Learning WebRTC was no small feat; it presented challenges that pushed us to expand my knowledge and skills in real-time communication.
 
 ## Future-Proof with Live Streaming
 
-Exciting news! We're gearing up to introduce live streaming capabilities to Zen. Powered by Mediasoup technology, the live streaming feature will enable you to broadcast your content to audiences worldwide in real-time, with unparalleled quality and reliability.
+I'm gearing up to introduce live streaming capabilities to Zen. Powered by Mediasoup technology, the live streaming feature will enable you to broadcast your content to audiences worldwide in real-time, with unparalleled quality and reliability.
 
 ## Technology Stack
 
@@ -45,4 +43,4 @@ Zen leverages the powerful PERN stack:
 
 ## Development Journey
 
-Our journey to building Zen has been filled with challenges and triumphs. We're passionate about creating a platform that enhances your communication experience, and we're constantly pushing the boundaries to achieve this goal.
+My journey of building Zen has been filled with challenges and triumphs. I'm passionate about creating a platform that enhances your communication experience, and constantly pushing the boundaries to achieve this goal. Although there's a lot of room for improvements so if you wanna suggest something or wanna contribute to the project, you're welcome.
