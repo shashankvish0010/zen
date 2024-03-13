@@ -18,7 +18,7 @@ const VideoCall: React.FC = () => {
             />}
         </div>
 
-        <div className='flex flex-col h-[50vh] w-max'>
+        <div className='flex flex-col h-max w-max'>
           {socketcontext?.remoteStream && (
             <ReactPlayer className='rounded-md shadow-slate-300'
               playing
