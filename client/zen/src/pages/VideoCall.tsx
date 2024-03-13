@@ -7,7 +7,7 @@ const VideoCall: React.FC = () => {
   const socketcontext = useContext(Socketcontext);
   return (
     <div className='h-max w-screen flex flex-col justify-evenly items-center gap-5 p-5'>
-      <div className='bg-indigo-600 relative p-3 rounded-xl border-2'>
+      <div className='h-max w-max bg-indigo-600 relative p-3 rounded-xl border-2'>
         <div className='ml-[60%] absolute h-max w-max bg-white-600'>
           {socketcontext?.LocalStream &&
             <ReactPlayer
