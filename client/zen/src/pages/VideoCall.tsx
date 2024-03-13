@@ -1,24 +1,21 @@
 import React, { useContext } from 'react';
 import { Socketcontext } from '../context/Socketcontext';
-import { UserContext } from '../context/Userauth';
 import ReactPlayer from 'react-player';
 import { Icon } from '@iconify/react';
 
 const VideoCall: React.FC = () => {
   const socketcontext = useContext(Socketcontext);
-  const userContext = useContext(UserContext);
   return (
     <div className='h-max w-screen flex flex-col justify-evenly items-center gap-5 p-5'>
-      <div className='bg-indigo-600 relative h-[50vh] w-[90vw] p-3 rounded-xl border-2'>
-        <div className='ml-[60%] absolute h-max w-max bg-white'>
+      <div className='bg-indigo-600 relative p-3 rounded-xl border-2'>
+        <div className='ml-[60%] absolute h-max w-max bg-white-600'>
           {socketcontext?.LocalStream &&
             <ReactPlayer
               playing
               url={socketcontext.LocalStream}
-              height={'20vh'}
+              height={'25vh'}
               width={'20vw'}
             />}
-            <p className='text-sm font-medium text-center'>{userContext?.curruser.firstname}</p>
         </div>
 
         <div className='flex flex-col h-[50vh] w-max'>
@@ -26,7 +23,7 @@ const VideoCall: React.FC = () => {
             <ReactPlayer className='rounded-md shadow-slate-300'
               playing
               url={socketcontext.remoteStream}
-              height={'50vh'}
+              height={'65vh'}
               width={'85vw'}
             />
           )}
