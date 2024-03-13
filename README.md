@@ -1,3 +1,5 @@
+![Vite + React + TS - Google Chrome 2024-03-12 20-28-52](https://github.com/shashankvish0010/zen/assets/140178357/312bddae-54df-4e3e-981b-6a84e6bb521f)
+
 # Welcome to Zen
 
 Welcome to Zen, your ultimate destination for seamless video calling and soon-to-be live streaming, all built on the robust PERN stack and WebRTC technology.
