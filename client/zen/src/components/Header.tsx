@@ -48,7 +48,7 @@ const Header: React.FC = () => {
             <ul className='h-[25vh] text-white uppercase header_list md:hidden flex flex-col justify-around text-sm'>
               <Link to='/'>Home</Link>
               <Link to='/about'>About</Link>
-              <Link to='/contact'>Contact</Link>
+              <li onClick={() => window.location.href = '/https://portfolio-six-gold-87.vercel.app/'}>Contact</li>
               {usercontext?.login == false ?
                 <Link to='/signup'>Login/Signup</Link>
                 :
