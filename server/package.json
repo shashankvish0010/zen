@@ -24,7 +24,7 @@
     "nodemailer": "^6.9.5",
     "pg": "^8.11.3",
     "socket.io": "^4.7.2",
-    "twilio": "^4.19.0",
+    "twilio": "^4.23.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
